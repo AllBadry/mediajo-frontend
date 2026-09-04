@@ -3,17 +3,17 @@ name: Deploy MediaJo to GitHub Pages
 on:
   push:
     branches:
-      - main # سيتم البناء والنشر فقط عند رفع كود جديد على هذا الفرع
+      - main
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # إعطاء صلاحية للروبوت للكتابة ورفع الملفات
+      contents: write
 
     defaults:
       run:
-        working-directory: ./client
+        working-directory: client
 
     steps:
       - name: Checkout Code 🛎️
@@ -24,7 +24,7 @@ jobs:
         with:
           node-version: "22"
           cache: npm
-          cache-dependency-path: package-lock.json
+          cache-dependency-path: client/package-lock.json
 
       - name: Install Dependencies 📦
         run: npm install
@@ -34,14 +34,14 @@ jobs:
           npm run build
           cp dist/index.html dist/404.html
 
-          # 🌟 إنشاء المجلدات لصفحات SPA الفرعية (GitHub Pages لا يدعم الـ history fallback تلقائياً)
+          # 🌟 إنشاء المجلدات لصفحات SPA الفرعية
           mkdir -p dist/about \
-                   dist/products \
-                   dist/auth \
-                   dist/contact \
-                   dist/products/instagram \
-                   dist/products/facebook \
-                   dist/products/tiktok
+                     dist/products \
+                     dist/auth \
+                     dist/contact \
+                     dist/products/instagram \
+                     dist/products/facebook \
+                     dist/products/tiktok
 
           # 🌟 نسخ وتعديل العناوين وإضافة وسم Canonical برمجياً لكل صفحة
 
@@ -77,5 +77,5 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./client/dist # المجلد الذي يتم توليده بعد البناء في Vite
+          publish_dir: client/dist
           cname: mediajo.org
