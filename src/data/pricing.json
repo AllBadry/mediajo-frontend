@@ -1,0 +1,294 @@
+{
+  "categories": [
+    {
+      "id": "social-media",
+      "name": "Social Media",
+      "nameAr": "السوشال ميديا",
+      "platforms": [
+        {
+          "id": "instagram",
+          "name": "Instagram",
+          "nameAr": "إنستغرام",
+          "gradient": "from-pink-500 to-purple-500",
+          "sections": [
+            {
+              "id": "followers",
+              "name": "Followers",
+              "nameAr": "المتابعين",
+              "groups": [
+                {
+                  "id": "arab",
+                  "name": "Arab",
+                  "nameAr": "عرب",
+                  "hint": "Arab followers",
+                  "variants": [
+                    { "name": null, "tiers": [
+                      { "qty": "1,000", "price": 4.99 },
+                      { "qty": "5,000", "price": 16.99 },
+                      { "qty": "10,000", "price": 32.99 },
+                      { "qty": "20,000", "price": 60.99 }
+                    ] }
+                  ]
+                },
+                {
+                  "id": "warranty-30",
+                  "name": "30-Day Warranty",
+                  "nameAr": "ضمان 30 يوم",
+                  "hint": "Includes refill guarantee",
+                  "variants": [
+                    { "name": null, "tiers": [
+                      { "qty": "1,000", "price": 1.99 },
+                      { "qty": "5,000", "price": 13.99 },
+                      { "qty": "10,000", "price": 27.99 },
+                      { "qty": "20,000", "price": 50.99 }
+                    ] }
+                  ]
+                },
+                {
+                  "id": "no-warranty",
+                  "name": "No Warranty",
+                  "nameAr": "بدون ضمان",
+                  "hint": "Best value",
+                  "variants": [
+                    { "name": null, "tiers": [
+                      { "qty": "1,000", "price": 1.99 },
+                      { "qty": "5,000", "price": 10.99 },
+                      { "qty": "10,000", "price": 22.99 },
+                      { "qty": "20,000", "price": 45.99 }
+                    ] }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "engagement",
+              "name": "Engagement",
+              "nameAr": "التفاعل",
+              "groups": [
+                {
+                  "id": "reels-views",
+                  "name": "Reels Views",
+                  "nameAr": "مشاهدات ريلز",
+                  "hint": "Views on reels",
+                  "variants": [
+                    { "name": null, "tiers": [
+                      { "qty": "10,000", "price": 8.99 },
+                      { "qty": "20,000", "price": 16.99 },
+                      { "qty": "30,000", "price": 22.99 },
+                      { "qty": "40,000", "price": 27.99 },
+                      { "qty": "50,000", "price": 31.99 }
+                    ] }
+                  ]
+                },
+                {
+                  "id": "likes-reels-posts",
+                  "name": "Likes (Reels / Posts)",
+                  "nameAr": "لايكات (ريلز / بوستات)",
+                  "hint": "Likes on content",
+                  "variants": [
+                    { "name": null, "tiers": [
+                      { "qty": "1,000", "price": 0.99 },
+                      { "qty": "5,000", "price": 4.99 },
+                      { "qty": "10,000", "price": 8.99 },
+                      { "qty": "20,000", "price": 16.99 }
+                    ] }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "facebook",
+          "name": "Facebook",
+          "nameAr": "فيسبوك",
+          "gradient": "from-blue-600 to-blue-400",
+          "sections": [
+            {
+              "id": "followers",
+              "name": "Followers",
+              "nameAr": "المتابعين",
+              "groups": [
+                {
+                  "id": "jordanian",
+                  "name": "Jordanian",
+                  "nameAr": "أردنيين",
+                  "hint": "Pure Jordanian accounts",
+                  "variants": [
+                    { "name": null, "tiers": [
+                      { "qty": "100", "price": 5.00 },
+                      { "qty": "1,000", "price": 50.00 }
+                    ] }
+                  ]
+                },
+                {
+                  "id": "arab",
+                  "name": "Arab",
+                  "nameAr": "عرب",
+                  "hint": "Arab followers",
+                  "variants": [
+                    { "name": null, "tiers": [
+                      { "qty": "1,000", "price": 6.99 },
+                      { "qty": "5,000", "price": 27.99 },
+                      { "qty": "10,000", "price": 50.99 },
+                      { "qty": "20,000", "price": 72.99 }
+                    ] }
+                  ]
+                },
+                {
+                  "id": "warranty-30",
+                  "name": "30-Day Warranty",
+                  "nameAr": "ضمان 30 يوم",
+                  "hint": "Includes refill guarantee",
+                  "variants": [
+                    { "name": null, "tiers": [
+                      { "qty": "1,000", "price": 3.99 },
+                      { "qty": "5,000", "price": 22.99 },
+                      { "qty": "10,000", "price": 40.99 },
+                      { "qty": "20,000", "price": 63.99 }
+                    ] }
+                  ]
+                },
+                {
+                  "id": "no-warranty",
+                  "name": "No Warranty",
+                  "nameAr": "بدون ضمان",
+                  "hint": "Best value",
+                  "variants": [
+                    { "name": null, "tiers": [
+                      { "qty": "1,000", "price": 2.99 },
+                      { "qty": "5,000", "price": 17.99 },
+                      { "qty": "10,000", "price": 31.99 },
+                      { "qty": "20,000", "price": 54.99 }
+                    ] }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "engagement",
+              "name": "Engagement",
+              "nameAr": "التفاعل",
+              "groups": [
+                {
+                  "id": "reels-views",
+                  "name": "Reels Views",
+                  "nameAr": "مشاهدات ريلز",
+                  "hint": "Views on reels",
+                  "variants": [
+                    { "name": null, "tiers": [
+                      { "qty": "10,000", "price": 8.99 },
+                      { "qty": "20,000", "price": 16.99 },
+                      { "qty": "30,000", "price": 22.99 },
+                      { "qty": "40,000", "price": 27.99 },
+                      { "qty": "50,000", "price": 31.99 }
+                    ] }
+                  ]
+                },
+                {
+                  "id": "likes-reels-posts",
+                  "name": "Likes (Reels / Posts)",
+                  "nameAr": "لايكات (ريلز / بوستات)",
+                  "hint": "Likes on content",
+                  "variants": [
+                    { "name": null, "tiers": [
+                      { "qty": "1,000", "price": 0.99 },
+                      { "qty": "5,000", "price": 4.99 },
+                      { "qty": "10,000", "price": 8.99 },
+                      { "qty": "20,000", "price": 16.99 }
+                    ] }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "tiktok",
+          "name": "TikTok",
+          "nameAr": "تيك توك",
+          "gradient": "from-gray-900 to-gray-700",
+          "sections": [
+            {
+              "id": "followers",
+              "name": "Followers",
+              "nameAr": "المتابعين",
+              "groups": [
+                {
+                  "id": "warranty-30",
+                  "name": "30-Day Warranty",
+                  "nameAr": "ضمان 30 يوم",
+                  "hint": "Includes refill guarantee",
+                  "variants": [
+                    { "name": null, "tiers": [
+                      { "qty": "1,000", "price": 5.99 },
+                      { "qty": "5,000", "price": 31.99 },
+                      { "qty": "10,000", "price": 63.99 },
+                      { "qty": "20,000", "price": 119.99 }
+                    ] }
+                  ]
+                },
+                {
+                  "id": "no-warranty",
+                  "name": "No Warranty",
+                  "nameAr": "بدون ضمان",
+                  "hint": "Best value",
+                  "variants": [
+                    { "name": null, "tiers": [
+                      { "qty": "1,000", "price": 4.99 },
+                      { "qty": "5,000", "price": 27.99 },
+                      { "qty": "10,000", "price": 45.99 },
+                      { "qty": "20,000", "price": 54.99 }
+                    ] }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "engagement",
+              "name": "Engagement",
+              "nameAr": "التفاعل",
+              "groups": [
+                {
+                  "id": "reels-views",
+                  "name": "Reels Views",
+                  "nameAr": "مشاهدات ريلز",
+                  "hint": "Views on videos",
+                  "variants": [
+                    { "name": null, "tiers": [
+                      { "qty": "10,000", "price": 8.99 },
+                      { "qty": "20,000", "price": 16.99 },
+                      { "qty": "30,000", "price": 22.99 },
+                      { "qty": "40,000", "price": 27.99 },
+                      { "qty": "50,000", "price": 31.99 }
+                    ] }
+                  ]
+                },
+                {
+                  "id": "reels-likes",
+                  "name": "Reels Likes",
+                  "nameAr": "لايكات ريلز",
+                  "hint": "Likes on reels",
+                  "variants": [
+                    { "name": null, "tiers": [
+                      { "qty": "1,000", "price": 0.99 },
+                      { "qty": "5,000", "price": 7.99 },
+                      { "qty": "10,000", "price": 13.99 },
+                      { "qty": "20,000", "price": 22.99 }
+                    ] }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "subscriptions",
+      "name": "Subscriptions & Accounts",
+      "nameAr": "حسابات و اشتراكات",
+      "platforms": []
+    }
+  ]
+}

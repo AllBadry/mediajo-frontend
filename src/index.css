@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    direction: rtl;
+    font-family: 'Tajawal', system-ui, sans-serif; /* يفضل استخدام خط عربي جميل مثل تجوال */
+  }
+  body {
+    @apply bg-gray-50 text-gray-800;
+  }
+}
