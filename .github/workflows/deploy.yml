@@ -1,16 +1,18 @@
-name: Deploy MediaJo to GitHub Pages
+name: Deploy MediaJo to GitHub Pages (Main)
 
 on:
   push:
     branches:
       - main
 
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
+permissions:
+  contents: write
+  pages: write
+  id-token: write
 
+jobs:
+  build:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Code 🛎️
         uses: actions/checkout@v4
@@ -67,9 +69,21 @@ jobs:
           cp dist/index.html dist/contact/index.html
           sed -i 's/<title>.*<\/title>/<title>تواصل معنا | ميديا جو<\/title><link rel="canonical" href="https:\/\/mediajo.org\/contact" \/>/' dist/contact/index.html
 
-      - name: Deploy to GitHub Pages 🚀
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          cname: mediajo.org
+          path: ./dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages 🚀
+        id: deployment
+        uses: actions/deploy-pages@v4
