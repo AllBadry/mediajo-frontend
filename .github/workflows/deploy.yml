@@ -1,18 +1,16 @@
-name: Deploy MediaJo to GitHub Pages (Main)
+name: Deploy MediaJo to Main Branch
 
 on:
   push:
     branches:
       - main
 
-permissions:
-  contents: write
-  pages: write
-  id-token: write
-
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
     steps:
       - name: Checkout Code 🛎️
         uses: actions/checkout@v4
@@ -38,8 +36,6 @@ jobs:
                      dist/products/instagram \
                      dist/products/facebook \
                      dist/products/tiktok
-
-          # 🌟 نسخ وتعديل العناوين وإضافة وسم Canonical برمجياً لكل صفحة
 
           # 1. من نحن
           cp dist/index.html dist/about/index.html
@@ -69,21 +65,11 @@ jobs:
           cp dist/index.html dist/contact/index.html
           sed -i 's/<title>.*<\/title>/<title>تواصل معنا | ميديا جو<\/title><link rel="canonical" href="https:\/\/mediajo.org\/contact" \/>/' dist/contact/index.html
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Deploy to Main Branch 🚀
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: ./dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages 🚀
-        id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          branch: main
+          force_orphan: true # هذه الخاصية تجعل فرع main يحمل فقط ملفات الـ dist النهائية نظيفة، مما يمنع ظهور خطأ الـ JSX نهائياً ويجعله مطابقاً تماماً لمتطلبات المتصفح.
+          cname: mediajo.org
