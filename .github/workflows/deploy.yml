@@ -1,0 +1,81 @@
+name: Deploy MediaJo to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main # سيتم البناء والنشر فقط عند رفع كود جديد على هذا الفرع
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # إعطاء صلاحية للروبوت للكتابة ورفع الملفات
+
+    defaults:
+      run:
+        working-directory: ./client
+
+    steps:
+      - name: Checkout Code 🛎️
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ⚙️
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: ./client/package-lock.json
+
+      - name: Install Dependencies 📦
+        run: npm install
+
+      - name: Build Project 🏗️
+        run: |
+          npm run build
+          cp dist/index.html dist/404.html
+
+          # 🌟 إنشاء المجلدات لصفحات SPA الفرعية (GitHub Pages لا يدعم الـ history fallback تلقائياً)
+          mkdir -p dist/about \
+                   dist/products \
+                   dist/auth \
+                   dist/contact \
+                   dist/products/instagram \
+                   dist/products/facebook \
+                   dist/products/tiktok
+
+          # 🌟 نسخ وتعديل العناوين وإضافة وسم Canonical برمجياً لكل صفحة
+
+          # 1. من نحن
+          cp dist/index.html dist/about/index.html
+          sed -i 's/<title>.*<\/title>/<title>من نحن | ميديا جو<\/title><link rel="canonical" href="https:\/\/mediajo.org\/about" \/>/' dist/about/index.html
+
+          # 2. المنتجات
+          cp dist/index.html dist/products/index.html
+          sed -i 's/<title>.*<\/title>/<title>المنتجات والأسعار | ميديا جو<\/title><link rel="canonical" href="https:\/\/mediajo.org\/products" \/>/' dist/products/index.html
+
+          # 3. إنستغرام
+          cp dist/index.html dist/products/instagram/index.html
+          sed -i 's/<title>.*<\/title>/<title>خدمات إنستغرام | ميديا جو<\/title><link rel="canonical" href="https:\/\/mediajo.org\/products\/instagram" \/>/' dist/products/instagram/index.html
+
+          # 4. فيسبوك
+          cp dist/index.html dist/products/facebook/index.html
+          sed -i 's/<title>.*<\/title>/<title>خدمات فيسبوك | ميديا جو<\/title><link rel="canonical" href="https:\/\/mediajo.org\/products\/facebook" \/>/' dist/products/facebook/index.html
+
+          # 5. تيك توك
+          cp dist/index.html dist/products/tiktok/index.html
+          sed -i 's/<title>.*<\/title>/<title>خدمات تيك توك | ميديا جو<\/title><link rel="canonical" href="https:\/\/mediajo.org\/products\/tiktok" \/>/' dist/products/tiktok/index.html
+
+          # 6. تسجيل الدخول
+          cp dist/index.html dist/auth/index.html
+          sed -i 's/<title>.*<\/title>/<title>تسجيل الدخول | ميديا جو<\/title><link rel="canonical" href="https:\/\/mediajo.org\/auth" \/>/' dist/auth/index.html
+
+          # 7. تواصل معنا
+          cp dist/index.html dist/contact/index.html
+          sed -i 's/<title>.*<\/title>/<title>تواصل معنا | ميديا جو<\/title><link rel="canonical" href="https:\/\/mediajo.org\/contact" \/>/' dist/contact/index.html
+
+      - name: Deploy to GitHub Pages 🚀
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./client/dist # المجلد الذي يتم توليده بعد البناء في Vite
+          cname: mediajo.org
