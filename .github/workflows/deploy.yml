@@ -22,10 +22,8 @@ jobs:
 
       - name: Install Dependencies 📦
         run: npm install
-        working-directory: ./client
 
       - name: Build Project 🏗️
-        working-directory: ./client
         run: |
           npm run build
           cp dist/index.html dist/404.html
@@ -73,5 +71,5 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./client/dist
+          publish_dir: ./dist
           cname: mediajo.org
