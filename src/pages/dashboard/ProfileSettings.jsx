@@ -3,6 +3,7 @@ import { User, Mail, Phone, Lock, ShieldCheck, Save, Loader2, CheckCircle2, Aler
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 import axios from 'axios';
 
 const api = axios.create({
@@ -13,6 +14,7 @@ const api = axios.create({
 export default function ProfileSettings() {
   const container = useRef();
   const { user, login } = useAuth();
+  const { t } = useLanguage();
 
   // حالات تحديث البيانات الشخصية
   const [formData, setFormData] = useState({
@@ -62,12 +64,12 @@ export default function ProfileSettings() {
       });
 
       if (response.data.success) {
-        setProfileMsg({ type: 'success', text: 'تم تحديث البيانات الشخصية بنجاح' });
+        setProfileMsg({ type: 'success', text: t.dashboard.profileUpdated });
         // تحديث الـ Context
         login(response.data.data.user);
       }
     } catch (err) {
-      setProfileMsg({ type: 'error', text: err.response?.data?.message || 'تعذر تحديث البيانات' });
+      setProfileMsg({ type: 'error', text: err.response?.data?.message || t.dashboard.profileUpdateFailed });
     } finally {
       setLoadingProfile(false);
     }
@@ -86,11 +88,11 @@ export default function ProfileSettings() {
       });
 
       if (response.data.success) {
-        setPassMsg({ type: 'success', text: 'تم تغيير كلمة المرور بنجاح' });
+        setPassMsg({ type: 'success', text: t.dashboard.passwordChanged });
         setPassData({ currentPassword: '', newPassword: '' });
       }
     } catch (err) {
-      setPassMsg({ type: 'error', text: err.response?.data?.message || 'كلمة المرور الحالية غير صحيحة' });
+      setPassMsg({ type: 'error', text: err.response?.data?.message || t.dashboard.passwordChangeFailed });
     } finally {
       setLoadingPass(false);
     }
@@ -107,15 +109,15 @@ export default function ProfileSettings() {
           <div className="w-10 h-10 bg-gray-900 text-white rounded-xl flex items-center justify-center">
             <User className="w-5 h-5" />
           </div>
-          Profile Settings
+          {t.dashboard.profileSettings}
         </h2>
-        <p className="text-gray-500 font-medium mt-1">Manage your account details, security preferences, and contact info.</p>
+        <p className="text-gray-500 font-medium mt-1">{t.dashboard.manageAccount}</p>
       </div>
 
       {/* بطاقة تعديل المعلومات الشخصية */}
       <div className="profile-card bg-white border border-gray-200 rounded-[2rem] p-8 shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
         <h3 className="text-xl font-black text-gray-900 mb-6 flex items-center gap-2">
-          <ShieldCheck className="w-5 h-5 text-blue-600" /> Personal Information
+          <ShieldCheck className="w-5 h-5 text-blue-600" /> {t.dashboard.personalInfo}
         </h3>
 
         {profileMsg.text && (
@@ -129,7 +131,7 @@ export default function ProfileSettings() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div>
               <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
-                <User className="w-4 h-4 text-gray-400" /> Full Name
+                <User className="w-4 h-4 text-gray-400" /> {t.dashboard.fullName}
               </label>
               <input 
                 type="text" 
@@ -143,7 +145,7 @@ export default function ProfileSettings() {
 
             <div>
               <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
-                <Mail className="w-4 h-4 text-gray-400" /> Email Address
+                <Mail className="w-4 h-4 text-gray-400" /> {t.dashboard.emailAddress}
               </label>
               <input 
                 type="email" 
@@ -151,13 +153,13 @@ export default function ProfileSettings() {
                 disabled 
                 className={`${inputClass} bg-gray-50 text-gray-400 cursor-not-allowed`} 
               />
-              <span className="text-[11px] text-gray-400 mt-1 block">Email cannot be changed directly.</span>
+              <span className="text-[11px] text-gray-400 mt-1 block">{t.dashboard.emailCannotChange}</span>
             </div>
           </div>
 
           <div>
             <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
-              <Phone className="w-4 h-4 text-gray-400" /> Phone Number / WhatsApp
+              <Phone className="w-4 h-4 text-gray-400" /> {t.dashboard.phoneWhatsapp}
             </label>
             <input 
               type="text" 
@@ -176,7 +178,7 @@ export default function ProfileSettings() {
               className="bg-gray-900 hover:bg-black text-white px-8 py-3.5 rounded-2xl font-bold text-sm transition-all shadow-[0_10px_25px_rgba(0,0,0,0.15)] flex items-center gap-2 disabled:opacity-70"
             >
               {loadingProfile ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-              Save Changes
+              {t.dashboard.saveChanges}
             </button>
           </div>
         </form>
@@ -185,7 +187,7 @@ export default function ProfileSettings() {
       {/* بطاقة تغيير كلمة المرور */}
       <div className="profile-card bg-white border border-gray-200 rounded-[2rem] p-8 shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
         <h3 className="text-xl font-black text-gray-900 mb-6 flex items-center gap-2">
-          <Lock className="w-5 h-5 text-blue-600" /> Security & Password
+          <Lock className="w-5 h-5 text-blue-600" /> {t.dashboard.securityPassword}
         </h3>
 
         {passMsg.text && (
@@ -199,7 +201,7 @@ export default function ProfileSettings() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div>
               <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
-                <Lock className="w-4 h-4 text-gray-400" /> Current Password
+                <Lock className="w-4 h-4 text-gray-400" /> {t.dashboard.currentPassword}
               </label>
               <input 
                 type="password" 
@@ -214,7 +216,7 @@ export default function ProfileSettings() {
 
             <div>
               <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
-                <Lock className="w-4 h-4 text-gray-400" /> New Password
+                <Lock className="w-4 h-4 text-gray-400" /> {t.dashboard.newPassword}
               </label>
               <input 
                 type="password" 
@@ -236,7 +238,7 @@ export default function ProfileSettings() {
               className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3.5 rounded-2xl font-bold text-sm transition-all shadow-[0_10px_25px_rgba(37,99,235,0.25)] flex items-center gap-2 disabled:opacity-70"
             >
               {loadingPass ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-              Update Password
+              {t.dashboard.updatePassword}
             </button>
           </div>
         </form>

@@ -7,6 +7,7 @@ import {
   Clock, Zap, ShoppingCart, MessageSquare, AlertCircle 
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 
 // ==========================================
 // 1. Mock Data (بيانات وهمية للتجربة)
@@ -24,8 +25,10 @@ export default function Overview() {
   const container = useRef();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { t } = useLanguage();
   
   const name = user?.name || 'User';
+  const statusLabel = (status) => t.dashboard.status[status.toLowerCase()] || status;
 
   // ==========================================
   // GSAP Animations
@@ -49,17 +52,17 @@ export default function Overview() {
         
         <div className="relative z-10">
           <p className="text-blue-400 font-mono text-sm mb-2 flex items-center gap-2">
-            <span className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></span> System Online
+            <span className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></span> {t.dashboard.systemOnline}
           </p>
           <h2 className="text-3xl md:text-4xl font-black text-white tracking-tight mb-2">
-            Welcome back, {name}!
+            {t.dashboard.welcomeBack.replace('{name}', name)}
           </h2>
-          <p className="text-gray-400 font-medium">Ready to boost your digital presence today?</p>
+          <p className="text-gray-400 font-medium">{t.dashboard.readyBoost}</p>
         </div>
         
         <div className="relative z-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 flex items-center gap-6">
           <div>
-            <p className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">Wallet Balance</p>
+            <p className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">{t.dashboard.walletBalance}</p>
             <div className="flex items-baseline gap-1">
               <span className="text-3xl font-black text-white">{balance.toFixed(2)}</span>
               <span className="text-sm font-bold text-gray-400">JOD</span>
@@ -83,13 +86,13 @@ export default function Overview() {
               <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
                 <ShoppingBag className="w-5 h-5" />
               </div>
-              <h3 className="text-xl font-black text-gray-900">Recent Orders</h3>
+              <h3 className="text-xl font-black text-gray-900">{t.dashboard.recentOrders}</h3>
             </div>
             <button 
               onClick={() => navigate('/dashboard/orders')} 
               className="text-sm font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1"
             >
-              View All <ChevronRight className="w-4 h-4" />
+              {t.dashboard.viewAll} <ChevronRight className="w-4 h-4 rtl:rotate-180" />
             </button>
           </div>
 
@@ -112,7 +115,7 @@ export default function Overview() {
                 <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-1 w-full sm:w-auto mt-2 sm:mt-0">
                   <span className="font-black text-gray-900">{order.price.toFixed(2)} JOD</span>
                   <span className={`text-[10px] font-bold uppercase tracking-widest ${order.status === 'Completed' ? 'text-emerald-500' : 'text-blue-500'}`}>
-                    {order.status}
+                    {statusLabel(order.status)}
                   </span>
                 </div>
               </div>
@@ -131,13 +134,13 @@ export default function Overview() {
             <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:bg-white/20 transition-colors"></div>
             <div className="flex items-center gap-3 mb-6 relative z-10">
               <Zap className="w-6 h-6 text-yellow-300" />
-              <h3 className="text-xl font-black">Active Cart</h3>
+              <h3 className="text-xl font-black">{t.dashboard.activeCart}</h3>
             </div>
             <p className="text-blue-100 text-sm font-medium leading-relaxed mb-6 relative z-10">
-              You have <span className="font-black text-white">1</span> item waiting in your cart.
+              {t.dashboard.cartWaiting}
             </p>
             <button className="w-full bg-white text-blue-700 py-3 rounded-xl font-bold text-sm hover:scale-[1.02] transition-transform relative z-10 flex items-center justify-center gap-2">
-              <ShoppingCart className="w-4 h-4" /> Go to Checkout
+              <ShoppingCart className="w-4 h-4" /> {t.dashboard.goToCheckout}
             </button>
           </div>
 
@@ -148,7 +151,7 @@ export default function Overview() {
                 <div className="w-10 h-10 bg-orange-50 text-orange-500 rounded-xl flex items-center justify-center">
                   <MessageSquare className="w-5 h-5" />
                 </div>
-                <h3 className="text-xl font-black text-gray-900">Support</h3>
+                <h3 className="text-xl font-black text-gray-900">{t.dashboard.support}</h3>
               </div>
             </div>
             
@@ -156,19 +159,19 @@ export default function Overview() {
               <div className="bg-orange-50/50 border border-orange-100 rounded-xl p-4 flex gap-3">
                 <AlertCircle className="w-5 h-5 text-orange-500 shrink-0" />
                 <div>
-                  <h4 className="text-sm font-bold text-gray-900">New reply on Ticket #441</h4>
-                  <p className="text-xs text-gray-500 mt-1">"Your Netflix account is ready..."</p>
+                  <h4 className="text-sm font-bold text-gray-900">{t.dashboard.newReply}</h4>
+                  <p className="text-xs text-gray-500 mt-1">{t.dashboard.replyPreview}</p>
                 </div>
               </div>
             ) : (
-              <p className="text-sm text-gray-500 font-medium">No new messages. Need help with an order?</p>
+              <p className="text-sm text-gray-500 font-medium">{t.dashboard.noNewMessages}</p>
             )}
             
             <button 
               onClick={() => navigate('/dashboard/tickets')} 
               className="w-full mt-4 py-2.5 bg-gray-50 hover:bg-gray-100 border border-gray-200 text-gray-700 rounded-xl font-bold text-sm transition-colors"
             >
-              Open Support
+              {t.dashboard.openSupport}
             </button>
           </div>
           

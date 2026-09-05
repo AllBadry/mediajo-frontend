@@ -24,11 +24,11 @@ export default function CustomerDashboardLayout() {
   // استخراج عنوان الصفحة من الرابط الحالي
   const getPageTitle = () => {
     const path = location.pathname;
-    if (path.includes('orders')) return 'My Orders';
-    if (path.includes('cart')) return 'Shopping Cart';
-    if (path.includes('tickets')) return 'Support Tickets';
-    if (path.includes('profile')) return 'Profile Settings';
-    return 'Dashboard Overview';
+    if (path.includes('orders')) return t.dashboard.myOrders;
+    if (path.includes('cart')) return t.dashboard.yourCart;
+    if (path.includes('tickets')) return t.dashboard.supportTickets;
+    if (path.includes('profile')) return t.dashboard.profileSettings;
+    return t.dashboard.dashboardOverview;
   };
 
   // ==========================================
@@ -41,14 +41,14 @@ export default function CustomerDashboardLayout() {
   }, { scope: container });
 
   const menuItems = [
-    { id: 'overview', path: '/dashboard', icon: <LayoutDashboard className="w-5 h-5" />, label: 'Overview' },
-    { id: 'orders', path: '/dashboard/orders', icon: <ShoppingBag className="w-5 h-5" />, label: 'My Orders' },
-    { id: 'cart', path: '/dashboard/cart', icon: <ShoppingCart className="w-5 h-5" />, label: 'Cart' },
-    { id: 'tickets', path: '/dashboard/tickets', icon: <MessageSquare className="w-5 h-5" />, label: 'Support Tickets', badge: 1 },
+    { id: 'overview', path: '/dashboard', icon: <LayoutDashboard className="w-5 h-5" />, label: t.dashboard.overview },
+    { id: 'orders', path: '/dashboard/orders', icon: <ShoppingBag className="w-5 h-5" />, label: t.dashboard.myOrders },
+    { id: 'cart', path: '/dashboard/cart', icon: <ShoppingCart className="w-5 h-5" />, label: t.dashboard.cart },
+    { id: 'tickets', path: '/dashboard/tickets', icon: <MessageSquare className="w-5 h-5" />, label: t.dashboard.supportTickets, badge: 1 },
   ];
 
   return (
-    <div ref={container} dir="ltr" className="flex h-screen bg-[#f6f8fa] font-sans overflow-hidden">
+    <div ref={container} dir={t.dir} className="flex h-screen bg-[#f6f8fa] font-sans overflow-hidden">
       
       {/* =========================================
           1. Sidebar (باستخدام NavLink للتوجيه)
@@ -62,7 +62,7 @@ export default function CustomerDashboardLayout() {
         </div>
 
         <nav className="flex-1 px-4 py-6 flex flex-col gap-2">
-          <p className="px-4 text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Menu</p>
+          <p className="px-4 text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">{t.dashboard.menu}</p>
           
           {menuItems.map((item) => (
             <NavLink
@@ -93,7 +93,7 @@ export default function CustomerDashboardLayout() {
             to="/dashboard/profile" 
             className={({ isActive }) => `flex items-center gap-3 px-4 py-3 w-full text-left rounded-xl hover:bg-gray-100 transition-colors font-medium text-sm mb-1 ${isActive ? 'bg-gray-900 text-white hover:bg-gray-900' : 'text-gray-600'}`}
           >
-            <User className="w-5 h-5" /> Profile Settings
+            <User className="w-5 h-5" /> {t.dashboard.profileSettings}
           </NavLink>
           <button onClick={handleSignOut} className="flex items-center gap-3 px-4 py-3 w-full text-left rounded-xl hover:bg-red-50 text-red-600 font-medium text-sm transition-colors">
             <LogOut className="w-5 h-5" /> {t.auth.signOut}
@@ -118,7 +118,7 @@ export default function CustomerDashboardLayout() {
           
           <div className="flex items-center gap-4">
             <Link to="/products" className="hidden sm:flex items-center gap-2 bg-white border border-gray-200 px-4 py-2 rounded-full text-sm font-bold text-gray-700 hover:border-blue-500 hover:text-blue-600 transition-colors shadow-sm">
-              <Sparkles className="w-4 h-4" /> New Order
+              <Sparkles className="w-4 h-4" /> {t.dashboard.newOrder}
             </Link>
             
             <button className="relative w-10 h-10 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-500 hover:text-gray-900 transition-colors shadow-sm">

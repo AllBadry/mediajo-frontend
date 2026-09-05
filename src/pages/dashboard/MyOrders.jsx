@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { ShoppingBag, CheckCircle2, Clock, Search, Filter, XCircle, ExternalLink, Package } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+import { useLanguage } from '../../context/LanguageContext';
 
 // ==========================================
 // Mock Data (بيانات وهمية للطلبات)
@@ -16,7 +17,12 @@ const mockOrders = [
 
 export default function MyOrders() {
   const container = useRef();
+  const { t } = useLanguage();
   const [filter, setFilter] = useState('All');
+
+  const statusLabel = (status) => t.dashboard.status[status.toLowerCase()] || status;
+
+  const statusFilters = ['All', 'Processing', 'Completed', 'Canceled'];
 
   const filteredOrders = filter === 'All' 
     ? mockOrders 
@@ -51,9 +57,9 @@ export default function MyOrders() {
               <div className="w-10 h-10 bg-gray-100 text-gray-900 rounded-xl flex items-center justify-center">
                 <ShoppingBag className="w-5 h-5" />
               </div>
-              Order History
+              {t.dashboard.orderHistory}
             </h2>
-            <p className="text-gray-500 font-medium mt-2">Track, manage, and review your purchases.</p>
+            <p className="text-gray-500 font-medium mt-2">{t.dashboard.orderHistorySub}</p>
           </div>
 
           <div className="flex items-center gap-3 w-full md:w-auto">
@@ -61,8 +67,9 @@ export default function MyOrders() {
               <Search className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
               <input 
                 type="text" 
-                placeholder="Search orders..." 
+                placeholder={t.dashboard.searchOrders} 
                 className="w-full bg-gray-50 border border-gray-200 rounded-full py-2.5 pl-10 pr-4 text-sm font-medium text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition-all"
+                dir={t.dir}
               />
             </div>
             <button className="w-10 h-10 bg-gray-50 border border-gray-200 rounded-full flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors shrink-0">
@@ -73,7 +80,7 @@ export default function MyOrders() {
 
         {/* Custom Tabs (Filters) */}
         <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
-          {['All', 'Processing', 'Completed', 'Canceled'].map((status) => (
+          {statusFilters.map((status) => (
             <button
               key={status}
               onClick={() => setFilter(status)}
@@ -83,7 +90,7 @@ export default function MyOrders() {
                   : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
               }`}
             >
-              {status}
+              {status === 'All' ? t.dashboard.all : statusLabel(status)}
             </button>
           ))}
         </div>
@@ -106,11 +113,11 @@ export default function MyOrders() {
                     <div className="flex items-center gap-3 mb-1">
                       <span className="text-xs font-bold text-gray-400 bg-gray-100 px-2 py-0.5 rounded-md font-mono">{order.id}</span>
                       <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full ${config.bg} ${config.color}`}>
-                        {order.status}
+                        {statusLabel(order.status)}
                       </span>
                     </div>
                     <h4 className="font-black text-gray-900 text-lg mb-1">{order.service}</h4>
-                    <p className="text-sm text-gray-500 font-medium">Placed on {order.date}</p>
+                    <p className="text-sm text-gray-500 font-medium">{t.dashboard.placedOn} {order.date}</p>
                   </div>
                 </div>
 
@@ -120,7 +127,7 @@ export default function MyOrders() {
                     {order.price.toFixed(2)} <span className="text-sm text-gray-400">JOD</span>
                   </div>
                   <button className="flex items-center gap-2 text-sm font-bold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-4 py-2 rounded-xl transition-colors">
-                    View Details <ExternalLink className="w-4 h-4" />
+                    {t.dashboard.viewDetails} <ExternalLink className="w-4 h-4 rtl:rotate-180" />
                   </button>
                 </div>
 
@@ -130,8 +137,8 @@ export default function MyOrders() {
         ) : (
           <div className="bg-white border border-gray-200 rounded-[2rem] p-12 flex flex-col items-center justify-center text-center">
             <Package className="w-16 h-16 text-gray-300 mb-4" />
-            <h3 className="text-xl font-black text-gray-900 mb-2">No orders found</h3>
-            <p className="text-gray-500 font-medium max-w-sm">You don't have any orders with the status "{filter}".</p>
+            <h3 className="text-xl font-black text-gray-900 mb-2">{t.dashboard.noOrdersFound}</h3>
+            <p className="text-gray-500 font-medium max-w-sm">{t.dashboard.noOrdersWithStatus.replace('{filter}', filter === 'All' ? t.dashboard.all : statusLabel(filter))}</p>
           </div>
         )}
       </div>

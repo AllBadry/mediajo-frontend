@@ -2,9 +2,11 @@ import React, { useRef, useState } from 'react';
 import { MessageSquare, Plus, AlertCircle, CheckCircle2, Clock, Send, X, HelpCircle } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function SupportTickets() {
   const container = useRef();
+  const { t } = useLanguage();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState(null);
 
@@ -52,10 +54,10 @@ export default function SupportTickets() {
       id: `TICK-${Math.floor(100 + Math.random() * 900)}`,
       subject: newSubject,
       status: "Open",
-      date: "Just now",
+      date: t.dashboard.justNow,
       category: "General",
       messages: [
-        { sender: "user", text: newMessage, time: "Just now" }
+        { sender: "user", text: newMessage, time: t.dashboard.justNow }
       ]
     };
 
@@ -66,13 +68,16 @@ export default function SupportTickets() {
   };
 
   const getStatusBadge = (status) => {
+    const label = t.dashboard.ticketStatus[status.toLowerCase()] || status;
     switch(status) {
-      case 'Answered': return { icon: <AlertCircle className="w-4 h-4"/>, color: 'text-orange-600', bg: 'bg-orange-50', border: 'border-orange-100' };
-      case 'Open': return { icon: <Clock className="w-4 h-4"/>, color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' };
-      case 'Closed': return { icon: <CheckCircle2 className="w-4 h-4"/>, color: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-100' };
-      default: return { icon: <HelpCircle className="w-4 h-4"/>, color: 'text-gray-600', bg: 'bg-gray-50', border: 'border-gray-100' };
+      case 'Answered': return { icon: <AlertCircle className="w-4 h-4"/>, color: 'text-orange-600', bg: 'bg-orange-50', border: 'border-orange-100', label };
+      case 'Open': return { icon: <Clock className="w-4 h-4"/>, color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100', label };
+      case 'Closed': return { icon: <CheckCircle2 className="w-4 h-4"/>, color: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-100', label };
+      default: return { icon: <HelpCircle className="w-4 h-4"/>, color: 'text-gray-600', bg: 'bg-gray-50', border: 'border-gray-100', label };
     }
   };
+
+  const categoryLabel = (category) => t.dashboard.ticketCategory[category.toLowerCase()] || category;
 
   return (
     <div ref={container} className="w-full flex flex-col gap-6 relative">
@@ -84,16 +89,16 @@ export default function SupportTickets() {
             <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
               <MessageSquare className="w-5 h-5" />
             </div>
-            Support Tickets
+            {t.dashboard.supportTickets}
           </h2>
-          <p className="text-gray-500 font-medium mt-1">Get fast assistance from our 24/7 technical team.</p>
+          <p className="text-gray-500 font-medium mt-1">{t.dashboard.fastAssistance}</p>
         </div>
 
         <button 
           onClick={() => setIsModalOpen(true)}
           className="bg-gray-900 hover:bg-black text-white px-6 py-3.5 rounded-2xl font-bold text-sm transition-all shadow-[0_10px_25px_rgba(0,0,0,0.15)] flex items-center justify-center gap-2"
         >
-          <Plus className="w-5 h-5" /> Open New Ticket
+          <Plus className="w-5 h-5" /> {t.dashboard.openNewTicket}
         </button>
       </div>
 
@@ -102,7 +107,7 @@ export default function SupportTickets() {
         
         {/* Tickets List (Left Column) */}
         <div className="lg:col-span-1 flex flex-col gap-4">
-          <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest px-2">Your Tickets</h3>
+          <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest px-2">{t.dashboard.yourTickets}</h3>
           
           {tickets.map((ticket) => {
             const config = getStatusBadge(ticket.status);
@@ -119,12 +124,12 @@ export default function SupportTickets() {
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-xs font-mono font-bold text-gray-400">{ticket.id}</span>
                   <span className={`text-[10px] font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full flex items-center gap-1 ${config.bg} ${config.color}`}>
-                    {config.icon} {ticket.status}
+                    {config.icon} {config.label}
                   </span>
                 </div>
                 <h4 className="font-bold text-gray-900 text-base mb-2 line-clamp-1">{ticket.subject}</h4>
                 <div className="flex items-center justify-between text-xs text-gray-400 font-medium">
-                  <span>{ticket.category}</span>
+                  <span>{categoryLabel(ticket.category)}</span>
                   <span>{ticket.date}</span>
                 </div>
               </div>
@@ -166,7 +171,8 @@ export default function SupportTickets() {
               <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
                 <input 
                   type="text" 
-                  placeholder="Type your reply..." 
+                  placeholder={t.dashboard.typeReply} 
+                  dir={t.dir}
                   className="flex-1 bg-gray-50 border border-gray-200 rounded-2xl py-3 px-4 text-sm font-medium text-gray-900 focus:outline-none focus:border-blue-500 transition-all"
                 />
                 <button className="w-12 h-12 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl flex items-center justify-center shrink-0 transition-colors shadow-sm">
@@ -178,8 +184,8 @@ export default function SupportTickets() {
           ) : (
             <div className="bg-white border border-gray-200 rounded-[2rem] p-12 flex flex-col items-center justify-center text-center h-[600px]">
               <MessageSquare className="w-16 h-16 text-gray-300 mb-4" />
-              <h3 className="text-xl font-black text-gray-900 mb-2">Select a ticket</h3>
-              <p className="text-gray-500 font-medium max-w-sm">Choose a support ticket from the left list to view the conversation details.</p>
+              <h3 className="text-xl font-black text-gray-900 mb-2">{t.dashboard.selectTicket}</h3>
+              <p className="text-gray-500 font-medium max-w-sm">{t.dashboard.selectTicketSub}</p>
             </div>
           )}
         </div>
@@ -195,36 +201,38 @@ export default function SupportTickets() {
               <X className="w-5 h-5" />
             </button>
 
-            <h3 className="text-2xl font-black text-gray-900 mb-2">Open New Ticket</h3>
-            <p className="text-sm text-gray-500 font-medium mb-6">Describe your issue and our team will respond shortly.</p>
+            <h3 className="text-2xl font-black text-gray-900 mb-2">{t.dashboard.openNewTicket}</h3>
+            <p className="text-sm text-gray-500 font-medium mb-6">{t.dashboard.describeIssue}</p>
 
             <form onSubmit={handleCreateTicket} className="flex flex-col gap-4">
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">Subject</label>
+                <label className="block text-sm font-bold text-gray-700 mb-2">{t.dashboard.subject}</label>
                 <input 
                   type="text" 
                   value={newSubject}
                   onChange={(e) => setNewSubject(e.target.value)}
-                  placeholder="e.g., Payment verification issue" 
+                  placeholder={t.dashboard.subjectPlaceholder} 
+                  dir={t.dir}
                   className="w-full bg-gray-50 border border-gray-200 rounded-2xl py-3 px-4 text-sm font-medium text-gray-900 focus:outline-none focus:border-blue-500 transition-all"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">Message</label>
+                <label className="block text-sm font-bold text-gray-700 mb-2">{t.dashboard.message}</label>
                 <textarea 
                   rows="4" 
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
-                  placeholder="Provide as much detail as possible..." 
+                  placeholder={t.dashboard.messagePlaceholder} 
+                  dir={t.dir}
                   className="w-full bg-gray-50 border border-gray-200 rounded-2xl p-4 text-sm font-medium text-gray-900 focus:outline-none focus:border-blue-500 transition-all resize-none"
                   required
                 ></textarea>
               </div>
 
               <button type="submit" className="w-full bg-blue-600 hover:bg-blue-500 text-white py-4 rounded-2xl font-bold text-sm transition-all shadow-[0_10px_25px_rgba(37,99,235,0.25)] mt-2">
-                Submit Ticket
+                {t.dashboard.submitTicket}
               </button>
             </form>
 
