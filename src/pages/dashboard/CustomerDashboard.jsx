@@ -7,8 +7,8 @@ import {
   User, LogOut, Bell, ChevronRight, Zap, CheckCircle2, 
   Clock, CreditCard, Sparkles, AlertCircle
 } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
-import { useLanguage } from '../context/LanguageContext';
+import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 
 // ==========================================
 // 1. Mock Data (بيانات وهمية للتجربة)
