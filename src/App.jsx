@@ -9,6 +9,13 @@ import Products from './pages/Products';
 import Instagram from './pages/Instagram';
 import Facebook from './pages/Facebook';
 import TikTok from './pages/TikTok';
+import YouTube from './pages/YouTube';
+import Netflix from './pages/Netflix';
+import Spotify from './pages/Spotify';
+import Shahid from './pages/Shahid';
+import ChatGPT from './pages/ChatGPT';
+import Canva from './pages/Canva';
+import Coursera from './pages/Coursera';
 import Auth from './pages/Auth';
 import ContactUs from './pages/ContactUs';
 import Navbar from './components/layout/Navbar';
@@ -33,6 +40,15 @@ export default function App() {
       <Route path="/products/instagram" element={<Instagram />} />
       <Route path="/products/facebook" element={<Facebook />} />
       <Route path="/products/tiktok" element={<TikTok />} />
+      <Route path="/products/youtube" element={<YouTube />} />
+
+      {/* صفحات الاشتراكات */}
+      <Route path="/products/netflix" element={<Netflix />} />
+      <Route path="/products/spotify" element={<Spotify />} />
+      <Route path="/products/shahid" element={<Shahid />} />
+      <Route path="/products/chatgpt" element={<ChatGPT />} />
+      <Route path="/products/canva" element={<Canva />} />
+      <Route path="/products/coursera" element={<Coursera />} />
 
       {/* صفحة تسجيل الدخول */}
       <Route path="/auth" element={<Auth />} />

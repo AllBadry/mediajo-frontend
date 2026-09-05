@@ -4,18 +4,17 @@ import { useGSAP } from '@gsap/react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { 
-  Sparkles, MonitorPlay, Cpu, TrendingUp, Zap, 
-  ArrowRight, ShieldCheck, CheckCircle2, Star, Lock, Wallet, Music
+  Sparkles, MonitorPlay, TrendingUp, Zap, 
+  ArrowRight, ShieldCheck, CheckCircle2, Star, Lock, Wallet
 } from 'lucide-react';
+import { SiInstagram, SiTiktok, SiYoutube, SiFacebook, SiNetflix, SiSpotify, SiCanvas, SiCoursera } from 'react-icons/si';
 
 
 // ==========================================
 // الأيقونات 
 // ==========================================
-const InstagramIcon = ({ className }) => (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect width="20" height="20" x="2" y="2" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" x2="17.51" y1="6.5" y2="6.5" /></svg>);
-const YoutubeIcon = ({ className }) => (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z" /><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" /></svg>);
-const TiktokIcon = ({ className }) => (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M9 12a4 4 0 1 0 4 4V4h3.5c.08 1.44 1.3 2.5 2.5 2.5V9.5c-1.9 0-3.5-1.1-4-2.5v9a6 6 0 1 1-6-6v3a3 3 0 1 0 3 3z" /></svg>);
-const FacebookIcon = ({ className }) => (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" /></svg>);
+const ChatGPTIcon = ({ className }) => (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M12 2v6" /><path d="M12 16v6" /><path d="M2 7v4a3 3 0 0 0 3 3h1" /><path d="M18 14h1a3 3 0 0 0 3-3V7" /><path d="M5.5 3.7 12 12l-6.5 8.3" /><path d="M18.5 3.7 12 12l6.5 8.3" /></svg>);
+const ShahidIcon = ({ className }) => (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10" /><path d="M10 8l6 4-6 4Z" fill="currentColor" stroke="none" /><path d="M7 6.5s-2 2.5-2 5.5 2 5.5 2 5.5" /><path d="M17 6.5s2 2.5 2 5.5-2 5.5-2 5.5" /></svg>);
 
 export default function Products() {
   const container = useRef();
@@ -27,7 +26,7 @@ export default function Products() {
   const socialPlatforms = [
     {
       name: 'Instagram',
-      icon: <InstagramIcon className="w-8 h-8 text-white" />,
+      icon: <SiInstagram className="w-8 h-8 text-white" />,
       gradient: 'from-pink-500 to-purple-500',
       link: '/products/instagram',
       popular: true,
@@ -40,7 +39,7 @@ export default function Products() {
     },
     {
       name: 'TikTok',
-      icon: <TiktokIcon className="w-8 h-8 text-white" />,
+      icon: <SiTiktok className="w-8 h-8 text-white" />,
       gradient: 'from-gray-900 to-gray-700',
       link: '/products/tiktok',
       services: [
@@ -52,7 +51,7 @@ export default function Products() {
     },
     {
       name: 'YouTube',
-      icon: <YoutubeIcon className="w-8 h-8 text-white" />,
+      icon: <SiYoutube className="w-8 h-8 text-white" />,
       gradient: 'from-red-500 to-orange-500',
       link: '/products/youtube',
       services: [
@@ -64,7 +63,7 @@ export default function Products() {
     },
     {
       name: 'Facebook',
-      icon: <FacebookIcon className="w-8 h-8 text-white" />,
+      icon: <SiFacebook className="w-8 h-8 text-white" />,
       gradient: 'from-blue-600 to-blue-400',
       link: '/products/facebook',
       services: [
@@ -90,12 +89,12 @@ export default function Products() {
   // بيانات الأسعار - الاشتراكات
   // ==========================================
   const subscriptions = [
-    { name: 'Netflix Premium', category: 'Entertainment', icon: <MonitorPlay className="w-8 h-8 text-red-500" />, price: '5.0', period: '/month', features: ['4K Ultra HD', '4 Devices', 'Private Profile'] },
-    { name: 'Spotify Premium', category: 'Audio', icon: <Music className="w-8 h-8 text-green-500" />, price: '2.5', period: '/month', features: ['No Ads', 'Offline Download', 'High Quality'] },
-    { name: 'Shahid VIP', category: 'Streaming', icon: <MonitorPlay className="w-8 h-8 text-orange-500" />, price: '4.0', period: '/month', features: ['Exclusive Shows', 'Live Sports', 'Ad-Free'] },
-    { name: 'ChatGPT Plus', category: 'AI Tools', icon: <Sparkles className="w-8 h-8 text-emerald-500" />, price: '7.0', period: '/month', features: ['GPT-4', 'DALL-E 3', 'Priority Access'] },
-    { name: 'Canva Pro', category: 'Design', icon: <Cpu className="w-8 h-8 text-blue-500" />, price: '3.0', period: '/month', features: ['Pro Templates', 'Transparent BGs', 'BG Erase'] },
-    { name: 'Coursera Plus', category: 'Education', icon: <Sparkles className="w-8 h-8 text-indigo-500" />, price: '8.0', period: '/month', features: ['Certificates', 'Unlimited Courses', 'Applied Projects'] },
+    { id: 'netflix', name: 'Netflix Premium', category: 'Entertainment', icon: <SiNetflix className="w-8 h-8 text-[#E50914]" />, price: '5.0', period: '/month', features: ['4K Ultra HD', '4 Devices', 'Private Profile'] },
+    { id: 'spotify', name: 'Spotify Premium', category: 'Audio', icon: <SiSpotify className="w-8 h-8 text-[#1DB954]" />, price: '2.5', period: '/month', features: ['No Ads', 'Offline Download', 'High Quality'] },
+    { id: 'shahid', name: 'Shahid VIP', category: 'Streaming', icon: <ShahidIcon className="w-8 h-8 text-[#E6091C]" />, price: '4.0', period: '/month', features: ['Exclusive Shows', 'Live Sports', 'Ad-Free'] },
+    { id: 'chatgpt', name: 'ChatGPT Plus', category: 'AI Tools', icon: <ChatGPTIcon className="w-8 h-8 text-[#10A37F]" />, price: '7.0', period: '/month', features: ['GPT-4', 'DALL-E 3', 'Priority Access'] },
+    { id: 'canva', name: 'Canva Pro', category: 'Design', icon: <SiCanvas className="w-8 h-8 text-[#00C4CC]" />, price: '3.0', period: '/month', features: ['Pro Templates', 'Transparent BGs', 'BG Erase'] },
+    { id: 'coursera', name: 'Coursera Plus', category: 'Education', icon: <SiCoursera className="w-8 h-8 text-[#0056D2]" />, price: '8.0', period: '/month', features: ['Certificates', 'Unlimited Courses', 'Applied Projects'] },
   ];
 
   const processSteps = [
@@ -374,7 +373,7 @@ export default function Products() {
                   ))}
                 </div>
 
-                <Link to={`/products/${sub.name.toLowerCase().replace(/\s+/g, '-')}`} className="flex items-center justify-center gap-2 w-full py-3 bg-gray-900 text-white rounded-full font-bold text-sm hover:bg-blue-600 transition-colors duration-300">
+                <Link to={`/products/${sub.id}`} className="flex items-center justify-center gap-2 w-full py-3 bg-gray-900 text-white rounded-full font-bold text-sm hover:bg-blue-600 transition-colors duration-300">
                   {t.products.viewDetails} <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>

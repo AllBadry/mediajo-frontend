@@ -35,7 +35,14 @@ jobs:
                      dist/contact \
                      dist/products/instagram \
                      dist/products/facebook \
-                     dist/products/tiktok
+                     dist/products/tiktok \
+                     dist/products/youtube \
+                     dist/products/netflix \
+                     dist/products/spotify \
+                     dist/products/shahid \
+                     dist/products/chatgpt \
+                     dist/products/canva \
+                     dist/products/coursera
 
           # 1. من نحن
           cp dist/index.html dist/about/index.html
@@ -64,6 +71,34 @@ jobs:
           # 7. تواصل معنا
           cp dist/index.html dist/contact/index.html
           sed -i 's/<title>.*<\/title>/<title>تواصل معنا | ميديا جو<\/title><link rel="canonical" href="https:\/\/mediajo.org\/contact" \/>/' dist/contact/index.html
+
+          # 8. يوتيوب
+          cp dist/index.html dist/products/youtube/index.html
+          sed -i 's/<title>.*<\/title>/<title>خدمات يوتيوب | ميديا جو<\/title><link rel="canonical" href="https:\/\/mediajo.org\/products\/youtube" \/>/' dist/products/youtube/index.html
+
+          # 9. نتفليكس
+          cp dist/index.html dist/products/netflix/index.html
+          sed -i 's/<title>.*<\/title>/<title>اشتراك نتفليكس | ميديا جو<\/title><link rel="canonical" href="https:\/\/mediajo.org\/products\/netflix" \/>/' dist/products/netflix/index.html
+
+          # 10. سبوتيفاي
+          cp dist/index.html dist/products/spotify/index.html
+          sed -i 's/<title>.*<\/title>/<title>اشتراك سبوتيفاي | ميديا جو<\/title><link rel="canonical" href="https:\/\/mediajo.org\/products\/spotify" \/>/' dist/products/spotify/index.html
+
+          # 11. شاهد
+          cp dist/index.html dist/products/shahid/index.html
+          sed -i 's/<title>.*<\/title>/<title>اشتراك شاهد | ميديا جو<\/title><link rel="canonical" href="https:\/\/mediajo.org\/products\/shahid" \/>/' dist/products/shahid/index.html
+
+          # 12. تشات جي بي تي
+          cp dist/index.html dist/products/chatgpt/index.html
+          sed -i 's/<title>.*<\/title>/<title>اشتراك تشات جي بي تي | ميديا جو<\/title><link rel="canonical" href="https:\/\/mediajo.org\/products\/chatgpt" \/>/' dist/products/chatgpt/index.html
+
+          # 13. كانفا
+          cp dist/index.html dist/products/canva/index.html
+          sed -i 's/<title>.*<\/title>/<title>اشتراك كانفا | ميديا جو<\/title><link rel="canonical" href="https:\/\/mediajo.org\/products\/canva" \/>/' dist/products/canva/index.html
+
+          # 14. كورسيرا
+          cp dist/index.html dist/products/coursera/index.html
+          sed -i 's/<title>.*<\/title>/<title>اشتراك كورسيرا | ميديا جو<\/title><link rel="canonical" href="https:\/\/mediajo.org\/products\/coursera" \/>/' dist/products/coursera/index.html
 
       - name: Deploy to Main Branch 🚀
         uses: peaceiris/actions-gh-pages@v4

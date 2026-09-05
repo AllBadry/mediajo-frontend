@@ -281,6 +281,95 @@
               ]
             }
           ]
+        },
+        {
+          "id": "youtube",
+          "name": "YouTube",
+          "nameAr": "يوتيوب",
+          "gradient": "from-red-500 to-orange-500",
+          "sections": [
+            {
+              "id": "followers",
+              "name": "Subscribers",
+              "nameAr": "المشتركين",
+              "groups": [
+                {
+                  "id": "subscribers",
+                  "name": "Subscribers",
+                  "nameAr": "مشتركين",
+                  "hint": "Subscribers with refill",
+                  "variants": [
+                    { "name": null, "tiers": [
+                      { "qty": "1,000", "price": 8.00 },
+                      { "qty": "5,000", "price": 35.00 },
+                      { "qty": "10,000", "price": 60.00 },
+                      { "qty": "20,000", "price": 110.00 }
+                    ] }
+                  ]
+                },
+                {
+                  "id": "no-warranty",
+                  "name": "No Warranty",
+                  "nameAr": "بدون ضمان",
+                  "hint": "Best value",
+                  "variants": [
+                    { "name": null, "tiers": [
+                      { "qty": "1,000", "price": 6.00 },
+                      { "qty": "5,000", "price": 25.00 },
+                      { "qty": "10,000", "price": 48.00 },
+                      { "qty": "20,000", "price": 90.00 }
+                    ] }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "engagement",
+              "name": "Engagement",
+              "nameAr": "التفاعل",
+              "groups": [
+                {
+                  "id": "views",
+                  "name": "Views",
+                  "nameAr": "مشاهدات",
+                  "hint": "Views on videos",
+                  "variants": [
+                    { "name": null, "tiers": [
+                      { "qty": "1,000", "price": 3.00 },
+                      { "qty": "10,000", "price": 20.00 },
+                      { "qty": "50,000", "price": 85.00 },
+                      { "qty": "100,000", "price": 150.00 }
+                    ] }
+                  ]
+                },
+                {
+                  "id": "likes",
+                  "name": "Likes",
+                  "nameAr": "إعجابات",
+                  "hint": "Likes on content",
+                  "variants": [
+                    { "name": null, "tiers": [
+                      { "qty": "1,000", "price": 2.50 },
+                      { "qty": "5,000", "price": 10.00 },
+                      { "qty": "10,000", "price": 18.00 }
+                    ] }
+                  ]
+                },
+                {
+                  "id": "watch-hours",
+                  "name": "Watch Hours",
+                  "nameAr": "ساعات المشاهدة",
+                  "hint": "Watch time for monetization",
+                  "variants": [
+                    { "name": null, "tiers": [
+                      { "qty": "1,000", "price": 10.00 },
+                      { "qty": "4,000", "price": 35.00 }
+                    ] }
+                  ]
+                }
+              ]
+            }
+          ]
         }
       ]
     },
@@ -288,7 +377,218 @@
       "id": "subscriptions",
       "name": "Subscriptions & Accounts",
       "nameAr": "حسابات و اشتراكات",
-      "platforms": []
+      "platforms": [
+        {
+          "id": "netflix",
+          "name": "Netflix Premium",
+          "nameAr": "نتفليكس بريميوم",
+          "gradient": "from-red-600 to-red-400",
+          "sections": [
+            {
+              "id": "plans",
+              "name": "Subscription Plans",
+              "nameAr": "خطط الاشتراك",
+              "groups": [
+                {
+                  "id": "premium",
+                  "name": "Premium",
+                  "nameAr": "بريميوم",
+                  "hint": "4K Ultra HD · 4 Devices",
+                  "variants": [
+                    { "name": "Monthly", "tiers": [
+                      { "qty": "1 Month", "price": 5.00 }
+                    ] },
+                    { "name": "Quarterly", "tiers": [
+                      { "qty": "3 Months", "price": 14.00 }
+                    ] },
+                    { "name": "Semi-Annual", "tiers": [
+                      { "qty": "6 Months", "price": 25.00 }
+                    ] },
+                    { "name": "Annual", "tiers": [
+                      { "qty": "12 Months", "price": 48.00 }
+                    ] }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "spotify",
+          "name": "Spotify Premium",
+          "nameAr": "سبوتيفاي بريميوم",
+          "gradient": "from-green-600 to-emerald-400",
+          "sections": [
+            {
+              "id": "plans",
+              "name": "Subscription Plans",
+              "nameAr": "خطط الاشتراك",
+              "groups": [
+                {
+                  "id": "premium",
+                  "name": "Premium",
+                  "nameAr": "بريميوم",
+                  "hint": "No Ads · Offline · High Quality",
+                  "variants": [
+                    { "name": "Monthly", "tiers": [
+                      { "qty": "1 Month", "price": 2.50 }
+                    ] },
+                    { "name": "Quarterly", "tiers": [
+                      { "qty": "3 Months", "price": 7.00 }
+                    ] },
+                    { "name": "Semi-Annual", "tiers": [
+                      { "qty": "6 Months", "price": 12.00 }
+                    ] },
+                    { "name": "Annual", "tiers": [
+                      { "qty": "12 Months", "price": 22.00 }
+                    ] }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "shahid",
+          "name": "Shahid VIP",
+          "nameAr": "شاهد VIP",
+          "gradient": "from-orange-500 to-amber-400",
+          "sections": [
+            {
+              "id": "plans",
+              "name": "Subscription Plans",
+              "nameAr": "خطط الاشتراك",
+              "groups": [
+                {
+                  "id": "vip",
+                  "name": "VIP",
+                  "nameAr": "VIP",
+                  "hint": "Exclusive Shows · Live Sports",
+                  "variants": [
+                    { "name": "Monthly", "tiers": [
+                      { "qty": "1 Month", "price": 4.00 }
+                    ] },
+                    { "name": "Quarterly", "tiers": [
+                      { "qty": "3 Months", "price": 11.00 }
+                    ] },
+                    { "name": "Semi-Annual", "tiers": [
+                      { "qty": "6 Months", "price": 19.00 }
+                    ] },
+                    { "name": "Annual", "tiers": [
+                      { "qty": "12 Months", "price": 36.00 }
+                    ] }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "chatgpt",
+          "name": "ChatGPT Plus",
+          "nameAr": "تشات جي بي تي بلس",
+          "gradient": "from-emerald-600 to-teal-400",
+          "sections": [
+            {
+              "id": "plans",
+              "name": "Subscription Plans",
+              "nameAr": "خطط الاشتراك",
+              "groups": [
+                {
+                  "id": "plus",
+                  "name": "Plus",
+                  "nameAr": "بلس",
+                  "hint": "GPT-4 · DALL-E 3 · Priority Access",
+                  "variants": [
+                    { "name": "Monthly", "tiers": [
+                      { "qty": "1 Month", "price": 7.00 }
+                    ] },
+                    { "name": "Quarterly", "tiers": [
+                      { "qty": "3 Months", "price": 19.00 }
+                    ] },
+                    { "name": "Semi-Annual", "tiers": [
+                      { "qty": "6 Months", "price": 35.00 }
+                    ] },
+                    { "name": "Annual", "tiers": [
+                      { "qty": "12 Months", "price": 67.00 }
+                    ] }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "canva",
+          "name": "Canva Pro",
+          "nameAr": "كانفا برو",
+          "gradient": "from-cyan-500 to-blue-500",
+          "sections": [
+            {
+              "id": "plans",
+              "name": "Subscription Plans",
+              "nameAr": "خطط الاشتراك",
+              "groups": [
+                {
+                  "id": "pro",
+                  "name": "Pro",
+                  "nameAr": "برو",
+                  "hint": "Pro Templates · BG Remover · Brand Kit",
+                  "variants": [
+                    { "name": "Monthly", "tiers": [
+                      { "qty": "1 Month", "price": 3.00 }
+                    ] },
+                    { "name": "Quarterly", "tiers": [
+                      { "qty": "3 Months", "price": 8.00 }
+                    ] },
+                    { "name": "Semi-Annual", "tiers": [
+                      { "qty": "6 Months", "price": 14.00 }
+                    ] },
+                    { "name": "Annual", "tiers": [
+                      { "qty": "12 Months", "price": 26.00 }
+                    ] }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "coursera",
+          "name": "Coursera Plus",
+          "nameAr": "كورسيرا بلس",
+          "gradient": "from-indigo-600 to-blue-500",
+          "sections": [
+            {
+              "id": "plans",
+              "name": "Subscription Plans",
+              "nameAr": "خطط الاشتراك",
+              "groups": [
+                {
+                  "id": "plus",
+                  "name": "Plus",
+                  "nameAr": "بلس",
+                  "hint": "Unlimited Courses · Certificates",
+                  "variants": [
+                    { "name": "Monthly", "tiers": [
+                      { "qty": "1 Month", "price": 8.00 }
+                    ] },
+                    { "name": "Quarterly", "tiers": [
+                      { "qty": "3 Months", "price": 21.00 }
+                    ] },
+                    { "name": "Semi-Annual", "tiers": [
+                      { "qty": "6 Months", "price": 39.00 }
+                    ] },
+                    { "name": "Annual", "tiers": [
+                      { "qty": "12 Months", "price": 74.00 }
+                    ] }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   ]
 }
