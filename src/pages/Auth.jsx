@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { LogIn, Mail, Lock as LockIcon, User, ShieldCheck, AlertCircle, Loader2 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 
 // إعداد Axios ليتعامل مع الكوكيز عبر الـ Subdomains
@@ -45,6 +46,7 @@ const GoogleIcon = ({ className }) => (
 export default function Auth() {
   const { t } = useLanguage();
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [mode, setMode] = useState('login');
 
   // إدارة حالات النموذج (State Management)
@@ -78,8 +80,8 @@ export default function Auth() {
       });
       
       if (response.data.success) {
-        // تم تسجيل الدخول والكوكيز حُفظت تلقائياً
-        // يمكنك حفظ بيانات المستخدم في Context هنا
+        // حفظ بيانات المستخدم في الـ Context ثم التوجيه للداشبورد
+        login(response.data.user || { name: formData.email.split('@')[0], email: formData.email });
         navigate('/dashboard'); // التوجيه بعد النجاح
       }
     } catch (err) {

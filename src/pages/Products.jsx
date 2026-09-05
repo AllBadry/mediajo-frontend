@@ -4,7 +4,7 @@ import { useGSAP } from '@gsap/react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { 
-  Sparkles, MonitorPlay, TrendingUp, Zap, 
+  MonitorPlay, TrendingUp, Zap, 
   ArrowRight, ShieldCheck, CheckCircle2, Star, Lock, Wallet
 } from 'lucide-react';
 import { SiInstagram, SiTiktok, SiYoutube, SiFacebook, SiNetflix, SiSpotify, SiCanvas, SiCoursera } from 'react-icons/si';
@@ -192,13 +192,13 @@ export default function Products() {
             <div className="hidden md:flex items-center gap-3 px-5 py-3 bg-gray-50 rounded-full border border-gray-200">
               <div className="flex -space-x-1">
                 <div className="w-7 h-7 bg-gradient-to-br from-pink-500 to-purple-500 rounded-full border-2 border-white flex items-center justify-center">
-                  <InstagramIcon className="w-3 h-3 text-white" />
+                  <SiInstagram className="w-3 h-3 text-white" />
                 </div>
                 <div className="w-7 h-7 bg-gradient-to-br from-red-500 to-orange-500 rounded-full border-2 border-white flex items-center justify-center">
-                  <YoutubeIcon className="w-3 h-3 text-white" />
+                  <SiYoutube className="w-3 h-3 text-white" />
                 </div>
                 <div className="w-7 h-7 bg-gradient-to-br from-blue-600 to-blue-400 rounded-full border-2 border-white flex items-center justify-center">
-                  <FacebookIcon className="w-3 h-3 text-white" />
+                  <SiFacebook className="w-3 h-3 text-white" />
                 </div>
               </div>
               <span className="text-sm font-bold text-gray-700">{t.products.platforms}</span>

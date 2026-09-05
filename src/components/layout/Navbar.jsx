@@ -1,5 +1,6 @@
 import { 
   LogIn, 
+  LogOut,
   ChevronDown, 
   MonitorPlay, 
   Share2, 
@@ -8,10 +9,12 @@ import {
   Sparkles,
   Cpu,
   Headphones,
-  Film
+  Film,
+  LayoutDashboard
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
+import { useAuth } from '../../context/AuthContext';
 import { Languages } from 'lucide-react';
 
 // ==========================================
@@ -48,6 +51,7 @@ export default function Navbar() {
   const location = useLocation();
   const isActive = (path) => location.pathname === path;
   const { t, lang, toggleLang } = useLanguage();
+  const { isAuthenticated, user, logout } = useAuth();
 
   return (
     <nav dir={t.dir} className="bg-white/90 backdrop-blur-xl border-b border-gray-100 px-6 lg:px-12 py-4 flex justify-between items-center sticky top-0 z-50">
@@ -261,13 +265,32 @@ export default function Navbar() {
           {lang === 'en' ? t.toggle.ar : t.toggle.en}
         </button>
 
-        <Link 
-          to="/auth"
-          className="flex items-center gap-2 bg-[#1e2022] hover:bg-black text-white px-6 py-2.5 rounded-full font-medium text-sm transition-all shadow-[0_4px_10px_rgba(0,0,0,0.1)] hover:-translate-y-0.5"
-        >
-          <span>{t.nav.signIn}</span>
-          <LogIn className="w-4 h-4" />
-        </Link>
+        {isAuthenticated ? (
+          <>
+            <Link 
+              to="/dashboard"
+              className={`flex items-center gap-2 bg-[#1e2022] hover:bg-black text-white px-6 py-2.5 rounded-full font-medium text-sm transition-all shadow-[0_4px_10px_rgba(0,0,0,0.1)] hover:-translate-y-0.5 ${isActive('/dashboard') ? 'ring-2 ring-blue-500' : ''}`}
+            >
+              <LayoutDashboard className="w-4 h-4" />
+              <span>{user?.name || t.nav.dashboard}</span>
+            </Link>
+            <button
+              onClick={logout}
+              title={t.auth.signOut}
+              className="flex items-center justify-center w-11 h-11 rounded-full border border-gray-200 text-gray-500 hover:text-red-600 hover:border-red-200 transition-all"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
+          </>
+        ) : (
+          <Link 
+            to="/auth"
+            className="flex items-center gap-2 bg-[#1e2022] hover:bg-black text-white px-6 py-2.5 rounded-full font-medium text-sm transition-all shadow-[0_4px_10px_rgba(0,0,0,0.1)] hover:-translate-y-0.5"
+          >
+            <span>{t.nav.signIn}</span>
+            <LogIn className="w-4 h-4" />
+          </Link>
+        )}
       </div>
 
     </nav>

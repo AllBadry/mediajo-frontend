@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { 
@@ -7,16 +7,14 @@ import {
   User, LogOut, Bell, ChevronRight, Zap, CheckCircle2, 
   Clock, CreditCard, Sparkles, AlertCircle
 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 
 // ==========================================
 // 1. Mock Data (بيانات وهمية للتجربة)
 // ==========================================
-const userData = {
-  name: "Adam",
-  balance: 45.50,
-  activeOrders: 2,
-  unreadMessages: 1,
-};
+const balance = 45.50;
+const unreadMessages = 1;
 
 const recentOrders = [
   { id: "ORD-992X", service: "10,000 Instagram Followers", status: "Processing", date: "Today", price: 12.00, color: "text-blue-500", bg: "bg-blue-50" },
@@ -27,6 +25,16 @@ const recentOrders = [
 export default function CustomerDashboard() {
   const container = useRef();
   const [activeTab, setActiveTab] = useState('overview'); // للتحكم في القائمة الجانبية
+  const { user, logout } = useAuth();
+  const { t } = useLanguage();
+  const navigate = useNavigate();
+
+  const name = user?.name || 'User';
+
+  const handleSignOut = () => {
+    logout();
+    navigate('/');
+  };
 
   // ==========================================
   // GSAP Animations
@@ -77,7 +85,7 @@ export default function CustomerDashboard() {
             { id: 'overview', icon: <LayoutDashboard className="w-5 h-5" />, label: 'Overview' },
             { id: 'orders', icon: <ShoppingBag className="w-5 h-5" />, label: 'My Orders' },
             { id: 'cart', icon: <ShoppingCart className="w-5 h-5" />, label: 'Cart' },
-            { id: 'messages', icon: <MessageSquare className="w-5 h-5" />, label: 'Support Tickets', badge: userData.unreadMessages },
+            { id: 'messages', icon: <MessageSquare className="w-5 h-5" />, label: 'Support Tickets', badge: unreadMessages },
           ].map((item) => (
             <button
               key={item.id}
@@ -106,8 +114,8 @@ export default function CustomerDashboard() {
           <button className="flex items-center gap-3 px-4 py-3 w-full text-left rounded-xl hover:bg-gray-100 text-gray-600 font-medium text-sm transition-colors">
             <User className="w-5 h-5" /> Profile Settings
           </button>
-          <button className="flex items-center gap-3 px-4 py-3 w-full text-left rounded-xl hover:bg-red-50 text-red-600 font-medium text-sm transition-colors mt-1">
-            <LogOut className="w-5 h-5" /> Sign Out
+          <button onClick={handleSignOut} className="flex items-center gap-3 px-4 py-3 w-full text-left rounded-xl hover:bg-red-50 text-red-600 font-medium text-sm transition-colors mt-1">
+            <LogOut className="w-5 h-5" /> {t.auth.signOut}
           </button>
         </div>
       </aside>
@@ -153,7 +161,7 @@ export default function CustomerDashboard() {
                 <span className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></span> System Online
               </p>
               <h2 className="text-3xl md:text-4xl font-black text-white tracking-tight mb-2">
-                Welcome back, {userData.name}!
+                Welcome back, {name}!
               </h2>
               <p className="text-gray-400 font-medium">Ready to boost your digital presence today?</p>
             </div>
@@ -162,7 +170,7 @@ export default function CustomerDashboard() {
               <div>
                 <p className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">Wallet Balance</p>
                 <div className="flex items-baseline gap-1">
-                  <span className="text-3xl font-black text-white">{userData.balance.toFixed(2)}</span>
+                  <span className="text-3xl font-black text-white">{balance.toFixed(2)}</span>
                   <span className="text-sm font-bold text-gray-400">JOD</span>
                 </div>
               </div>
@@ -243,14 +251,14 @@ export default function CustomerDashboard() {
                     </div>
                     <h3 className="text-xl font-black text-gray-900">Support</h3>
                   </div>
-                  {userData.unreadMessages > 0 && (
+                  {unreadMessages > 0 && (
                     <span className="w-6 h-6 bg-red-500 text-white text-xs font-bold flex items-center justify-center rounded-full">
-                      {userData.unreadMessages}
+                      {unreadMessages}
                     </span>
                   )}
                 </div>
                 
-                {userData.unreadMessages > 0 ? (
+                {unreadMessages > 0 ? (
                   <div className="bg-orange-50/50 border border-orange-100 rounded-xl p-4 flex gap-3">
                     <AlertCircle className="w-5 h-5 text-orange-500 shrink-0" />
                     <div>

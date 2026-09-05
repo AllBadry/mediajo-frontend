@@ -1,6 +1,7 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import ScrollToTop from './components/ScrollToTop';
+import { AuthProvider, useAuth } from './context/AuthContext';
 
 // استيراد الصفحات التي قمنا ببنائها
 import Home from './pages/Home';
@@ -18,14 +19,24 @@ import Canva from './pages/Canva';
 import Coursera from './pages/Coursera';
 import Auth from './pages/Auth';
 import ContactUs from './pages/ContactUs';
+import CustomerDashboard from './pages/CustomerDashboard';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
-export default function App() {
+
+// حماية مسار الداشبورد: لا يمكن الوصول إلا عند تسجيل الدخول
+function ProtectedRoute({ children }) {
+  const { isAuthenticated } = useAuth();
+  return isAuthenticated ? children : <Navigate to="/auth" replace />;
+}
+
+// توجيه صفحة تسجيل الدخول: لو المستخدم مسجل بالفعل يذهب للداشبورد مباشرة
+function GuestRoute({ children }) {
+  const { isAuthenticated } = useAuth();
+  return isAuthenticated ? <Navigate to="/dashboard" replace /> : children;
+}
+
+function AppRoutes() {
   return (
-    <>
-    <ScrollToTop />
-    <Navbar /> 
-   
     <Routes>
       {/* الصفحة الرئيسية */}
       <Route path="/" element={<Home />} />
@@ -50,19 +61,25 @@ export default function App() {
       <Route path="/products/canva" element={<Canva />} />
       <Route path="/products/coursera" element={<Coursera />} />
 
+      {/* لوحة التحكم (محمية) */}
+      <Route path="/dashboard" element={<ProtectedRoute><CustomerDashboard /></ProtectedRoute>} />
+
       {/* صفحة تسجيل الدخول */}
-      <Route path="/auth" element={<Auth />} />
+      <Route path="/auth" element={<GuestRoute><Auth /></GuestRoute>} />
 
       {/* صفحة تواصل معنا */}
       <Route path="/contact" element={<ContactUs />} />
-
-      {/* يمكنك لاحقاً إضافة مسارات فرعية إذا أردت صفحات مخصصة لكل منتج */}
-      {/* <Route path="/products/instagram" element={<InstagramService />} /> */}
-      
-      {/* صفحة تواصل معنا (إذا قررت فصلها كصفحة مستقلة لاحقاً) */}
-      {/* <Route path="/contact" element={<ContactUs />} /> */}
     </Routes>
-    <Footer />
-    </>
+  );
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <ScrollToTop />
+      <Navbar />
+      <AppRoutes />
+      <Footer />
+    </AuthProvider>
   );
 }
