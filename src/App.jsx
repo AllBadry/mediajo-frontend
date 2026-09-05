@@ -3,7 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import ScrollToTop from './components/ScrollToTop';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
-// استيراد الصفحات التي قمنا ببنائها
+// الصفحات العامة
 import Home from './pages/Home';
 import AboutUs from './pages/AboutUs';
 import Products from './pages/Products';
@@ -19,17 +19,25 @@ import Canva from './pages/Canva';
 import Coursera from './pages/Coursera';
 import Auth from './pages/Auth';
 import ContactUs from './pages/ContactUs';
-import CustomerDashboard from './pages/CustomerDashboard';
+
+// تخطيط وصفحات لوحة التحكم المتداخلة
+import CustomerDashboardLayout from './layouts/CustomerDashboardLayout';
+import Overview from './pages/dashboard/Overview';
+import MyOrders from './pages/dashboard/MyOrders';
+import Cart from './pages/dashboard/Cart';
+import SupportTickets from './pages/dashboard/SupportTickets';
+import ProfileSettings from './pages/dashboard/ProfileSettings';
+
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 
-// حماية مسار الداشبورد: لا يمكن الوصول إلا عند تسجيل الدخول
+// حماية مسار الداشبورد
 function ProtectedRoute({ children }) {
   const { isAuthenticated } = useAuth();
   return isAuthenticated ? children : <Navigate to="/auth" replace />;
 }
 
-// توجيه صفحة تسجيل الدخول: لو المستخدم مسجل بالفعل يذهب للداشبورد مباشرة
+// توجيه صفحة تسجيل الدخول
 function GuestRoute({ children }) {
   const { isAuthenticated } = useAuth();
   return isAuthenticated ? <Navigate to="/dashboard" replace /> : children;
@@ -40,11 +48,7 @@ function AppRoutes() {
     <Routes>
       {/* الصفحة الرئيسية */}
       <Route path="/" element={<Home />} />
-      
-      {/* صفحة من نحن */}
       <Route path="/about" element={<AboutUs />} />
-      
-      {/* صفحة المنتجات (الرابط العام الذي طلبته) */}
       <Route path="/products" element={<Products />} />
 
       {/* صفحات المنصات */}
@@ -61,8 +65,14 @@ function AppRoutes() {
       <Route path="/products/canva" element={<Canva />} />
       <Route path="/products/coursera" element={<Coursera />} />
 
-      {/* لوحة التحكم (محمية) */}
-      <Route path="/dashboard" element={<ProtectedRoute><CustomerDashboard /></ProtectedRoute>} />
+      {/* 🚀 لوحة التحكم المتداخلة (محمية بالكامل) */}
+      <Route path="/dashboard" element={<ProtectedRoute><CustomerDashboardLayout /></ProtectedRoute>}>
+        <Route index element={<Overview />} />
+        <Route path="orders" element={<MyOrders />} />
+        <Route path="cart" element={<Cart />} />
+        <Route path="tickets" element={<SupportTickets />} />
+        <Route path="profile" element={<ProfileSettings />} />
+      </Route>
 
       {/* صفحة تسجيل الدخول */}
       <Route path="/auth" element={<GuestRoute><Auth /></GuestRoute>} />
