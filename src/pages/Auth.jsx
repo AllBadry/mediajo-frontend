@@ -89,6 +89,16 @@ export default function Auth() {
         navigate('/dashboard'); // التوجيه بعد النجاح
       }
     } catch (err) {
+      const code = err.response?.data?.code;
+      // الحساب غير مفعل: الانتقال لبطاقة إدخال كود التحقق المُرسل للبريد
+      if (code === 'EMAIL_NOT_VERIFIED') {
+        setFormData(prev => ({ ...prev, email: err.response.data.data?.email || prev.email }));
+        setVerificationCode('');
+        setSuccess(t.auth.resendSuccess);
+        setMode('verify');
+        setTimeout(() => codeRefs.current[0]?.focus(), 500);
+        return;
+      }
       setError(err.response?.data?.message || 'حدث خطأ غير متوقع');
     } finally {
       setLoading(false);
@@ -157,7 +167,6 @@ export default function Auth() {
     setError('');
     try {
       const response = await api.post('/api/auth/verify', {
-        email: formData.email,
         code: verificationCode
       });
 
