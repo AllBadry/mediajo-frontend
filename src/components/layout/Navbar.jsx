@@ -10,11 +10,13 @@ import {
   Cpu,
   Headphones,
   Film,
-  LayoutDashboard
+  LayoutDashboard,
+  ShoppingCart
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
 import { useAuth } from '../../context/AuthContext';
+import { useCartStore, selectItemCount } from '../../store/cartStore';
 import { Languages } from 'lucide-react';
 
 // ==========================================
@@ -52,6 +54,7 @@ export default function Navbar() {
   const isActive = (path) => location.pathname === path;
   const { t, lang, toggleLang } = useLanguage();
   const { isAuthenticated, user, logout } = useAuth();
+  const cartCount = useCartStore(selectItemCount);
 
   return (
     <nav dir={t.dir} className="bg-white/90 backdrop-blur-xl border-b border-gray-100 px-6 lg:px-12 py-4 flex justify-between items-center sticky top-0 z-50">
@@ -255,6 +258,20 @@ export default function Navbar() {
           الأكشن الجانبي + زر اللغة
           ========================================= */}
       <div className="flex items-center gap-3">
+        {/* أيقونة السلة */}
+        <Link
+          to="/dashboard/cart"
+          title="Cart"
+          className="relative flex items-center justify-center w-11 h-11 rounded-full border border-gray-200 text-gray-600 hover:text-black hover:bg-gray-50 hover:border-gray-300 transition-all"
+        >
+          <ShoppingCart className="w-4.5 h-4.5" />
+          {cartCount > 0 && (
+            <span className="absolute -top-1 -right-1 rtl:-right-auto rtl:-left-1 min-w-5 h-5 px-1 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 text-white text-[11px] font-bold flex items-center justify-center shadow-sm">
+              {cartCount}
+            </span>
+          )}
+        </Link>
+
         {/* زر اللغة */}
         <button
           onClick={toggleLang}

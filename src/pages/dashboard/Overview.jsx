@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
+import { useCartStore, selectItemCount } from '../../store/cartStore';
 
 // ==========================================
 // 1. Mock Data (بيانات وهمية للتجربة)
@@ -29,6 +30,11 @@ export default function Overview() {
   
   const name = user?.name || 'User';
   const statusLabel = (status) => t.dashboard.status[status.toLowerCase()] || status;
+
+  const cartCount = useCartStore(selectItemCount);
+  const cartMsg = cartCount === 1
+    ? t.dashboard.cartWaiting
+    : t.dashboard.cartWaitingPlural.replace('{count}', cartCount);
 
   // ==========================================
   // GSAP Animations
@@ -137,7 +143,7 @@ export default function Overview() {
               <h3 className="text-xl font-black">{t.dashboard.activeCart}</h3>
             </div>
             <p className="text-blue-100 text-sm font-medium leading-relaxed mb-6 relative z-10">
-              {t.dashboard.cartWaiting}
+              {cartMsg}
             </p>
             <button className="w-full bg-white text-blue-700 py-3 rounded-xl font-bold text-sm hover:scale-[1.02] transition-transform relative z-10 flex items-center justify-center gap-2">
               <ShoppingCart className="w-4 h-4" /> {t.dashboard.goToCheckout}
