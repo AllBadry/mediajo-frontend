@@ -6,8 +6,8 @@ import {
   LayoutDashboard, ShoppingBag, ShoppingCart, MessageSquare, 
   User, LogOut, Bell, Sparkles
 } from 'lucide-react';
-import { useAuth } from '../../context/AuthContext';
-import { useLanguage } from '../../context/LanguageContext';
+import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function CustomerDashboardLayout() {
   const container = useRef();
