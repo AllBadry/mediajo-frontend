@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { MessageSquare, Plus, AlertCircle, CheckCircle2, Clock, Send, X, ChevronRight, HelpCircle } from 'lucide-react';
+import { MessageSquare, Plus, AlertCircle, CheckCircle2, Clock, Send, X, HelpCircle } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 

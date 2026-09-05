@@ -23,7 +23,7 @@ import ContactUs from './pages/ContactUs';
 // تخطيط وصفحات لوحة التحكم المتداخلة
 import CustomerDashboardLayout from './layouts/CustomerDashboardLayout';
 import Overview from './pages/dashboard/Overview';
-import MyOrders from './pages/dashboard/myorders';
+import MyOrders from './pages/dashboard/MyOrders';
 import Cart from './pages/dashboard/Cart';
 import SupportTickets from './pages/dashboard/SupportTickets';
 import ProfileSettings from './pages/dashboard/ProfileSettings';
