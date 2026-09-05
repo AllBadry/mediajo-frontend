@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { LogIn, Mail, Lock as LockIcon, User, ShieldCheck, AlertCircle, Loader2 } from 'lucide-react';
+import { LogIn, Mail, Lock as LockIcon, User, ShieldCheck, AlertCircle, Loader2, KeyRound, RefreshCw } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
@@ -51,9 +51,13 @@ export default function Auth() {
 
   // إدارة حالات النموذج (State Management)
   const [formData, setFormData] = useState({ name: '', email: '', password: '', confirmPassword: '' });
+  const [verificationCode, setVerificationCode] = useState('');
   const [loading, setLoading] = useState(false);
+  const [verifying, setVerifying] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+
+  const codeRefs = useRef([]);
 
   const shadowCircle = getGradientExtrusion(50, 236, 72, 153, 250, 204, 21, -1, 1.5);
   const shadowBox = getGradientExtrusion(60, 6, 182, 212, 139, 92, 246, -1.2, 1);
@@ -100,6 +104,7 @@ export default function Auth() {
     
     setLoading(true);
     setError('');
+    setSuccess('');
     try {
       const response = await api.post('/api/auth/register', {
         name: formData.name,
@@ -108,12 +113,76 @@ export default function Auth() {
       });
 
       if (response.data.success) {
-        setSuccess(response.data.message || 'تم التسجيل بنجاح! يرجى التحقق من بريدك');
-        setFormData({ name: '', email: '', password: '', confirmPassword: '' });
-        setTimeout(() => setMode('login'), 3000); // تحويل للوجن بعد 3 ثوانٍ
+        setSuccess(response.data.message || t.auth.verifySuccess);
+        setVerificationCode('');
+        setTimeout(() => {
+          setMode('verify');
+          setTimeout(() => codeRefs.current[0]?.focus(), 500);
+        }, 600); // الانتقال لشاشة إدخال كود التحقق
       }
     } catch (err) {
       setError(err.response?.data?.message || 'حدث خطأ أثناء إنشاء الحساب');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // معالجة إدخال كود التحقق (6 خانات)
+  const handleCodeChange = (index, value) => {
+    const digits = value.replace(/\D/g, '');
+    setVerificationCode(prev => {
+      const arr = prev.split('');
+      arr[index] = digits.slice(-1);
+      return arr.join('');
+    });
+    // الانتقال التلقائي للخانة التالية
+    if (digits && index < 5) {
+      codeRefs.current[index + 1]?.focus();
+    }
+  };
+
+  const handleCodeKeyDown = (index, e) => {
+    if (e.key === 'Backspace' && !e.target.value && index > 0) {
+      codeRefs.current[index - 1]?.focus();
+    }
+  };
+
+  // التحقق من الكود وتفعيل الحساب
+  const handleVerify = async (e) => {
+    e.preventDefault();
+    if (verificationCode.length < 6) {
+      return setError(t.auth.verifyError);
+    }
+    setVerifying(true);
+    setError('');
+    try {
+      const response = await api.post('/api/auth/verify', {
+        email: formData.email,
+        code: verificationCode
+      });
+
+      if (response.data.success) {
+        login(response.data.user || { name: formData.name || formData.email.split('@')[0], email: formData.email });
+        navigate('/dashboard');
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || t.auth.verifyError);
+    } finally {
+      setVerifying(false);
+    }
+  };
+
+  // إعادة إرسال كود التحقق
+  const handleResend = async () => {
+    setLoading(true);
+    setError('');
+    setSuccess('');
+    try {
+      await api.post('/api/auth/resend', { email: formData.email });
+      setVerificationCode('');
+      setSuccess(t.auth.resendSuccess);
+    } catch (err) {
+      setError(err.response?.data?.message || 'حدث خطأ أثناء إعادة الإرسال');
     } finally {
       setLoading(false);
     }
@@ -268,6 +337,65 @@ export default function Auth() {
                 </p>
               </div>
 
+            </div>
+
+            {/* الوجه الثالث: إدخال كود التحقق */}
+            <div className={`absolute inset-0 w-full h-full bg-white/80 backdrop-blur-xl border border-gray-200 rounded-[2.5rem] p-8 md:p-10 shadow-[0_40px_80px_rgba(0,0,0,0.06)] overflow-y-auto transition-all duration-500 z-20 ${mode === 'verify' ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}>
+              {success && mode === 'verify' && (
+                <div className="mb-5 p-3 bg-green-50 text-green-700 rounded-xl text-sm font-medium flex items-center gap-2">
+                  {success}
+                </div>
+              )}
+
+              <div className="w-14 h-14 bg-gradient-to-br from-blue-600 to-indigo-600 text-white rounded-2xl flex items-center justify-center shadow-lg mb-6">
+                <KeyRound className="w-7 h-7" />
+              </div>
+
+              <h2 className="text-2xl md:text-3xl font-black tracking-tight text-gray-900 mb-2">{t.auth.verifyTitle}</h2>
+              <p className="text-gray-500 font-medium text-sm mb-1">{t.auth.verifySub}</p>
+              <p className="text-gray-900 font-black text-lg mb-7 truncate" dir="ltr">{formData.email}</p>
+
+              {error && mode === 'verify' && (
+                <div className="mb-5 p-3 bg-red-50 text-red-600 rounded-xl text-sm font-medium flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4" /> {error}
+                </div>
+              )}
+
+              <form onSubmit={handleVerify} className="flex flex-col gap-4">
+                <div>
+                  <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-3">
+                    <ShieldCheck className="w-4 h-4 text-gray-400" /> {t.auth.verifyCode}
+                  </label>
+                  <div className="flex items-center justify-between gap-2 md:gap-3">
+                    {[0, 1, 2, 3, 4, 5].map((i) => (
+                      <input
+                        key={i}
+                        ref={el => codeRefs.current[i] = el}
+                        type="text"
+                        inputMode="numeric"
+                        maxLength={2}
+                        value={verificationCode[i] || ''}
+                        onChange={(e) => handleCodeChange(i, e.target.value)}
+                        onKeyDown={(e) => handleCodeKeyDown(i, e)}
+                        className="w-full aspect-square text-2xl font-black text-center bg-white border border-gray-200 rounded-2xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition-all"
+                        required
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                <button type="submit" disabled={verifying} className="mt-2 w-full py-4 bg-blue-600 text-white rounded-2xl font-bold text-sm hover:bg-blue-500 transition-all shadow-[0_10px_25px_rgba(37,99,235,0.25)] disabled:opacity-70 flex justify-center items-center">
+                  {verifying ? <Loader2 className="w-5 h-5 animate-spin" /> : t.auth.verifyButton}
+                </button>
+              </form>
+
+              <p className="mt-6 text-center text-sm font-medium text-gray-500">
+                {t.auth.verifyHint}{' '}
+                <button onClick={handleResend} disabled={loading} className="text-blue-600 font-bold hover:text-blue-500 flex items-center gap-1 inline-flex disabled:opacity-60">
+                  {loading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
+                  {t.auth.resend}
+                </button>
+              </p>
             </div>
           </div>
         </div>
