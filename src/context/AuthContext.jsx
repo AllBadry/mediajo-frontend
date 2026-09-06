@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { useCartStore } from '../store/cartStore';
 
 const AuthContext = createContext(null);
 
@@ -12,12 +13,29 @@ export function AuthProvider({ children }) {
     }
   });
 
+  // مزامنة حالة السلة مع حالة المصادقة
+  useEffect(() => {
+    const isAuth = !!user;
+    useCartStore.getState().setAuth(isAuth);
+    if (isAuth) {
+      // عند فتح التطبيق والمستخدم مسجل مسبقاً نعيد سلة حسابه من السيرفر
+      useCartStore.getState().loadFromServer();
+    }
+  }, [user]);
+
   const login = (userData) => {
     setUser(userData);
     localStorage.setItem('mediajo_user', JSON.stringify(userData));
+    const store = useCartStore.getState();
+    store.setAuth(true);
+    store.mergeAndSync();
   };
 
   const logout = () => {
+    const store = useCartStore.getState();
+    // يجب تعطيل المصادقة أولاً كي لا تُرسل سلة فارغة للسيرفر
+    store.setAuth(false);
+    store.clearCart();
     setUser(null);
     localStorage.removeItem('mediajo_user');
   };
