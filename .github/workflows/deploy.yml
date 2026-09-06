@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    env:
+      VITE_GOOGLE_CLIENT_ID: "942453935253-llh45qo1rdnj437o5d9rgi24vg3nst5h.apps.googleusercontent.com"
 
     steps:
       - name: Checkout Code 🛎️
