@@ -19,6 +19,7 @@ import Canva from './pages/Canva';
 import Coursera from './pages/Coursera';
 import Auth from './pages/Auth';
 import ContactUs from './pages/ContactUs';
+import CartPage from './pages/CartPage';
 
 // تخطيط وصفحات لوحة التحكم المتداخلة
 import CustomerDashboardLayout from './layouts/CustomerDashboardLayout';
@@ -73,6 +74,9 @@ function AppRoutes() {
         <Route path="tickets" element={<SupportTickets />} />
         <Route path="profile" element={<ProfileSettings />} />
       </Route>
+
+      {/* صفحة السلة العامة (متاحة دون تسجيل دخول) */}
+      <Route path="/cart" element={<CartPage />} />
 
       {/* صفحة تسجيل الدخول */}
       <Route path="/auth" element={<GuestRoute><Auth /></GuestRoute>} />

@@ -250,6 +250,7 @@ export const translations = {
       },
 
       yourCart: 'Your Cart',
+      cartHeaderSub: 'Review your items before checkout.',
       itemSingle: 'Item',
       itemPlural: 'Items',
       cartEmpty: 'Your cart is empty',
@@ -350,6 +351,10 @@ export const translations = {
       verifyError: 'Invalid or expired code. Please try again.',
       resendSuccess: 'A new code was sent to your email.',
       verifying: 'Verifying...',
+      checkoutTitle: 'Login to Complete Your Order',
+      checkoutSub: 'Your cart is saved on this device. Once you sign in, your items will be linked to your account.',
+      checkoutUnverified: 'Your account is not verified yet. Verify your email to continue.',
+      verifyNow: 'Verify Now',
     },
     contactPage: {
       contactUs: 'Contact Us',
@@ -632,6 +637,7 @@ export const translations = {
       },
 
       yourCart: 'سلة المشتريات',
+      cartHeaderSub: 'راجع عناصرك قبل إتمام الطلب.',
       itemSingle: 'عنصر',
       itemPlural: 'عناصر',
       cartEmpty: 'سلتك فارغة',
@@ -732,6 +738,10 @@ export const translations = {
       verifyError: 'الرمز غير صحيح أو منتهي الصلاحية. حاول مجدداً.',
       resendSuccess: 'تم إرسال رمز جديد إلى بريدك.',
       verifying: 'جاري التحقق...',
+      checkoutTitle: 'سجّل الدخول لإتمام طلبك',
+      checkoutSub: 'سلتك محفوظة على هذا الجهاز. بمجرد تسجيل الدخول ستُربط عناصرك بحسابك.',
+      checkoutUnverified: 'حسابك غير مفعل بعد. تحقق من بريدك الإلكتروني للمتابعة.',
+      verifyNow: 'تحقق الآن',
     },
     contactPage: {
       contactUs: 'تواصل معنا',

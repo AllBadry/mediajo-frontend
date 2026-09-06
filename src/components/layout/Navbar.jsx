@@ -260,7 +260,7 @@ export default function Navbar() {
       <div className="flex items-center gap-3">
         {/* أيقونة السلة */}
         <Link
-          to="/dashboard/cart"
+          to={isAuthenticated ? '/dashboard/cart' : '/cart'}
           title="Cart"
           className="relative flex items-center justify-center w-11 h-11 rounded-full border border-gray-200 text-gray-600 hover:text-black hover:bg-gray-50 hover:border-gray-300 transition-all"
         >

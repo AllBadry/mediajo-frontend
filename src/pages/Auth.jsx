@@ -1,15 +1,10 @@
-import React, { useState, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useRef, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { LogIn, Mail, Lock as LockIcon, User, ShieldCheck, AlertCircle, Loader2, KeyRound, RefreshCw } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
-import axios from 'axios';
-
-// إعداد Axios ليتعامل مع الكوكيز عبر الـ Subdomains
-const api = axios.create({
-  baseURL: 'https://api.mediajo.org', // رابط الباك اند الخاص بك
-  withCredentials: true, // ⚠️ أهم سطر: السماح باستقبال وإرسال الكوكيز المحمية
-});
+import GoogleButton from '../components/auth/GoogleButton';
+import api from '../api/client';
 
 // ==========================================
 // دالة توليد الظلال ثلاثية الأبعاد (كما هي)
@@ -31,23 +26,25 @@ const getGradientExtrusion = (depth, r1, g1, b1, r2, g2, b2, xDir, yDir) => {
   return shadows.join(', ');
 };
 
-// ==========================================
-// شعار Google الرسمي (كما هو)
-// ==========================================
-const GoogleIcon = ({ className }) => (
-  <svg className={className} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z" />
-    <path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z" />
-    <path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238C29.211 35.091 26.715 36 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z" />
-    <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303c-.792 2.237-2.231 4.166-4.087 5.571.001-.001.002-.001.003-.002l6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z" />
-  </svg>
-);
-
 export default function Auth() {
   const { t } = useLanguage();
   const navigate = useNavigate();
+  const location = useLocation();
   const { login } = useAuth();
   const [mode, setMode] = useState('login');
+  const dest = location.state?.from || '/dashboard';
+
+  // عند القدوم من نافذة تسجيل الدخول (بريد غير مفعل) نفتح شاشة التحقق مباشرة
+  useEffect(() => {
+    if (location.state?.verifyEmail) {
+      setFormData(prev => ({ ...prev, email: location.state.verifyEmail }));
+      setSuccess(t.auth.verifySub);
+      setError('');
+      setMode('verify');
+      setTimeout(() => codeRefs.current[0]?.focus(), 500);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.state?.verifyEmail]);
 
   // إدارة حالات النموذج (State Management)
   const [formData, setFormData] = useState({ name: '', email: '', password: '', confirmPassword: '' });
@@ -86,7 +83,7 @@ export default function Auth() {
       if (response.data.success) {
         // حفظ بيانات المستخدم في الـ Context ثم التوجيه للداشبورد
         login(response.data.user || { name: formData.email.split('@')[0], email: formData.email });
-        navigate('/dashboard'); // التوجيه بعد النجاح
+        navigate(dest); // التوجيه بعد النجاح
       }
     } catch (err) {
       const code = err.response?.data?.code;
@@ -172,12 +169,30 @@ export default function Auth() {
 
       if (response.data.success) {
         login(response.data.user || { name: formData.name || formData.email.split('@')[0], email: formData.email });
-        navigate('/dashboard');
+        navigate(dest);
       }
     } catch (err) {
       setError(err.response?.data?.message || t.auth.verifyError);
     } finally {
       setVerifying(false);
+    }
+  };
+
+  // تسجيل الدخول عبر حساب Google (التحقق يتم على الخادم عبر /api/auth/google)
+  const handleGoogleSuccess = async ({ idToken }) => {
+    if (!idToken) return;
+    setLoading(true);
+    setError('');
+    try {
+      const response = await api.post('/api/auth/google', { idToken });
+      if (response.data?.success) {
+        login(response.data.data.user);
+        navigate(dest);
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || 'فشل تسجيل الدخول عبر Google');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -243,9 +258,7 @@ export default function Auth() {
                   </div>
                 )}
 
-                <button className="w-full flex items-center justify-center gap-3 py-3.5 bg-white border border-gray-200 rounded-2xl font-bold text-sm text-gray-800 hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm mb-6">
-                  <GoogleIcon className="w-5 h-5" /> {t.auth.signInGoogle}
-                </button>
+                <GoogleButton onSuccess={handleGoogleSuccess} text="signin_with" width={380} />
 
                 <div className="flex items-center gap-4 mb-6">
                   <div className="flex-1 h-px bg-gray-200"></div>
@@ -297,9 +310,7 @@ export default function Auth() {
                   </div>
                 )}
 
-                <button className="w-full flex items-center justify-center gap-3 py-3.5 bg-white border border-gray-200 rounded-2xl font-bold text-sm text-gray-800 hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm mb-6">
-                  <GoogleIcon className="w-5 h-5" /> {t.auth.signUpGoogle}
-                </button>
+                <GoogleButton onSuccess={handleGoogleSuccess} text="signup_with" width={380} />
 
                 <div className="flex items-center gap-4 mb-6">
                   <div className="flex-1 h-px bg-gray-200"></div>
