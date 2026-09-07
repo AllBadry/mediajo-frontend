@@ -1,120 +1,142 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect, useMemo } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
+import api from '../lib/axios'; // 👈 استيراد ملف axios الذي أنشأناه
 import { 
   MonitorPlay, TrendingUp, Zap, 
-  ArrowRight, ShieldCheck, CheckCircle2, Star, Lock, Wallet, ChevronRight
+  ArrowRight, ShieldCheck, CheckCircle2, Star, Lock, Wallet, ChevronRight, Loader2
 } from 'lucide-react';
 import { SiInstagram, SiTiktok, SiYoutube, SiFacebook } from 'react-icons/si';
+
+// ==========================================
+// 1. الإعدادات البصرية للمنصات (تصميم فقط بدون بيانات)
+// ==========================================
+const platformUIConfig = {
+  tiktok: {
+    title: 'TikTok',
+    bgGradient: 'bg-gradient-to-br from-[#0a0a0b] via-[#111112] to-[#1a1b1e]',
+    overlay: 'from-black/50 via-transparent to-transparent',
+    themeColor: 'text-gray-900',
+    btnColor: 'bg-gray-900 hover:bg-black',
+    link: '/products/tiktok',
+    popular: true,
+    shapes: (
+      <>
+        <SiTiktok className="float-shape absolute right-10 md:right-24 top-1/2 -translate-y-1/2 w-80 h-80 md:w-[400px] md:h-[400px] text-white opacity-[0.04] rotate-12 pointer-events-none z-0" />
+        <div className="float-shape absolute top-10 right-20 w-56 h-56 bg-gradient-to-br from-cyan-300 to-cyan-600 rounded-full shadow-[inset_-10px_-10px_30px_rgba(0,0,0,0.3)] z-10"></div>
+        <div className="float-shape absolute -bottom-10 right-56 w-64 h-64 bg-gradient-to-tr from-pink-500 to-rose-600 rounded-[3rem] rotate-12 shadow-[inset_-15px_-15px_30px_rgba(0,0,0,0.3)] z-10"></div>
+        <div className="float-shape absolute top-20 right-72 w-40 h-40 bg-gradient-to-bl from-white/10 to-white/5 backdrop-blur-xl rounded-full border border-white/20 shadow-[inset_-10px_-10px_20px_rgba(255,255,255,0.1)] z-20"></div>
+      </>
+    )
+  },
+  instagram: {
+    title: 'Instagram',
+    bgGradient: 'bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600',
+    overlay: 'from-black/40 via-transparent to-transparent',
+    themeColor: 'text-pink-600',
+    btnColor: 'bg-gradient-to-r from-pink-500 to-purple-600 hover:opacity-90',
+    link: '/products/instagram',
+    popular: false,
+    shapes: (
+      <>
+        <SiInstagram className="float-shape absolute right-10 md:right-24 top-1/2 -translate-y-1/2 w-80 h-80 md:w-[400px] md:h-[400px] text-white opacity-[0.15] rotate-12 pointer-events-none z-0 mix-blend-overlay" />
+        <div className="float-shape absolute top-10 right-10 w-64 h-64 bg-gradient-to-br from-white/30 to-white/5 backdrop-blur-lg rounded-full shadow-[inset_-10px_-10px_30px_rgba(255,255,255,0.2)] border border-white/20 z-10"></div>
+        <div className="float-shape absolute -bottom-10 right-56 w-48 h-48 bg-gradient-to-tr from-orange-400 to-red-500 rounded-full shadow-[inset_-15px_-15px_30px_rgba(0,0,0,0.2)] z-10"></div>
+        <div className="float-shape absolute top-20 right-80 w-32 h-64 bg-gradient-to-bl from-purple-700 to-indigo-800 rounded-full shadow-[inset_-10px_-10px_20px_rgba(0,0,0,0.4)] rotate-45 z-20"></div>
+      </>
+    )
+  },
+  youtube: {
+    title: 'YouTube',
+    bgGradient: 'bg-gradient-to-br from-[#ff0033] to-[#ff6600]',
+    overlay: 'from-black/50 via-transparent to-transparent',
+    themeColor: 'text-red-600',
+    btnColor: 'bg-red-600 hover:bg-red-700',
+    link: '/products/youtube',
+    popular: false,
+    shapes: (
+      <>
+        <SiYoutube className="float-shape absolute right-0 md:right-10 top-1/2 -translate-y-1/2 w-[350px] h-[350px] md:w-[450px] md:h-[450px] text-white opacity-[0.07] -rotate-12 pointer-events-none z-0" />
+        <div className="float-shape absolute -top-20 right-20 w-80 h-80 bg-gradient-to-br from-white/20 to-white/5 rounded-3xl rotate-12 backdrop-blur-lg border border-white/30 shadow-2xl z-10"></div>
+        <div className="float-shape absolute bottom-10 right-10 w-40 h-40 bg-gradient-to-tr from-red-800 to-red-500 rounded-full shadow-[inset_-15px_-15px_30px_rgba(0,0,0,0.4)] z-20"></div>
+      </>
+    )
+  },
+  facebook: {
+    title: 'Facebook',
+    bgGradient: 'bg-gradient-to-br from-[#0f172a] to-[#1e293b]',
+    overlay: 'from-transparent to-transparent',
+    themeColor: 'text-indigo-600',
+    btnColor: 'bg-indigo-600 hover:bg-indigo-700',
+    link: '/products/facebook',
+    popular: false,
+    shapes: (
+      <>
+        <SiFacebook className="float-shape absolute right-10 md:right-32 top-1/2 -translate-y-1/2 w-80 h-80 md:w-96 md:h-96 text-white opacity-[0.05] rotate-12 pointer-events-none z-0" />
+        <div className="float-shape absolute top-10 right-32 w-56 h-56 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-2xl rotate-45 shadow-[inset_-10px_-10px_30px_rgba(0,0,0,0.3)] z-10"></div>
+        <div className="float-shape absolute bottom-0 right-0 w-72 h-72 bg-gradient-to-tl from-indigo-500 to-purple-500 rounded-full blur-2xl opacity-50 z-10"></div>
+      </>
+    )
+  }
+};
 
 export default function Products() {
   const container = useRef();
   const { t } = useLanguage();
+  
+  // 👈 تعريف الحالات لجلب البيانات
+  const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // ==========================================
-  // بيانات الأسعار - السوشال ميديا 
-  // ==========================================
-  const socialPlatforms = [
-    {
-      name: 'TikTok',
-      // خلفية داكنة جداً لتبرز ألوان النيون
-      bgGradient: 'bg-gradient-to-br from-[#0a0a0b] via-[#111112] to-[#1a1b1e]',
-      overlay: 'from-black/50 via-transparent to-transparent',
-      themeColor: 'text-gray-900',
-      btnColor: 'bg-gray-900 hover:bg-black',
-      link: '/products/tiktok',
-      popular: true,
-      services: [
-        { name: 'Followers (30-day)', qty: '1,000', price: '5.99' },
-        { name: 'Followers (No Warranty)', qty: '1,000', price: '4.99' },
-        { name: 'Reels Views', qty: '10,000', price: '8.99' },
-        { name: 'Reels Likes', qty: '1,000', price: '0.99' },
-      ],
-      shapes: (
-        <>
-          {/* العلامة المائية للتيك توك */}
-          <SiTiktok className="float-shape absolute right-10 md:right-24 top-1/2 -translate-y-1/2 w-80 h-80 md:w-[400px] md:h-[400px] text-white opacity-[0.04] rotate-12 pointer-events-none z-0" />
-          
-          {/* مجسمات 3D بألوان التيك توك (سماوي، وردي نيون، وزجاج) */}
-          <div className="float-shape absolute top-10 right-20 w-56 h-56 bg-gradient-to-br from-cyan-300 to-cyan-600 rounded-full shadow-[inset_-10px_-10px_30px_rgba(0,0,0,0.3)] z-10"></div>
-          <div className="float-shape absolute -bottom-10 right-56 w-64 h-64 bg-gradient-to-tr from-pink-500 to-rose-600 rounded-[3rem] rotate-12 shadow-[inset_-15px_-15px_30px_rgba(0,0,0,0.3)] z-10"></div>
-          <div className="float-shape absolute top-20 right-72 w-40 h-40 bg-gradient-to-bl from-white/10 to-white/5 backdrop-blur-xl rounded-full border border-white/20 shadow-[inset_-10px_-10px_20px_rgba(255,255,255,0.1)] z-20"></div>
-        </>
-      )
-    },
-    {
-      name: 'Instagram',
-      bgGradient: 'bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600',
-      overlay: 'from-black/40 via-transparent to-transparent',
-      themeColor: 'text-pink-600',
-      btnColor: 'bg-gradient-to-r from-pink-500 to-purple-600 hover:opacity-90',
-      link: '/products/instagram',
-      services: [
-        { name: 'Arab Followers', qty: '1,000', price: '4.99' },
-        { name: 'Followers (No Warranty)', qty: '1,000', price: '1.99' },
-        { name: 'Likes (Reels/Posts)', qty: '1,000', price: '0.99' },
-        { name: 'Reels Views', qty: '10,000', price: '8.99' },
-      ],
-      shapes: (
-        <>
-          <SiInstagram className="float-shape absolute right-10 md:right-24 top-1/2 -translate-y-1/2 w-80 h-80 md:w-[400px] md:h-[400px] text-white opacity-[0.15] rotate-12 pointer-events-none z-0 mix-blend-overlay" />
-          <div className="float-shape absolute top-10 right-10 w-64 h-64 bg-gradient-to-br from-white/30 to-white/5 backdrop-blur-lg rounded-full shadow-[inset_-10px_-10px_30px_rgba(255,255,255,0.2)] border border-white/20 z-10"></div>
-          <div className="float-shape absolute -bottom-10 right-56 w-48 h-48 bg-gradient-to-tr from-orange-400 to-red-500 rounded-full shadow-[inset_-15px_-15px_30px_rgba(0,0,0,0.2)] z-10"></div>
-          <div className="float-shape absolute top-20 right-80 w-32 h-64 bg-gradient-to-bl from-purple-700 to-indigo-800 rounded-full shadow-[inset_-10px_-10px_20px_rgba(0,0,0,0.4)] rotate-45 z-20"></div>
-        </>
-      )
-    },
-    {
-      name: 'YouTube',
-      bgGradient: 'bg-gradient-to-br from-[#ff0033] to-[#ff6600]',
-      overlay: 'from-black/50 via-transparent to-transparent',
-      themeColor: 'text-red-600',
-      btnColor: 'bg-red-600 hover:bg-red-700',
-      link: '/products/youtube',
-      services: [
-        { name: 'Subscribers', qty: '1,000', price: '8.00' },
-        { name: 'Views', qty: '1,000', price: '3.00' },
-        { name: 'Likes', qty: '1,000', price: '2.50' },
-        { name: 'Watch Hours', qty: '1,000', price: '10.00' },
-      ],
-      shapes: (
-        <>
-          <SiYoutube className="float-shape absolute right-0 md:right-10 top-1/2 -translate-y-1/2 w-[350px] h-[350px] md:w-[450px] md:h-[450px] text-white opacity-[0.07] -rotate-12 pointer-events-none z-0" />
-          <div className="float-shape absolute -top-20 right-20 w-80 h-80 bg-gradient-to-br from-white/20 to-white/5 rounded-3xl rotate-12 backdrop-blur-lg border border-white/30 shadow-2xl z-10"></div>
-          <div className="float-shape absolute bottom-10 right-10 w-40 h-40 bg-gradient-to-tr from-red-800 to-red-500 rounded-full shadow-[inset_-15px_-15px_30px_rgba(0,0,0,0.4)] z-20"></div>
-        </>
-      )
-    },
-    {
-      name: 'Facebook',
-      bgGradient: 'bg-gradient-to-br from-[#0f172a] to-[#1e293b]',
-      overlay: 'from-transparent to-transparent',
-      themeColor: 'text-indigo-600',
-      btnColor: 'bg-indigo-600 hover:bg-indigo-700',
-      link: '/products/facebook',
-      services: [
-        { name: 'Jordanian Followers', qty: '100', price: '5.00' },
-        { name: 'Arab Followers', qty: '1,000', price: '6.99' },
-        { name: 'Followers (No Warranty)', qty: '1,000', price: '2.99' },
-        { name: 'Reels Views', qty: '10,000', price: '8.99' },
-      ],
-      shapes: (
-        <>
-          <SiFacebook className="float-shape absolute right-10 md:right-32 top-1/2 -translate-y-1/2 w-80 h-80 md:w-96 md:h-96 text-white opacity-[0.05] rotate-12 pointer-events-none z-0" />
-          <div className="float-shape absolute top-10 right-32 w-56 h-56 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-2xl rotate-45 shadow-[inset_-10px_-10px_30px_rgba(0,0,0,0.3)] z-10"></div>
-          <div className="float-shape absolute bottom-0 right-0 w-72 h-72 bg-gradient-to-tl from-indigo-500 to-purple-500 rounded-full blur-2xl opacity-50 z-10"></div>
-        </>
-      )
-    }
-  ];
+  // 👈 جلب البيانات من الباك إند
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        // نستخدم المسار العام للمنتجات (الذي يرجع المنتجات النشطة فقط)
+        const response = await api.get('/products');
+        setProducts(response.data.data.products);
+      } catch (error) {
+        console.error("Failed to fetch products", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
+
+  // 👈 تجميع المنتجات حسب المنصة (لكي نأخذ عينة لصفحة الهبوط)
+  const groupedPlatforms = useMemo(() => {
+    if (!products.length) return [];
+    
+    // نستخرج المنصات الموجودة في الإعدادات البصرية
+    const keys = Object.keys(platformUIConfig);
+    const result = [];
+
+    keys.forEach(key => {
+      // نبحث عن المنتجات التي تتبع هذه المنصة وتكون تابعة لقسم السوشال ميديا
+      const platformProducts = products.filter(
+        p => p.platform === key && p.productType === 'SOCIAL_GROWTH'
+      );
+
+      // إذا كان هناك منتجات لهذه المنصة، نقوم بدمجها مع التصميم البصري
+      if (platformProducts.length > 0) {
+        result.push({
+          ...platformUIConfig[key],
+          // نأخذ أول 4 منتجات فقط كـ (Preview) لتظهر في الكارت الرئيسي
+          services: platformProducts.slice(0, 4) 
+        });
+      }
+    });
+
+    return result;
+  }, [products]);
 
   // ==========================================
   // GSAP Animations
   // ==========================================
   useGSAP(() => {
-    // حركة الهيرو 
     gsap.from(".hero-pill-1", { x: -100, opacity: 0, duration: 1, ease: "back.out(1.5)" });
     gsap.from(".hero-pill-2", { x: 100, opacity: 0, duration: 1, ease: "back.out(1.5)", delay: 0.1 });
     gsap.from(".hero-pill-3", { y: 50, opacity: 0, duration: 1, ease: "back.out(1.5)", delay: 0.2 });
@@ -125,7 +147,6 @@ export default function Products() {
     gsap.to(".float-3", { y: -25, x: 10, repeat: -1, yoyo: true, ease: "sine.inOut", duration: 2.5 });
     gsap.fromTo(".svg-line", { strokeDasharray: 2000, strokeDashoffset: 2000 }, { strokeDashoffset: 0, duration: 2.5, ease: "power2.out" });
 
-    // حركات الأشكال الفنية والأيقونات الضخمة
     gsap.to(".float-shape", {
       y: -20,
       rotation: "+=3", 
@@ -141,7 +162,7 @@ export default function Products() {
     <div ref={container} dir={t.dir} className="min-h-screen bg-gray-50 font-sans overflow-hidden">
       
       {/* =========================================
-          1. Hero Section 
+          1. Hero Section (ثابت كما هو)
           ========================================= */}
       <section className="relative w-full pt-32 pb-24 flex flex-col items-center justify-center bg-white">
         <div className="float-1 absolute top-[20%] left-[15%] w-4 h-4 bg-blue-600 rounded-full"></div>
@@ -189,91 +210,96 @@ export default function Products() {
       </section>
 
       {/* =========================================
-          2. Social Media Platforms
+          2. Social Media Platforms (من الباك إند)
           ========================================= */}
-      <section className="relative w-full py-16 px-6 lg:px-12">
-        <div className="max-w-[85rem] mx-auto flex flex-col gap-16">
-          
-          {socialPlatforms.map((platform, index) => (
-            <div 
-              key={index} 
-              className="w-full flex flex-col rounded-[3rem] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.08)] border border-gray-200 bg-white"
-            >
-              {/* الجزء العلوي: اللوحة الفنية (Artistic Banner) */}
-              <div className={`relative w-full h-[350px] md:h-[400px] overflow-hidden ${platform.bgGradient || 'bg-gray-100'}`}>
-                
-                {platform.image && (
-                  <img 
-                    src={platform.image} 
-                    alt={platform.name} 
-                    className="absolute inset-0 w-full h-full object-cover float-shape scale-110" 
-                  />
-                )}
-
-                {/* هنا نضع الأشكال والأيقونات المائية */}
-                <div className="absolute inset-0 pointer-events-none rtl:-scale-x-100">
-                  {platform.shapes}
-                </div>
-
-                {/* التدرج اللوني للوضوح */}
-                <div className={`absolute inset-0 bg-gradient-to-r rtl:bg-gradient-to-l ${platform.overlay} z-20`}></div>
-
-                {/* المحتوى النصي */}
-                <div className="absolute inset-0 flex flex-col justify-center px-10 md:px-16 z-30">
-                  {platform.popular && (
-                    <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/20 backdrop-blur-md rounded-full text-white text-sm font-bold w-max mb-6 border border-white/30">
-                      <Zap className="w-3.5 h-3.5 text-amber-400" /> {t.products.mostPopular}
-                    </span>
-                  )}
-                  <h2 className="text-6xl md:text-[6rem] font-black text-white tracking-tighter leading-none drop-shadow-md">
-                    {platform.name}
-                  </h2>
-                  <p className="text-white/90 mt-6 text-xl md:text-2xl font-medium max-w-lg leading-relaxed drop-shadow-sm">
-                    {t.products.elevate}
-                  </p>
-                </div>
-              </div>
-
-              {/* الجزء السفلي: النظيف (الخدمات والأسعار) */}
-              <div className="w-full bg-white p-10 md:p-16 flex flex-col lg:flex-row gap-12 items-center justify-between">
-                
-                <div className="w-full lg:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  {platform.services.map((service, i) => (
-                    <div key={i} className="flex items-center justify-between p-6 bg-gray-50 rounded-[1.5rem] border border-gray-100 hover:border-gray-200 hover:bg-white transition-all duration-300">
-                      <div>
-                        <span className="text-base font-black text-gray-900 block mb-1">{t.products.svc[service.name] || service.name}</span>
-                        <span className="text-sm text-gray-500 font-medium">{service.qty} {t.products.units}</span>
-                      </div>
-                      <div className="flex items-baseline gap-1 bg-white px-4 py-2 rounded-xl shadow-sm border border-gray-100">
-                        <span className={`text-2xl font-black ${platform.themeColor}`}>{service.price}</span>
-                        <span className="text-xs font-bold text-gray-400">JD</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="w-full lg:w-1/3 flex flex-col items-center lg:items-end justify-center">
-                  <div className="text-center lg:text-right mb-6">
-                    <p className="text-gray-400 font-medium mb-1">{t.products.readyToBoost}</p>
-                    <h3 className="text-3xl font-black text-gray-900">{t.products.growthQ.replace('{name}', platform.name)}</h3>
+      <section className="relative w-full py-16 px-6 lg:px-12 min-h-[500px]">
+        {isLoading ? (
+          // شاشة تحميل أنيقة أثناء جلب البيانات
+          <div className="flex flex-col items-center justify-center h-64 text-indigo-600">
+            <Loader2 className="w-12 h-12 animate-spin mb-4" />
+            <p className="font-medium text-gray-500">{t.dir === 'rtl' ? 'جاري تحميل الباقات...' : 'Loading packages...'}</p>
+          </div>
+        ) : groupedPlatforms.length === 0 ? (
+          // في حال كانت قاعدة البيانات فارغة
+          <div className="text-center py-20 text-gray-500">
+            لا توجد منتجات حالياً.
+          </div>
+        ) : (
+          <div className="max-w-[85rem] mx-auto flex flex-col gap-16">
+            {groupedPlatforms.map((platform, index) => (
+              <div 
+                key={index} 
+                className="w-full flex flex-col rounded-[3rem] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.08)] border border-gray-200 bg-white"
+              >
+                {/* الجزء العلوي: اللوحة الفنية (من الإعدادات الثابتة) */}
+                <div className={`relative w-full h-[350px] md:h-[400px] overflow-hidden ${platform.bgGradient || 'bg-gray-100'}`}>
+                  
+                  <div className="absolute inset-0 pointer-events-none rtl:-scale-x-100">
+                    {platform.shapes}
                   </div>
-                  <Link 
-                    to={platform.link} 
-                    className={`inline-flex items-center justify-center gap-3 w-full sm:w-auto px-10 py-5 ${platform.btnColor} text-white rounded-full font-bold text-lg hover:scale-105 transition-all duration-300 shadow-xl`}
-                  >
-                    {t.products.getStarted} <ChevronRight className="w-5 h-5 rtl:rotate-180" />
-                  </Link>
+
+                  <div className={`absolute inset-0 bg-gradient-to-r rtl:bg-gradient-to-l ${platform.overlay} z-20`}></div>
+
+                  <div className="absolute inset-0 flex flex-col justify-center px-10 md:px-16 z-30">
+                    {platform.popular && (
+                      <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/20 backdrop-blur-md rounded-full text-white text-sm font-bold w-max mb-6 border border-white/30">
+                        <Zap className="w-3.5 h-3.5 text-amber-400" /> {t.products.mostPopular}
+                      </span>
+                    )}
+                    <h2 className="text-6xl md:text-[6rem] font-black text-white tracking-tighter leading-none drop-shadow-md">
+                      {platform.title}
+                    </h2>
+                    <p className="text-white/90 mt-6 text-xl md:text-2xl font-medium max-w-lg leading-relaxed drop-shadow-sm">
+                      {t.products.elevate}
+                    </p>
+                  </div>
                 </div>
 
-              </div>
-            </div>
-          ))}
+                {/* الجزء السفلي: (الخدمات والأسعار من الباك إند) */}
+                <div className="w-full bg-white p-10 md:p-16 flex flex-col lg:flex-row gap-12 items-center justify-between">
+                  
+                  <div className="w-full lg:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    {platform.services.map((service, i) => (
+                      <div key={i} className="flex items-center justify-between p-6 bg-gray-50 rounded-[1.5rem] border border-gray-100 hover:border-gray-200 hover:bg-white transition-all duration-300">
+                        <div>
+                          {/* استخدمنا groupName من الباك إند كعنوان فرعي */}
+                          <span className="text-base font-black text-gray-900 block mb-1">
+                            {t.dir === 'rtl' && service.subGroup ? `${service.subGroup}` : service.name}
+                          </span>
+                          <span className="text-sm text-gray-500 font-medium">
+                            {service.qty} {service.groupName}
+                          </span>
+                        </div>
+                        <div className="flex items-baseline gap-1 bg-white px-4 py-2 rounded-xl shadow-sm border border-gray-100">
+                          <span className={`text-2xl font-black ${platform.themeColor}`}>{service.price}</span>
+                          <span className="text-xs font-bold text-gray-400">$</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
 
-        </div>
+                  <div className="w-full lg:w-1/3 flex flex-col items-center lg:items-end justify-center">
+                    <div className="text-center lg:text-right mb-6">
+                      <p className="text-gray-400 font-medium mb-1">{t.products.readyToBoost}</p>
+                      <h3 className="text-3xl font-black text-gray-900">{t.products.growthQ.replace('{name}', platform.title)}</h3>
+                    </div>
+                    <Link 
+                      to={platform.link} 
+                      className={`inline-flex items-center justify-center gap-3 w-full sm:w-auto px-10 py-5 ${platform.btnColor} text-white rounded-full font-bold text-lg hover:scale-105 transition-all duration-300 shadow-xl`}
+                    >
+                      {t.products.getStarted} <ChevronRight className="w-5 h-5 rtl:rotate-180" />
+                    </Link>
+                  </div>
+
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* =========================================
-          3. Subscriptions (Coming Soon)
+          3. Subscriptions (Coming Soon) - (ثابت كما هو)
           ========================================= */}
       <section className="subs-section relative w-full py-24 px-6 lg:px-12 bg-gray-50/50 border-t border-gray-100">
         <div className="max-w-[85rem] mx-auto text-center">
@@ -288,7 +314,7 @@ export default function Products() {
       </section>
 
       {/* =========================================
-          4. Trust & FAQ Section
+          4. Trust & FAQ Section - (ثابت كما هو)
           ========================================= */}
       <section className="relative w-full py-24 px-6 lg:px-12 bg-[#131416] text-white">
         <div className="max-w-[85rem] mx-auto flex flex-col lg:flex-row gap-20">
