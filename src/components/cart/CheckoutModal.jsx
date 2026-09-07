@@ -40,13 +40,10 @@ export default function CheckoutModal({ open, onClose }) {
   const hasMjBalance = mjBalance != null;
   const canPayMj = hasMjBalance && mjBalance >= mjNeeded && mjNeeded > 0;
 
+  // إعادة تعيين النموذج وجلب البيانات فقط عند فتح النافذة (أو تغيّر المستخدم)
+  // لا يعتمد على loading حتى لا يمسح شاشة النجاح عند انتهاء الإرسال
   useEffect(() => {
-    const onKey = (e) => {
-      if (e.key === 'Escape' && !loading) onClose();
-    };
     if (open) {
-      window.addEventListener('keydown', onKey);
-      document.body.style.overflow = 'hidden';
       setError('');
       setCreatedOrder(null);
       setPayMethod('bank');
@@ -69,11 +66,22 @@ export default function CheckoutModal({ open, onClose }) {
         setMjBalance(null);
       }
     }
+  }, [open, user]);
+
+  // إغلاق عند الضغط على Escape وقفل تمرير الصفحة
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === 'Escape' && !loading) onClose();
+    };
+    if (open) {
+      window.addEventListener('keydown', onKey);
+      document.body.style.overflow = 'hidden';
+    }
     return () => {
       window.removeEventListener('keydown', onKey);
       document.body.style.overflow = '';
     };
-  }, [open, onClose, loading, user]);
+  }, [open, onClose, loading]);
 
   useGSAP(() => {
     if (open) {

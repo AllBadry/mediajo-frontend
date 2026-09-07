@@ -92,7 +92,10 @@ export default function MyOrders() {
   }, []);
 
   const payLabel = (status) => (paymentStatusKeys[status] ? o[paymentStatusKeys[status]] : status);
-  const stLabel = (status) => (orderStatusKeys[status] ? o[orderStatusKeys[status]] : status);
+  const stLabel = (status) => {
+    if (!orderStatusKeys[status]) return status;
+    return o[orderStatusKeys[status]] || d.status[orderStatusKeys[status]] || status;
+  };
   const typeLabel = (type) => (orderTypeKeys[type] ? o[orderTypeKeys[type]] : type);
 
   // شارة نوع الطلب
@@ -114,19 +117,25 @@ export default function MyOrders() {
     }
   };
 
-  // مرشحات (الكل / بانتظار الدفع / قيد المراجعة أو التنفيذ / مكتمل)
+  // مرشحات حسب حالة الدفع والتنفيذ
   const filters = [
     { key: 'All', label: d.all },
     { key: 'unpaid', label: o.awaitingPayment },
-    { key: 'active', label: ar ? 'تحت المعالجة' : 'In Progress' },
-    { key: 'completed', label: o.completed },
+    { key: 'pending_review', label: o.awaitingReview },
+    { key: 'paid', label: o.paid },
+    { key: 'processing', label: d.status.processing },
+    { key: 'completed', label: d.status.completed },
+    { key: 'rejected', label: o.rejected },
   ];
 
   const filtered = orders
     .filter((order) => {
       if (filter === 'unpaid') return order.paymentStatus === 'unpaid';
-      if (filter === 'active') return ['pending_review', 'processing'].some((s) => order.paymentStatus === s || order.status === s);
-      if (filter === 'completed') return order.status === 'completed' || order.paymentStatus === 'paid';
+      if (filter === 'pending_review') return order.paymentStatus === 'pending_review';
+      if (filter === 'paid') return order.paymentStatus === 'paid';
+      if (filter === 'processing') return order.status === 'processing';
+      if (filter === 'completed') return order.status === 'completed';
+      if (filter === 'rejected') return order.paymentStatus === 'rejected';
       return true;
     })
     .filter((order) => {

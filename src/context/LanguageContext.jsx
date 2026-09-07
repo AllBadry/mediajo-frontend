@@ -291,6 +291,16 @@ export const translations = {
         mixed: 'Mixed',
         bankNote: 'Transfer to Union Bank (JOD). After transferring, upload the receipt below.',
       },
+      notifications: {
+        title: 'Notifications',
+        empty: 'No notifications yet',
+        emptySub: 'Updates about your orders, payments and top-ups will appear here.',
+        markAllRead: 'Mark all as read',
+        justNow: 'just now',
+        minAgo: '{m} min ago',
+        hourAgo: '{h} hr ago',
+        dayAgo: '{d} days ago',
+      },
       wallet: {
         title: 'Wallet',
         balanceLabel: 'YOUR MJ BALANCE',
@@ -766,6 +776,16 @@ export const translations = {
         subscription: 'اشتراك',
         mixed: 'مختلط',
         bankNote: 'حوّل لحساب بنك الاتحاد (JOD). بعد التحويل ارفع الإيصال بالأسفل.',
+      },
+      notifications: {
+        title: 'الإشعارات',
+        empty: 'لا توجد إشعارات بعد',
+        emptySub: 'ستظهر هنا تحديثات طلباتك ودفعاتك وطلبات الشحن.',
+        markAllRead: 'تعليم الكل كمقروء',
+        justNow: 'الآن',
+        minAgo: 'قبل {m} دقيقة',
+        hourAgo: 'قبل {h} ساعة',
+        dayAgo: 'قبل {d} يوم',
       },
       wallet: {
         title: 'المحفظة',

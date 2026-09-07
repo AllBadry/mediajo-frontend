@@ -4,10 +4,11 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { 
   LayoutDashboard, ShoppingBag, ShoppingCart, MessageSquare, 
-  User, LogOut, Bell, Sparkles, Wallet
+  User, LogOut, Sparkles, Wallet
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
+import NotificationBell from '../components/dashboard/NotificationBell';
 
 export default function CustomerDashboardLayout() {
   const container = useRef();
@@ -38,7 +39,6 @@ export default function CustomerDashboardLayout() {
   useGSAP(() => {
     gsap.from(".sidebar", { x: -50, opacity: 0, duration: 0.8, ease: "power3.out" });
     gsap.from(".topbar", { y: -20, opacity: 0, duration: 0.8, delay: 0.2, ease: "power3.out" });
-    gsap.to(".notification-dot", { scale: 1.5, opacity: 0, repeat: -1, duration: 1.5, ease: "sine.out" });
   }, { scope: container });
 
   const menuItems = [
@@ -123,11 +123,7 @@ export default function CustomerDashboardLayout() {
               <Sparkles className="w-4 h-4" /> {t.dashboard.newOrder}
             </Link>
             
-            <button className="relative w-10 h-10 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-500 hover:text-gray-900 transition-colors shadow-sm">
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full z-10"></span>
-              <span className="notification-dot absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full"></span>
-            </button>
+            <NotificationBell />
           </div>
         </header>
 
