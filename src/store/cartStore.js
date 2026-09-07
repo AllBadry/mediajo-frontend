@@ -6,6 +6,17 @@ const CART_KEY = 'mediajo-cart';
 
 export const SERVICE_FEE = 1.5;
 
+// تطبيع عناصر السلة القادمة من أي مصدر (localStorage قديم / سيرفر)
+// لضمان وجود productQty دائماً وعدم ظهور "Subtotal (0)"
+const normalizeItems = (items) =>
+  (items || [])
+    .filter((i) => i && typeof i === 'object' && i.id)
+    .map((i) => ({
+      ...i,
+      productQty: Number.isFinite(i.productQty) && i.productQty >= 1 ? Math.floor(i.productQty) : 1,
+      dynamicInputs: i.dynamicInputs || {},
+    }));
+
 export const useCartStore = create(
   persist(
     (set, get) => ({
@@ -76,7 +87,7 @@ export const useCartStore = create(
         try {
           const { data } = await api.put('/api/cart', { items: get().items });
           if (data?.success && Array.isArray(data.data?.items)) {
-            set({ items: data.data.items });
+            set({ items: normalizeItems(data.data.items) });
           }
         } catch {
           // تبقى السلة محلية في حال فشل المزامنة
@@ -89,7 +100,7 @@ export const useCartStore = create(
         try {
           const { data } = await api.get('/api/cart');
           if (data?.success && Array.isArray(data.data?.items)) {
-            set({ items: data.data.items });
+            set({ items: normalizeItems(data.data.items) });
           }
         } catch {
           // تجاهل
@@ -120,7 +131,7 @@ export const useCartStore = create(
 
           const { data: saved } = await api.put('/api/cart', { items: merged });
           if (saved?.success && Array.isArray(saved.data?.items)) {
-            set({ items: saved.data.items });
+            set({ items: normalizeItems(saved.data.items) });
           }
         } catch {
           // إن فشلت المزامنة تبقى السلة المحلية
@@ -130,6 +141,11 @@ export const useCartStore = create(
     {
       name: CART_KEY,
       partialize: (state) => ({ items: state.items }),
+      merge: (persisted, current) => ({
+        ...current,
+        ...persisted,
+        items: normalizeItems(persisted?.items),
+      }),
     }
   )
 );
@@ -138,7 +154,7 @@ export const useCartStore = create(
 // Selectors
 // ==========================================
 export const selectItemCount = (state) =>
-  state.items.reduce((sum, i) => sum + i.productQty, 0);
+  state.items.reduce((sum, i) => sum + (i.productQty || 1), 0);
 
 export const selectSubtotal = (state) =>
-  state.items.reduce((sum, i) => sum + i.price * i.productQty, 0);
+  state.items.reduce((sum, i) => sum + (i.price || 0) * (i.productQty || 1), 0);

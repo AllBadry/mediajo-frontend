@@ -106,7 +106,7 @@ export default function CheckoutModal({ open, onClose }) {
       const { data } = await api.post('/api/orders', {
         items: items.map((i) => ({
           productId: i.id,
-          quantity: i.productQty,
+          quantity: parseInt(i.productQty, 10) || 1,
           dynamicInputs: i.dynamicInputs || {},
         })),
         targetLink,
