@@ -22,12 +22,31 @@ export const useCartStore = create(
           if (found) {
             return {
               items: state.items.map((i) =>
-                i.id === item.id ? { ...i, productQty: i.productQty + 1 } : i
+                i.id === item.id
+                  ? {
+                      ...i,
+                      productQty: i.productQty + 1,
+                      dynamicInputs: item.dynamicInputs || i.dynamicInputs,
+                    }
+                  : i
               ),
             };
           }
-          return { items: [...state.items, { ...item, productQty: 1 }] };
+          return {
+            items: [
+              ...state.items,
+              { ...item, productQty: 1, dynamicInputs: item.dynamicInputs || {} },
+            ],
+          };
         });
+        get().saveToServer();
+      },
+
+      // تحديث المدخلات الديناميكية لبند محدد (الرابط/الإيميل...)
+      updateItemDynamicInputs: (id, dynamicInputs) => {
+        set((state) => ({
+          items: state.items.map((i) => (i.id === id ? { ...i, dynamicInputs } : i)),
+        }));
         get().saveToServer();
       },
 

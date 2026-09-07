@@ -8,6 +8,7 @@ import { SiInstagram, SiTiktok, SiYoutube, SiFacebook, SiNetflix, SiSpotify, SiC
 import { useLanguage } from '../context/LanguageContext';
 import { useCartStore } from '../store/cartStore';
 import api from '../lib/axios'; // 👈 استيراد axios
+import PackageInputModal from './cart/PackageInputModal';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -116,15 +117,7 @@ const platformStyles = {
 // ==========================================
 // 3. مكون البطاقات (Tier Cards)
 // ==========================================
-function TierCards({ productsList, itemName, theme, orderNow, onAdd, addedText }) {
-  const [addedKey, setAddedKey] = useState(null);
-
-  const handleAdd = (product) => {
-    onAdd(product);
-    setAddedKey(product._id);
-    setTimeout(() => setAddedKey(null), 1200);
-  };
-
+function TierCards({ productsList, itemName, theme, orderNow, onAdd, addedText, addedId }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {productsList.map((product) => (
@@ -145,10 +138,10 @@ function TierCards({ productsList, itemName, theme, orderNow, onAdd, addedText }
           </div>
 
           <button
-            onClick={() => handleAdd(product)}
-            className={`mt-auto w-full py-3 bg-gray-100 text-gray-900 group-hover/tier:text-white rounded-xl font-bold text-sm transition-all duration-300 z-10 flex items-center justify-center gap-1.5 ${theme.btnHover} ${addedKey === product._id ? '!bg-emerald-500 !text-white group-hover/tier:!bg-emerald-500' : ''}`}
+            onClick={() => onAdd(product)}
+            className={`mt-auto w-full py-3 bg-gray-100 text-gray-900 group-hover/tier:text-white rounded-xl font-bold text-sm transition-all duration-300 z-10 flex items-center justify-center gap-1.5 ${theme.btnHover} ${addedId === product._id ? '!bg-emerald-500 !text-white group-hover/tier:!bg-emerald-500' : ''}`}
           >
-            {addedKey === product._id ? (
+            {addedId === product._id ? (
               <><Check className="w-4 h-4" /> {addedText}</>
             ) : (
               orderNow
@@ -164,6 +157,8 @@ function TierCards({ productsList, itemName, theme, orderNow, onAdd, addedText }
 // 4. المكون الرئيسي (Platform Page)
 // ==========================================
 export default function PlatformPage({ platformId }) {
+
+  
   const container = useRef();
   const { t } = useLanguage();
   const pp = t.platformPage;
@@ -172,6 +167,17 @@ export default function PlatformPage({ platformId }) {
   // حالات الباك إند
   const [platformProducts, setPlatformProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  // حالات جمع المدخلات الديناميكية (الرابط/الإيميل) والتحقق من الإضافة
+  const [pendingProduct, setPendingProduct] = useState(null);
+  const [addedId, setAddedId] = useState(null);
+  const addedTimer = useRef(null);
+
+  const flashAdded = (productId) => {
+    setAddedId(productId);
+    if (addedTimer.current) clearTimeout(addedTimer.current);
+    addedTimer.current = setTimeout(() => setAddedId(null), 1200);
+  };
 
   // اختيار التنسيق البصري الخاص بالمنصة
   const theme = platformStyles[platformId] || platformStyles.default;
@@ -216,7 +222,7 @@ export default function PlatformPage({ platformId }) {
   }, [platformProducts]);
 
   // 3. دالة الإضافة للسلة بناءً على المنتج من الـ DB
-  const handleAddToCart = (product) => {
+  const handleAddToCart = (product, dynamicInputs = {}) => {
     addItem({
       id: product._id, // المعرف الحقيقي من قاعدة البيانات
       platformId: product.platform,
@@ -224,7 +230,29 @@ export default function PlatformPage({ platformId }) {
       nameAr: product.name,
       unit: product.qty,
       price: product.price,
+      productType: product.productType,
+      inputRequirements: product.inputRequirements || [],
+      dynamicInputs,
     });
+  };
+
+  // 4. نقطة الدخول لزر "اطلب الآن": إن احتاج المنتج مدخلات نفتح البوب-آب وإلا نضيف مباشرة
+  const requestAdd = (product) => {
+    const reqs = product.inputRequirements || [];
+    if (reqs.length > 0) {
+      setPendingProduct(product);
+    } else {
+      handleAddToCart(product);
+      flashAdded(product._id);
+    }
+  };
+
+  const confirmPendingInputs = (dynamicInputs) => {
+    if (pendingProduct) {
+      handleAddToCart(pendingProduct, dynamicInputs);
+      flashAdded(pendingProduct._id);
+    }
+    setPendingProduct(null);
   };
 
   // ==========================================
@@ -365,8 +393,9 @@ export default function PlatformPage({ platformId }) {
                         itemName={sectionName}
                         theme={theme}
                         orderNow={pp.orderNow}
-                        onAdd={handleAddToCart}
+                        onAdd={requestAdd}
                         addedText={pp.added}
+                        addedId={addedId}
                       />
                     </div>
                   ))}
@@ -416,6 +445,14 @@ export default function PlatformPage({ platformId }) {
           </div>
         </div>
       </section>
+
+      {/* نافذة جمع مدخلات المنتج (رابط النمو / إيميل الاشتراك) */}
+      <PackageInputModal
+        open={!!pendingProduct}
+        product={pendingProduct}
+        onConfirm={confirmPendingInputs}
+        onClose={() => setPendingProduct(null)}
+      />
 
     </div>
   );

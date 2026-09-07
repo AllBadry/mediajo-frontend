@@ -9,7 +9,7 @@ import api from '../../api/client';
 import GoogleButton from './GoogleButton';
 
 // نافذة تسجيل الدخول المنبثقة عند إتمام الطلب
-export default function LoginModal({ open, onClose }) {
+export default function LoginModal({ open, onClose, onSuccess }) {
   const container = useRef();
   const { t } = useLanguage();
   const navigate = useNavigate();
@@ -68,7 +68,11 @@ export default function LoginModal({ open, onClose }) {
       if (response.data?.success) {
         login(response.data.data.user);
         onClose();
-        navigate('/dashboard/cart', { replace: true });
+        if (onSuccess) {
+          onSuccess();
+        } else {
+          navigate('/dashboard/cart', { replace: true });
+        }
       }
     } catch (err) {
       setError(err.response?.data?.message || (t.dir === 'rtl' ? 'فشل تسجيل الدخول عبر Google' : 'Google sign-in failed'));
@@ -91,7 +95,11 @@ export default function LoginModal({ open, onClose }) {
       if (response.data.success) {
         login(response.data.user || { name: email.split('@')[0], email });
         onClose();
-        navigate('/dashboard/cart', { replace: true });
+        if (onSuccess) {
+          onSuccess();
+        } else {
+          navigate('/dashboard/cart', { replace: true });
+        }
       }
     } catch (err) {
       const code = err.response?.data?.code;

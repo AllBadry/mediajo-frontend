@@ -1,21 +1,27 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ShoppingCart } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import CartContent from '../components/cart/CartContent';
 import LoginModal from '../components/auth/LoginModal';
+import CheckoutModal from '../components/cart/CheckoutModal';
 
 // صفحة سلة عامة (متاحة دون تسجيل دخول)
 export default function CartPage() {
   const { t } = useLanguage();
-  const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const [showLogin, setShowLogin] = useState(false);
+  const [showCheckout, setShowCheckout] = useState(false);
+
+  const openCheckout = () => {
+    setShowLogin(false);
+    setShowCheckout(true);
+  };
 
   const handleCheckout = () => {
     if (isAuthenticated) {
-      navigate('/dashboard/cart');
+      openCheckout();
     } else {
       setShowLogin(true);
     }
@@ -49,6 +55,12 @@ export default function CartPage() {
       <LoginModal 
         open={showLogin} 
         onClose={() => setShowLogin(false)} 
+        onSuccess={openCheckout}
+      />
+
+      <CheckoutModal
+        open={showCheckout}
+        onClose={() => setShowCheckout(false)}
       />
     </div>
   );

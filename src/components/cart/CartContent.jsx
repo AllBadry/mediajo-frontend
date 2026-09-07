@@ -1,9 +1,10 @@
 import React, { useRef, useState } from 'react';
-import { ShoppingCart, Trash2, Plus, Minus, Tag, ArrowRight, ShieldCheck, Headphones, MonitorPlay, Sparkles, PenTool, GraduationCap } from 'lucide-react';
+import { ShoppingCart, Trash2, Plus, Minus, Tag, ArrowRight, ShieldCheck, Headphones, MonitorPlay, Sparkles, PenTool, GraduationCap, Pencil } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { useCartStore, selectSubtotal, selectItemCount, SERVICE_FEE } from '../../store/cartStore';
 import { useLanguage } from '../../context/LanguageContext';
+import PackageInputModal from './PackageInputModal';
 
 // ==========================================
 // مكونات أيقونات المنصات (SVG مخصصة محلية)
@@ -70,11 +71,13 @@ export default function CartContent({ onCheckout = () => {} }) {
   const items = useCartStore((s) => s.items);
   const updateQty = useCartStore((s) => s.updateQty);
   const removeItem = useCartStore((s) => s.removeItem);
+  const updateItemDynamicInputs = useCartStore((s) => s.updateItemDynamicInputs);
   const subtotal = useCartStore(selectSubtotal);
   const count = useCartStore(selectItemCount);
 
   const [promoCode, setPromoCode] = useState('');
   const [promoApplied, setPromoApplied] = useState(false);
+  const [editingItem, setEditingItem] = useState(null);
 
   const fees = subtotal > 0 ? SERVICE_FEE : 0;
   const discount = promoApplied ? subtotal * 0.1 : 0;
@@ -137,6 +140,32 @@ export default function CartContent({ onCheckout = () => {} }) {
                     <span className="inline-block px-2.5 py-1 bg-gray-50 border border-gray-100 rounded-lg text-xs font-bold uppercase tracking-widest text-gray-500">
                       {item.unit}
                     </span>
+                    {item.inputRequirements?.length > 0 && (
+                      <button
+                        onClick={() => setEditingItem(item)}
+                        className="inline-flex items-center gap-1 px-2.5 py-1 bg-indigo-50 text-indigo-600 rounded-lg text-xs font-bold hover:bg-indigo-100 transition-colors mr-1"
+                      >
+                        <Pencil className="w-3 h-3" /> {d.editInputs}
+                      </button>
+                    )}
+
+                    {/* المدخلات الديناميكية (الرابط/الإيميل) الخاصة بالبند */}
+                    {item.dynamicInputs &&
+                      Object.keys(item.dynamicInputs).filter((k) => (item.dynamicInputs[k] || '').trim()).length > 0 && (
+                        <div className="mt-2 space-y-1">
+                          {Object.entries(item.dynamicInputs)
+                            .filter(([, v]) => (v || '').trim())
+                            .map(([key, value]) => {
+                              const req = (item.inputRequirements || []).find((r) => r.name === key);
+                              return (
+                                <div key={key} className="flex items-center gap-1.5 text-xs font-medium text-gray-600">
+                                  <span className="text-gray-400">{req?.label || key}:</span>
+                                  <span dir="ltr" className="text-indigo-600 font-semibold break-all">{value}</span>
+                                </div>
+                              );
+                            })}
+                        </div>
+                      )}
                   </div>
                 </div>
 
@@ -236,6 +265,22 @@ export default function CartContent({ onCheckout = () => {} }) {
           </p>
         </div>
       </div>
+
+      {/* نافذة تعديل مدخلات البند (الرابط/الإيميل) */}
+      <PackageInputModal
+        open={!!editingItem}
+        product={editingItem ? {
+          _id: editingItem.id,
+          name: editingItem.name,
+          nameAr: editingItem.nameAr,
+          inputRequirements: editingItem.inputRequirements || [],
+          _pendingInputs: editingItem.dynamicInputs || {},
+        } : null}
+        onConfirm={(inputs) => {
+          if (editingItem) updateItemDynamicInputs(editingItem.id, inputs);
+        }}
+        onClose={() => setEditingItem(null)}
+      />
 
     </div>
   );
