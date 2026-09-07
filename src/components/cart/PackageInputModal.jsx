@@ -62,6 +62,12 @@ export default function PackageInputModal({ open, product, onConfirm, onClose })
 
   const label = t.dir === 'rtl' ? product.nameAr : product.name;
 
+  // العنوان/نص الحقل مترجم حسب اللغة (من قاعدة الترجمة) مع الرجوع لليبل المخزن بالـ DB
+  const reqLabel = (req) => pp.inputFields?.[req.name] || req.label;
+  const reqPlaceholder = (req) =>
+    pp.inputPlaceholders?.[req.name] ||
+    (req.type === 'email' ? 'you@example.com' : req.type === 'url' ? 'https://...' : req.placeholder);
+
   const validate = () => {
     const nextErrors = {};
     requirements.forEach((req) => {
@@ -131,7 +137,7 @@ export default function PackageInputModal({ open, product, onConfirm, onClose })
               <div key={req.name}>
                 <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
                   {typeIcons[req.type] || <FileText className="w-4 h-4 text-gray-400" />}
-                  {req.label}
+                  {reqLabel(req)}
                   {req.required !== false && (
                     <span className="text-xs font-bold text-red-500">*</span>
                   )}
@@ -141,7 +147,7 @@ export default function PackageInputModal({ open, product, onConfirm, onClose })
                     rows={3}
                     value={values[req.name] || ''}
                     onChange={(e) => setField(req.name, e.target.value)}
-                    placeholder={req.placeholder}
+                    placeholder={reqPlaceholder(req)}
                     className={`w-full py-3 px-4 bg-gray-50 border rounded-xl text-sm font-medium text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500/40 focus:border-violet-500 transition-all ${errors[req.name] ? 'border-red-300' : 'border-gray-200'}`}
                   />
                 ) : (
@@ -150,7 +156,7 @@ export default function PackageInputModal({ open, product, onConfirm, onClose })
                     dir="ltr"
                     value={values[req.name] || ''}
                     onChange={(e) => setField(req.name, e.target.value)}
-                    placeholder={req.placeholder}
+                    placeholder={reqPlaceholder(req)}
                     className={`w-full py-3 px-4 bg-gray-50 border rounded-xl text-sm font-medium text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500/40 focus:border-violet-500 transition-all ${errors[req.name] ? 'border-red-300' : 'border-gray-200'}`}
                   />
                 )}

@@ -185,6 +185,14 @@ export const translations = {
       required: 'Required',
       urlInvalid: 'Please enter a valid link (http:// or https://)',
       emailInvalid: 'Please enter a valid email',
+      inputFields: {
+        targetLink: 'Account / Post link',
+        accountEmail: 'Email to activate the subscription on',
+      },
+      inputPlaceholders: {
+        targetLink: 'https://...',
+        accountEmail: 'you@example.com',
+      },
       hintMap: {
         'Arab followers': 'Arab followers',
         'Includes refill guarantee': 'Includes refill guarantee',
@@ -271,6 +279,7 @@ export const translations = {
       checkoutSecurely: 'Checkout Securely',
       sslEncrypted: 'SSL Encrypted Checkout',
       editInputs: 'Edit',
+      fillInputs: 'Fill required details',
       confirmOrder: 'Confirm Your Order',
       confirmOrderSub: 'Review your order before confirming. Make sure all links and emails are correct.',
       placeOrder: 'Place Order',
@@ -587,6 +596,14 @@ export const translations = {
       required: 'مطلوب',
       urlInvalid: 'يرجى إدخال رابط صحيح يبدأ بـ http:// أو https://',
       emailInvalid: 'يرجى إدخال بريد إلكتروني صحيح',
+      inputFields: {
+        targetLink: 'رابط الحساب / المنشور',
+        accountEmail: 'البريد الإلكتروني المراد تفعيل الاشتراك عليه',
+      },
+      inputPlaceholders: {
+        targetLink: 'https://...',
+        accountEmail: 'you@example.com',
+      },
       hintMap: {
         'Arab followers': 'متابعون عرب',
         'Includes refill guarantee': 'يشمل ضمان إعادة التعبئة',
@@ -673,6 +690,7 @@ export const translations = {
       checkoutSecurely: 'إتمام الدفع بأمان',
       sslEncrypted: 'دفع مشفر عبر SSL',
       editInputs: 'تعديل',
+      fillInputs: 'أكمل البيانات المطلوبة',
       confirmOrder: 'تأكيد الطلب',
       confirmOrderSub: 'راجع طلبك قبل التأكيد. تأكد من صحة الروابط والبريد الإلكتروني.',
       placeOrder: 'إتمام الطلب',

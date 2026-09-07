@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { X, Loader2, ShoppingBag, CheckCircle2, AlertCircle, ShieldCheck, ArrowRight, Mail } from 'lucide-react';
+import { X, Loader2, ShoppingBag, CheckCircle2, AlertCircle, ShieldCheck, ArrowRight, Mail, Pencil } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { useLanguage } from '../../context/LanguageContext';
 import { useAuth } from '../../context/AuthContext';
 import { useCartStore, selectSubtotal, selectItemCount, SERVICE_FEE } from '../../store/cartStore';
 import api from '../../api/client';
+import PackageInputModal from './PackageInputModal';
 
 // نافذة تأكيد إتمام الطلب (تُرسل الطلب للباك إند ويصل للأدمن)
 export default function CheckoutModal({ open, onClose }) {
@@ -16,12 +17,17 @@ export default function CheckoutModal({ open, onClose }) {
 
   const items = useCartStore((s) => s.items);
   const clearCart = useCartStore((s) => s.clearCart);
+  const updateItemDynamicInputs = useCartStore((s) => s.updateItemDynamicInputs);
   const subtotal = useCartStore(selectSubtotal);
   const count = useCartStore(selectItemCount);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [createdOrder, setCreatedOrder] = useState(null);
+
+  // فهرس المنتجات الحية من الباك إند (للتأكد من المدخلات المطلوبة محلياً قبل الإرسال)
+  const [productsIndex, setProductsIndex] = useState({});
+  const [missingInput, setMissingInput] = useState(null); // { item, product } بانتظار تعبئة المدخلات
 
   const fees = subtotal > 0 ? SERVICE_FEE : 0;
   const total = subtotal + fees;
@@ -35,6 +41,15 @@ export default function CheckoutModal({ open, onClose }) {
       document.body.style.overflow = 'hidden';
       setError('');
       setCreatedOrder(null);
+      // جلب المنتجات مرة واحدة لمعرفة المتطلبات الفعلية لكل منتج
+      api
+        .get('/products')
+        .then(({ data }) => {
+          const index = {};
+          (data?.data?.products || []).forEach((p) => { index[p._id] = p; });
+          setProductsIndex(index);
+        })
+        .catch(() => {});
     }
     return () => {
       window.removeEventListener('keydown', onKey);
@@ -56,14 +71,37 @@ export default function CheckoutModal({ open, onClose }) {
 
   const label = (item) => (t.dir === 'rtl' ? item.nameAr : item.name);
 
+  // أول مدخل مطلوب ناقص في بند معين (وقيمته فارغة)
+  const firstMissingReq = (item) => {
+    const product = productsIndex[item.id];
+    if (!product) return null;
+    for (const req of product.inputRequirements || []) {
+      if (req.required === false) continue;
+      const value = item.dynamicInputs?.[req.name];
+      if (!value || !String(value).trim()) return req;
+    }
+    return null;
+  };
+
   const targetLink =
     items
       .map((i) => i.dynamicInputs?.targetLink)
       .find((v) => typeof v === 'string' && v.trim()) || '';
 
   const handleConfirm = async () => {
-    setLoading(true);
     setError('');
+    // تحقق محلي قبل الإرسال: أي بند مدخلاته الإلزامية ناقصة → فتح نافذة التعبئة
+    for (const item of items) {
+      const product = productsIndex[item.id];
+      if (!product) continue;
+      const missingReq = firstMissingReq(item);
+      if (missingReq) {
+        setMissingInput({ item, product });
+        return;
+      }
+    }
+
+    setLoading(true);
     try {
       const { data } = await api.post('/api/orders', {
         items: items.map((i) => ({
@@ -86,6 +124,16 @@ export default function CheckoutModal({ open, onClose }) {
       setLoading(false);
     }
   };
+
+  const missingProduct = missingInput
+    ? {
+        _id: missingInput.item.id,
+        name: missingInput.item.name,
+        nameAr: missingInput.item.nameAr,
+        inputRequirements: missingInput.product.inputRequirements || [],
+        _pendingInputs: missingInput.item.dynamicInputs || {},
+      }
+    : null;
 
   return (
     <div ref={container}>
@@ -137,12 +185,18 @@ export default function CheckoutModal({ open, onClose }) {
               <div className="max-h-44 overflow-y-auto space-y-2.5 mb-5">
                 {items.map((item) => {
                   const hasInputs = item.dynamicInputs && Object.keys(item.dynamicInputs).filter((k) => (item.dynamicInputs[k] || '').trim()).length > 0;
+                  const missingReq = firstMissingReq(item);
                   return (
                     <div key={item.id} className="flex items-start justify-between gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100">
                       <div className="text-sm">
                         <span className="font-bold text-gray-900 block leading-tight">{label(item)}</span>
                         <span className="text-xs text-gray-500 font-medium">{item.unit} × {item.productQty}</span>
-                        {hasInputs && (
+                        {missingReq ? (
+                          <span className="flex items-center gap-1 text-[11px] text-amber-600 font-semibold mt-1">
+                            <AlertCircle className="w-3 h-3" />
+                            {missingReq.label}
+                          </span>
+                        ) : hasInputs ? (
                           <span className="flex items-center gap-1 text-[11px] text-indigo-600 font-medium mt-1">
                             <Mail className="w-3 h-3" />
                             {Object.entries(item.dynamicInputs)
@@ -150,6 +204,14 @@ export default function CheckoutModal({ open, onClose }) {
                               .map(([, v]) => v)
                               .join(' • ')}
                           </span>
+                        ) : null}
+                        {missingReq && (
+                          <button
+                            onClick={() => setMissingInput({ item, product: productsIndex[item.id] })}
+                            className="flex items-center gap-1 text-[11px] text-blue-600 font-bold hover:text-blue-500 mt-0.5"
+                          >
+                            <Pencil className="w-3 h-3" /> {d.fillInputs}
+                          </button>
                         )}
                       </div>
                       <span className="font-bold text-gray-900 text-sm shrink-0">{(item.price * item.productQty).toFixed(2)}</span>
@@ -194,6 +256,18 @@ export default function CheckoutModal({ open, onClose }) {
           )}
         </div>
       </div>
+
+      {/* نافذة تعبئة المدخلات الإلزامية الناقصة قبل إتمام الطلب */}
+      <PackageInputModal
+        open={!!missingInput}
+        product={missingProduct}
+        onConfirm={(inputs) => {
+          if (missingInput) updateItemDynamicInputs(missingInput.item.id, inputs);
+          setMissingInput(null);
+          setError('');
+        }}
+        onClose={() => setMissingInput(null)}
+      />
     </div>
   );
 }
