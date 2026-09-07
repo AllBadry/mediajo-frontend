@@ -4,7 +4,7 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { 
   LayoutDashboard, ShoppingBag, ShoppingCart, MessageSquare, 
-  User, LogOut, Bell, Sparkles
+  User, LogOut, Bell, Sparkles, Wallet
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -25,6 +25,7 @@ export default function CustomerDashboardLayout() {
   const getPageTitle = () => {
     const path = location.pathname;
     if (path.includes('orders')) return t.dashboard.myOrders;
+    if (path.includes('wallet')) return t.dashboard.wallet.title;
     if (path.includes('cart')) return t.dashboard.yourCart;
     if (path.includes('tickets')) return t.dashboard.supportTickets;
     if (path.includes('profile')) return t.dashboard.profileSettings;
@@ -43,6 +44,7 @@ export default function CustomerDashboardLayout() {
   const menuItems = [
     { id: 'overview', path: '/dashboard', icon: <LayoutDashboard className="w-5 h-5" />, label: t.dashboard.overview },
     { id: 'orders', path: '/dashboard/orders', icon: <ShoppingBag className="w-5 h-5" />, label: t.dashboard.myOrders },
+    { id: 'wallet', path: '/dashboard/wallet', icon: <Wallet className="w-5 h-5" />, label: t.dashboard.wallet.title },
     { id: 'cart', path: '/dashboard/cart', icon: <ShoppingCart className="w-5 h-5" />, label: t.dashboard.cart },
     { id: 'tickets', path: '/dashboard/tickets', icon: <MessageSquare className="w-5 h-5" />, label: t.dashboard.supportTickets, badge: 1 },
   ];

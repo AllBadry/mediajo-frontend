@@ -25,6 +25,7 @@ import CartPage from './pages/CartPage';
 import CustomerDashboardLayout from './layouts/CustomerDashboardLayout';
 import Overview from './pages/dashboard/Overview';
 import MyOrders from './pages/dashboard/MyOrders';
+import Wallet from './pages/dashboard/Wallet';
 import Cart from './pages/dashboard/Cart';
 import SupportTickets from './pages/dashboard/SupportTickets';
 import ProfileSettings from './pages/dashboard/ProfileSettings';
@@ -70,6 +71,7 @@ function AppRoutes() {
       <Route path="/dashboard" element={<ProtectedRoute><CustomerDashboardLayout /></ProtectedRoute>}>
         <Route index element={<Overview />} />
         <Route path="orders" element={<MyOrders />} />
+        <Route path="wallet" element={<Wallet />} />
         <Route path="cart" element={<Cart />} />
         <Route path="tickets" element={<SupportTickets />} />
         <Route path="profile" element={<ProfileSettings />} />

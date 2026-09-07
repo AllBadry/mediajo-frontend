@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { X, Loader2, ShoppingBag, CheckCircle2, AlertCircle, ShieldCheck, ArrowRight, Mail, Pencil } from 'lucide-react';
+import { X, Loader2, ShoppingBag, CheckCircle2, AlertCircle, ShieldCheck, ArrowRight, Mail, Pencil, Wallet, Landmark } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { useLanguage } from '../../context/LanguageContext';
@@ -25,12 +25,20 @@ export default function CheckoutModal({ open, onClose }) {
   const [error, setError] = useState('');
   const [createdOrder, setCreatedOrder] = useState(null);
 
+  // طريقة الدفع: حوالة بنكية (افتراضي) أو رصيد عملات MJ
+  const [payMethod, setPayMethod] = useState('bank');
+  const [mjBalance, setMjBalance] = useState(null);
+
   // فهرس المنتجات الحية من الباك إند (للتأكد من المدخلات المطلوبة محلياً قبل الإرسال)
   const [productsIndex, setProductsIndex] = useState({});
   const [missingInput, setMissingInput] = useState(null); // { item, product } بانتظار تعبئة المدخلات
 
   const fees = subtotal > 0 ? SERVICE_FEE : 0;
   const total = subtotal + fees;
+  // ما يعادله بالعملات MJ (1 دينار = 10 MJ)
+  const mjNeeded = Math.round(total * 10);
+  const hasMjBalance = mjBalance != null;
+  const canPayMj = hasMjBalance && mjBalance >= mjNeeded && mjNeeded > 0;
 
   useEffect(() => {
     const onKey = (e) => {
@@ -41,6 +49,7 @@ export default function CheckoutModal({ open, onClose }) {
       document.body.style.overflow = 'hidden';
       setError('');
       setCreatedOrder(null);
+      setPayMethod('bank');
       // جلب المنتجات مرة واحدة لمعرفة المتطلبات الفعلية لكل منتج
       api
         .get('/api/products')
@@ -50,12 +59,21 @@ export default function CheckoutModal({ open, onClose }) {
           setProductsIndex(index);
         })
         .catch(() => {});
+      // جلب رصيد عملات MJ عند تسجيل الدخول لعرض خيار الدفع بالرصيد
+      if (user) {
+        api
+          .get('/api/auth/me')
+          .then(({ data }) => setMjBalance(data?.data?.user?.mjBalance ?? 0))
+          .catch(() => {});
+      } else {
+        setMjBalance(null);
+      }
     }
     return () => {
       window.removeEventListener('keydown', onKey);
       document.body.style.overflow = '';
     };
-  }, [open, onClose, loading]);
+  }, [open, onClose, loading, user]);
 
   useGSAP(() => {
     if (open) {
@@ -111,6 +129,7 @@ export default function CheckoutModal({ open, onClose }) {
         })),
         targetLink,
         customerEmail: user?.email || '',
+        paymentMethod: payMethod === 'mj' ? 'mj' : 'union_bank',
       });
       if (data?.status === 'success') {
         setCreatedOrder(data.data.order);
@@ -235,6 +254,56 @@ export default function CheckoutModal({ open, onClose }) {
                 </div>
               </div>
 
+              {/* ===== طريقة الدفع: رصيد MJ أو حوالة يدوية ===== */}
+              <div className="mb-4">
+                <p className="text-xs font-bold text-gray-500 mb-2">{d.payMethod}</p>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setPayMethod('bank')}
+                    className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border text-xs font-bold transition-colors ${
+                      payMethod === 'bank'
+                        ? 'bg-gray-900 text-white border-gray-900'
+                        : 'border-gray-200 text-gray-600 hover:border-gray-400 bg-white'
+                    }`}
+                  >
+                    <Landmark className="w-5 h-5" />
+                    {d.payWithBank}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => (hasMjBalance ? setPayMethod('mj') : setPayMethod('bank'))}
+                    className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border text-xs font-bold transition-colors ${
+                      payMethod === 'mj'
+                        ? 'bg-indigo-600 text-white border-indigo-600'
+                        : 'border-gray-200 text-gray-600 hover:border-indigo-400 bg-white'
+                    }`}
+                  >
+                    <Wallet className="w-5 h-5" />
+                    {d.payWithMj}
+                  </button>
+                </div>
+
+                {payMethod === 'mj' && (
+                  <div className={`mt-2 p-3 rounded-xl text-xs font-bold flex items-center justify-between ${
+                    canPayMj ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'
+                  }`}>
+                    <span>
+                      {d.yourBalance}: {mjBalance ?? '—'} MJ · {d.mjNeeded.replace('{mj}', mjNeeded)} MJ
+                    </span>
+                    {!canPayMj ? (
+                      <a href="/dashboard/wallet" className="underline underline-offset-2 shrink-0">{d.topUpNow}</a>
+                    ) : null}
+                  </div>
+                )}
+              </div>
+
+              {!canPayMj && payMethod === 'mj' && (
+                <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-xl text-sm font-medium flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 shrink-0" /> {d.mjInsufficient}
+                </div>
+              )}
+
               {error && (
                 <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-xl text-sm font-medium flex items-center gap-2">
                   <AlertCircle className="w-4 h-4 shrink-0" /> {error}
@@ -243,7 +312,7 @@ export default function CheckoutModal({ open, onClose }) {
 
               <button
                 onClick={handleConfirm}
-                disabled={loading || items.length === 0}
+                disabled={loading || items.length === 0 || (payMethod === 'mj' && !canPayMj)}
                 className="w-full py-4 bg-blue-600 hover:bg-blue-500 disabled:bg-gray-200 disabled:text-gray-400 text-white rounded-xl font-bold text-sm transition-all shadow-[0_10px_25px_rgba(37,99,235,0.3)] flex items-center justify-center gap-2"
               >
                 {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <>{d.placeOrder} <ArrowRight className="w-4 h-4 rtl:rotate-180" /></>}
