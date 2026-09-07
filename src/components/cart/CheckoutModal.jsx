@@ -43,7 +43,7 @@ export default function CheckoutModal({ open, onClose }) {
       setCreatedOrder(null);
       // جلب المنتجات مرة واحدة لمعرفة المتطلبات الفعلية لكل منتج
       api
-        .get('/products')
+        .get('/api/products')
         .then(({ data }) => {
           const index = {};
           (data?.data?.products || []).forEach((p) => { index[p._id] = p; });
