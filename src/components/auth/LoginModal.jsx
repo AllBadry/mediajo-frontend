@@ -115,9 +115,9 @@ export default function LoginModal({ open, onClose, onSuccess }) {
 
   return (
     <div ref={container}>
-      <div dir={t.dir} className="login-modal-backdrop fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4" onClick={onClose}>
+      <div dir={t.dir} className="login-modal-backdrop fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm flex items-start justify-center p-4 overflow-y-auto" onClick={onClose}>
         <div
-          className="login-modal-card relative w-full max-w-md bg-white rounded-[2rem] p-8 md:p-10 shadow-[0_60px_120px_rgba(0,0,0,0.3)] max-h-[90vh] overflow-y-auto"
+          className="login-modal-card relative w-full max-w-md bg-white rounded-[2rem] p-8 md:p-10 shadow-[0_60px_120px_rgba(0,0,0,0.3)] m-auto"
           onClick={(e) => e.stopPropagation()}
         >
           {/* زر الإغلاق */}

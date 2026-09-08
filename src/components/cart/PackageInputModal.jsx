@@ -109,9 +109,9 @@ export default function PackageInputModal({ open, product, onConfirm, onClose })
 
   return (
     <div ref={container}>
-      <div dir={t.dir} className="pkg-backdrop fixed inset-0 z-[105] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4" onClick={onClose}>
+      <div dir={t.dir} className="pkg-backdrop fixed inset-0 z-[105] bg-black/60 backdrop-blur-sm flex items-start justify-center p-4 overflow-y-auto" onClick={onClose}>
         <div
-          className="pkg-card relative w-full max-w-md bg-white rounded-[2rem] p-8 md:p-10 shadow-[0_60px_120px_rgba(0,0,0,0.35)] max-h-[90vh] overflow-y-auto"
+          className="pkg-card relative w-full max-w-md bg-white rounded-[2rem] p-8 md:p-10 shadow-[0_60px_120px_rgba(0,0,0,0.35)] m-auto"
           onClick={(e) => e.stopPropagation()}
         >
           <button

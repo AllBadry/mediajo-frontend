@@ -7,8 +7,13 @@ import api from '../../api/client';
 // جرّس الإشعارات داخل لوحة تحكم العميل
 export default function NotificationBell() {
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const n = t.dashboard.notifications;
+
+  const loc = (item, field) => {
+    if (lang === 'ar') return item[field] || item[field + 'En'] || '';
+    return item[field + 'En'] || item[field] || '';
+  };
 
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState([]);
@@ -140,14 +145,23 @@ export default function NotificationBell() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       {!item.read && <span className="w-2 h-2 bg-blue-500 rounded-full shrink-0"></span>}
-                      <span className="font-bold text-sm text-gray-900 truncate">{item.title}</span>
+                      <span className="font-bold text-sm text-gray-900 truncate">{loc(item, 'title')}</span>
                     </div>
-                    {item.body && <p className="text-xs text-gray-500 font-medium mt-0.5 leading-relaxed break-words">{item.body}</p>}
+                    {loc(item, 'body') && <p className="text-xs text-gray-500 font-medium mt-0.5 leading-relaxed break-words">{loc(item, 'body')}</p>}
                     <span className="text-[10px] text-gray-400 font-medium mt-1 block">{relative(item.createdAt)}</span>
                   </div>
                 </button>
               ))
             )}
+          </div>
+
+          <div className="border-t border-gray-100 px-4 py-2.5">
+            <button
+              onClick={() => { setOpen(false); navigate('/dashboard/notifications'); }}
+              className="w-full text-center text-xs font-bold text-blue-600 hover:text-blue-500 py-1"
+            >
+              {n.viewAll}
+            </button>
           </div>
         </div>
       )}

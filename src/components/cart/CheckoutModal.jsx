@@ -164,9 +164,9 @@ export default function CheckoutModal({ open, onClose }) {
 
   return (
     <div ref={container}>
-      <div dir={t.dir} className="co-backdrop fixed inset-0 z-[110] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => !loading && onClose()}>
+      <div dir={t.dir} className="co-backdrop fixed inset-0 z-[110] bg-black/60 backdrop-blur-sm flex items-start justify-center p-4 overflow-y-auto" onClick={() => !loading && onClose()}>
         <div
-          className="co-card relative w-full max-w-md bg-white rounded-[2rem] p-8 md:p-10 shadow-[0_60px_120px_rgba(0,0,0,0.35)] max-h-[90vh] overflow-y-auto"
+          className="co-card relative w-full max-w-md bg-white rounded-[2rem] p-8 md:p-10 shadow-[0_60px_120px_rgba(0,0,0,0.35)] m-auto"
           onClick={(e) => e.stopPropagation()}
         >
           {!loading && !createdOrder && (

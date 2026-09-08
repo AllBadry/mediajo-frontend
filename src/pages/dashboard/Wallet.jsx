@@ -270,8 +270,8 @@ export default function Wallet() {
 
       {/* ===== نافذة إرفاق الحوالة ===== */}
       {showPay && (
-        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => !uploading && setShowPay(false)}>
-          <div className="bg-white rounded-[2rem] w-full max-w-md p-8 max-h-[90vh] overflow-y-auto" dir={t.dir} onClick={(e) => e.stopPropagation()}>
+        <div className="fixed inset-0 z-[110] flex items-start justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto" onClick={() => !uploading && setShowPay(false)}>
+          <div className="bg-white rounded-[2rem] w-full max-w-md p-8 m-auto" dir={t.dir} onClick={(e) => e.stopPropagation()}>
             <div className="flex items-start justify-between mb-5">
               <div>
                 <h3 className="text-xl font-black text-gray-900">{w.payTitle}</h3>

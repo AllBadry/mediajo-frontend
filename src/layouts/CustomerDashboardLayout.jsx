@@ -4,7 +4,7 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { 
   LayoutDashboard, ShoppingBag, ShoppingCart, MessageSquare, 
-  User, LogOut, Sparkles, Wallet
+  User, LogOut, Sparkles, Wallet, BellRing
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -30,6 +30,7 @@ export default function CustomerDashboardLayout() {
     if (path.includes('cart')) return t.dashboard.yourCart;
     if (path.includes('tickets')) return t.dashboard.supportTickets;
     if (path.includes('profile')) return t.dashboard.profileSettings;
+    if (path.includes('notifications')) return t.dashboard.notifications.title;
     return t.dashboard.dashboardOverview;
   };
 
@@ -47,15 +48,16 @@ export default function CustomerDashboardLayout() {
     { id: 'wallet', path: '/dashboard/wallet', icon: <Wallet className="w-5 h-5" />, label: t.dashboard.wallet.title },
     { id: 'cart', path: '/dashboard/cart', icon: <ShoppingCart className="w-5 h-5" />, label: t.dashboard.cart },
     { id: 'tickets', path: '/dashboard/tickets', icon: <MessageSquare className="w-5 h-5" />, label: t.dashboard.supportTickets, badge: 1 },
+    { id: 'notifications', path: '/dashboard/notifications', icon: <BellRing className="w-5 h-5" />, label: t.dashboard.notifications.title },
   ];
 
   return (
-    <div ref={container} dir={t.dir} className="flex h-screen bg-[#f6f8fa] font-sans overflow-hidden">
+    <div ref={container} dir={t.dir} className="flex min-h-screen bg-[#f6f8fa] font-sans">
       
       {/* =========================================
           1. Sidebar (باستخدام NavLink للتوجيه)
           ========================================= */}
-      <aside className="sidebar w-64 bg-white border-r border-gray-200 flex flex-col hidden md:flex shrink-0 z-20">
+      <aside className="sidebar w-64 bg-white border-r border-gray-200 flex flex-col hidden md:flex md:sticky md:top-0 md:h-screen shrink-0 z-20">
         <div className="h-20 flex items-center px-8 border-b border-gray-100">
           <Link to="/" className="flex items-center gap-2 group">
             <span className="text-xl font-black tracking-tight text-gray-900 group-hover:opacity-80">MediaJo</span>
@@ -106,7 +108,7 @@ export default function CustomerDashboardLayout() {
       {/* =========================================
           2. Main Content Area
           ========================================= */}
-      <main className="flex-1 flex flex-col h-full relative overflow-y-auto overflow-x-hidden">
+      <main className="flex-1 min-w-0 flex flex-col relative">
         
         {/* Background Elements */}
         <div className="absolute top-0 right-0 w-[40vw] h-[40vw] bg-blue-400/5 rounded-full blur-[80px] -z-10 pointer-events-none"></div>

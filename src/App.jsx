@@ -29,6 +29,7 @@ import Wallet from './pages/dashboard/Wallet';
 import Cart from './pages/dashboard/Cart';
 import SupportTickets from './pages/dashboard/SupportTickets';
 import ProfileSettings from './pages/dashboard/ProfileSettings';
+import Notifications from './pages/dashboard/Notifications';
 
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
@@ -75,6 +76,7 @@ function AppRoutes() {
         <Route path="cart" element={<Cart />} />
         <Route path="tickets" element={<SupportTickets />} />
         <Route path="profile" element={<ProfileSettings />} />
+        <Route path="notifications" element={<Notifications />} />
       </Route>
 
       {/* صفحة السلة العامة (متاحة دون تسجيل دخول) */}

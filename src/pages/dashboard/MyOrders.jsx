@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { useEffect } from 'react';
-import { ShoppingBag, CheckCircle2, Clock, Search, Filter, XCircle, ExternalLink, Package, Upload, X, Loader2, Banknote, Mail } from 'lucide-react';
+import { ShoppingBag, CheckCircle2, Clock, Search, Filter, XCircle, ExternalLink, Package, Upload, X, Loader2, Banknote, Mail, ChevronLeft, ChevronRight } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { useLanguage } from '../../context/LanguageContext';
@@ -63,6 +63,9 @@ export default function MyOrders() {
   const [filter, setFilter] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
 
+  const PAGE_SIZE = 8;
+  const [page, setPage] = useState(1);
+
   const [payingOrder, setPayingOrder] = useState(null); // الطلب الجاري دفعه (نافذة رفع الإيصال)
   const [detailOrder, setDetailOrder] = useState(null); // نافذة تفاصيل الطلب
 
@@ -90,6 +93,29 @@ export default function MyOrders() {
     fetchOrders();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // إعادة التعيين للصفحة الأولى عند تغيير الفلتر أو البحث
+  useEffect(() => {
+    setPage(1);
+  }, [filter, searchTerm]);
+
+  // ترقيم الصفحات
+  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const safePage = Math.min(page, pageCount);
+  const paged = filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
+
+  const pageItems = [];
+  if (pageCount <= 7) {
+    for (let i = 1; i <= pageCount; i++) pageItems.push(i);
+  } else {
+    const s = Math.max(2, safePage - 2);
+    const e = Math.min(pageCount - 1, safePage + 2);
+    pageItems.push(1);
+    if (s > 2) pageItems.push('…');
+    for (let i = s; i <= e; i++) pageItems.push(i);
+    if (e < pageCount - 1) pageItems.push('…');
+    pageItems.push(pageCount);
+  }
 
   const payLabel = (status) => (paymentStatusKeys[status] ? o[paymentStatusKeys[status]] : status);
   const stLabel = (status) => {
@@ -123,7 +149,6 @@ export default function MyOrders() {
     { key: 'unpaid', label: o.awaitingPayment },
     { key: 'pending_review', label: o.awaitingReview },
     { key: 'paid', label: o.paid },
-    { key: 'processing', label: d.status.processing },
     { key: 'completed', label: d.status.completed },
     { key: 'rejected', label: o.rejected },
   ];
@@ -133,7 +158,6 @@ export default function MyOrders() {
       if (filter === 'unpaid') return order.paymentStatus === 'unpaid';
       if (filter === 'pending_review') return order.paymentStatus === 'pending_review';
       if (filter === 'paid') return order.paymentStatus === 'paid';
-      if (filter === 'processing') return order.status === 'processing';
       if (filter === 'completed') return order.status === 'completed';
       if (filter === 'rejected') return order.paymentStatus === 'rejected';
       return true;
@@ -251,9 +275,10 @@ export default function MyOrders() {
           <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
         </div>
       ) : filtered.length > 0 ? (
-        /* ===== Orders List ===== */
+        <>
+        {/* ===== Orders List ===== */}
         <div className="flex flex-col gap-4">
-          {filtered.map((order) => {
+          {paged.map((order) => {
             const canPay = order.paymentStatus === 'unpaid' || order.paymentStatus === 'rejected';
             return (
               <div key={order._id} className="order-item bg-white border border-gray-200 rounded-[1.5rem] p-6 hover:shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:border-gray-300 transition-all duration-300">
@@ -263,11 +288,6 @@ export default function MyOrders() {
                     <span className="text-xs font-bold text-gray-400 bg-gray-100 px-2 py-0.5 rounded-md font-mono">{order.orderNumber}</span>
                     {typeBadge(order)}
                     {payBadge(order)}
-                    {order.status === 'processing' && (
-                      <span className="flex items-center gap-1 text-blue-700 bg-blue-50 border border-blue-100 px-2 py-1 rounded-full text-[10px] font-bold">
-                        <Clock className="w-3 h-3" /> {stLabel('processing')}
-                      </span>
-                    )}
                   </div>
                   <span className="text-xs text-gray-400 font-medium shrink-0">{d.placedOn} {fmtDate(order.createdAt)}</span>
                 </div>
@@ -330,6 +350,44 @@ export default function MyOrders() {
             );
           })}
         </div>
+
+        {/* ===== Pagination ===== */}
+        {pageCount > 1 && (
+          <div className="flex items-center justify-center gap-2 mt-2">
+            <button
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={safePage === 1}
+              className="w-10 h-10 rounded-xl border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center transition-colors"
+              aria-label={ar ? 'السابق' : 'Previous'}
+            >
+              <ChevronLeft className="w-4 h-4 rtl:rotate-180" />
+            </button>
+            {pageItems.map((n, i) =>
+              n === '…' ? (
+                <span key={`e${i}`} className="w-8 text-center text-gray-400 font-bold">…</span>
+              ) : (
+                <button
+                  key={n}
+                  onClick={() => setPage(n)}
+                  className={`min-w-[40px] h-10 px-2 rounded-xl text-sm font-bold transition-all ${
+                    n === safePage ? 'bg-gray-900 text-white shadow-md' : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
+                  }`}
+                >
+                  {n}
+                </button>
+              )
+            )}
+            <button
+              onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
+              disabled={safePage === pageCount}
+              className="w-10 h-10 rounded-xl border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center transition-colors"
+              aria-label={ar ? 'التالي' : 'Next'}
+            >
+              <ChevronRight className="w-4 h-4 rtl:rotate-180" />
+            </button>
+          </div>
+        )}
+        </>
       ) : (
         /* ===== Empty ===== */
         <div className="bg-white border border-gray-200 rounded-[2rem] p-12 flex flex-col items-center justify-center text-center">
@@ -341,8 +399,8 @@ export default function MyOrders() {
 
       {/* ===== نافذة رفع الإيصال ===== */}
       {payingOrder && (
-        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => !uploading && setPayingOrder(null)}>
-          <div className="bg-white rounded-[2rem] w-full max-w-md p-8 max-h-[90vh] overflow-y-auto" dir={t.dir} onClick={(e) => e.stopPropagation()}>
+        <div className="fixed inset-0 z-[110] flex items-start justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto" onClick={() => !uploading && setPayingOrder(null)}>
+          <div className="bg-white rounded-[2rem] w-full max-w-md p-8 m-auto" dir={t.dir} onClick={(e) => e.stopPropagation()}>
             <div className="flex items-start justify-between mb-5">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center">
@@ -416,8 +474,8 @@ export default function MyOrders() {
 
       {/* ===== نافذة تفاصيل الطلب ===== */}
       {detailOrder && (
-        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setDetailOrder(null)}>
-          <div className="bg-white rounded-[2rem] w-full max-w-lg p-8 max-h-[90vh] overflow-y-auto" dir={t.dir} onClick={(e) => e.stopPropagation()}>
+        <div className="fixed inset-0 z-[110] flex items-start justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto" onClick={() => setDetailOrder(null)}>
+          <div className="bg-white rounded-[2rem] w-full max-w-lg p-8 m-auto" dir={t.dir} onClick={(e) => e.stopPropagation()}>
             <div className="flex items-start justify-between mb-6">
               <div>
                 <h3 className="text-xl font-black text-gray-900">{o.detailsTitle}</h3>
@@ -474,6 +532,10 @@ export default function MyOrders() {
                 <a href={fullReceiptUrl(detailOrder.paymentProof)} target="_blank" rel="noreferrer">
                   <img src={fullReceiptUrl(detailOrder.paymentProof)} alt="receipt" className="w-full max-h-56 object-contain rounded-xl border border-gray-200 hover:opacity-90 transition-opacity" />
                 </a>
+              </div>
+            ) : detailOrder.paymentStatus === 'paid' ? (
+              <div className="p-3 bg-emerald-50 text-emerald-700 rounded-xl text-sm font-medium flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 shrink-0" /> {ar ? 'تم تأكيد الدفع — خُصِمت قيمته من رصيدك MJ ولا يحتاج إيصالاً.' : 'Payment confirmed — charged from your MJ balance, no receipt needed.'}
               </div>
             ) : (
               <div className="p-3 bg-amber-50 text-amber-800 rounded-xl text-sm font-medium flex items-center gap-2">
