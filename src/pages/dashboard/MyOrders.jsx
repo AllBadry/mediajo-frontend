@@ -99,24 +99,6 @@ export default function MyOrders() {
     setPage(1);
   }, [filter, searchTerm]);
 
-  // ترقيم الصفحات
-  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const safePage = Math.min(page, pageCount);
-  const paged = filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
-
-  const pageItems = [];
-  if (pageCount <= 7) {
-    for (let i = 1; i <= pageCount; i++) pageItems.push(i);
-  } else {
-    const s = Math.max(2, safePage - 2);
-    const e = Math.min(pageCount - 1, safePage + 2);
-    pageItems.push(1);
-    if (s > 2) pageItems.push('…');
-    for (let i = s; i <= e; i++) pageItems.push(i);
-    if (e < pageCount - 1) pageItems.push('…');
-    pageItems.push(pageCount);
-  }
-
   const payLabel = (status) => (paymentStatusKeys[status] ? o[paymentStatusKeys[status]] : status);
   const stLabel = (status) => {
     if (!orderStatusKeys[status]) return status;
@@ -172,6 +154,24 @@ export default function MyOrders() {
         Object.values(order.items?.[0]?.dynamicInputs || {}).some((v) => String(v).toLowerCase().includes(q))
       );
     });
+
+  // ترقيم الصفحات
+  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const safePage = Math.min(page, pageCount);
+  const paged = filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
+
+  const pageItems = [];
+  if (pageCount <= 7) {
+    for (let i = 1; i <= pageCount; i++) pageItems.push(i);
+  } else {
+    const s = Math.max(2, safePage - 2);
+    const e = Math.min(pageCount - 1, safePage + 2);
+    pageItems.push(1);
+    if (s > 2) pageItems.push('…');
+    for (let i = s; i <= e; i++) pageItems.push(i);
+    if (e < pageCount - 1) pageItems.push('…');
+    pageItems.push(pageCount);
+  }
 
   useGSAP(() => {
     gsap.fromTo(".order-item", { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, stagger: 0.1, ease: 'power2.out' });
