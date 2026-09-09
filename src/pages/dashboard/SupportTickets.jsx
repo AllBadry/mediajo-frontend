@@ -1,83 +1,138 @@
-import React, { useRef, useState } from 'react';
-import { MessageSquare, Plus, AlertCircle, CheckCircle2, Clock, Send, X, HelpCircle } from 'lucide-react';
+import React, { useRef, useState, useEffect } from 'react';
+import { MessageSquare, Plus, AlertCircle, CheckCircle2, Clock, Send, X, HelpCircle, Loader2 } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { useLanguage } from '../../context/LanguageContext';
+import api from '../../lib/axios';
 
 export default function SupportTickets() {
   const container = useRef();
   const { t } = useLanguage();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  const [tickets, setTickets] = useState([]);
   const [selectedTicket, setSelectedTicket] = useState(null);
+  
+  // حالات التحميل والواجهة
+  const [isLoading, setIsLoading] = useState(true);
+  const [isFetchingDetails, setIsFetchingDetails] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSending, setIsSending] = useState(false);
 
-  // بيانات وهمية للتذاكر
-  const [tickets, setTickets] = useState([
-    { 
-      id: "TICK-441", 
-      subject: "Issue with Netflix Account Login", 
-      status: "Answered", 
-      date: "Today, 14:20", 
-      category: "Streaming",
-      messages: [
-        { sender: "user", text: "Hello, the password for the Netflix account I bought isn't working.", time: "14:00" },
-        { sender: "support", text: "Dear customer, we apologize for this. Please try the updated password sent to your email or let us know.", time: "14:20" }
-      ]
-    },
-    { 
-      id: "TICK-390", 
-      subject: "Inquiry about Instagram followers delivery", 
-      status: "Closed", 
-      date: "Oct 20, 2026", 
-      category: "Social Media",
-      messages: [
-        { sender: "user", text: "When will my order start processing?", time: "10:00" },
-        { sender: "support", text: "Orders start automatically within 1 to 2 hours.", time: "10:30" }
-      ]
-    },
-  ]);
-
+  // مدخلات التذكرة الجديدة
   const [newSubject, setNewSubject] = useState('');
   const [newMessage, setNewMessage] = useState('');
+  const [newCategory, setNewCategory] = useState('OTHER');
+  
+  // مدخل الرد
+  const [replyText, setReplyText] = useState('');
 
-  useGSAP(() => {
-    gsap.fromTo(".ticket-card", 
-      { y: 20, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.5, stagger: 0.1, ease: "power2.out" }
-    );
-  }, { scope: container });
+  // 1. جلب قائمة تذاكر العميل عند التحميل
+  useEffect(() => {
+    fetchMyTickets();
+  }, []);
 
-  const handleCreateTicket = (e) => {
-    e.preventDefault();
-    if (!newSubject || !newMessage) return;
-
-    const newTicket = {
-      id: `TICK-${Math.floor(100 + Math.random() * 900)}`,
-      subject: newSubject,
-      status: "Open",
-      date: t.dashboard.justNow,
-      category: "General",
-      messages: [
-        { sender: "user", text: newMessage, time: t.dashboard.justNow }
-      ]
-    };
-
-    setTickets([newTicket, ...tickets]);
-    setNewSubject('');
-    setNewMessage('');
-    setIsModalOpen(false);
+  const fetchMyTickets = async () => {
+    try {
+      setIsLoading(true);
+      const res = await api.get('/tickets/my-tickets');
+      setTickets(res.data.data.tickets);
+    } catch (error) {
+      console.error('فشل في جلب التذاكر:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
+  // 2. جلب تفاصيل التذكرة (مع الرسائل) عند النقر عليها
+  const handleSelectTicket = async (ticketId) => {
+    try {
+      setIsFetchingDetails(true);
+      const res = await api.get(`/tickets/${ticketId}`);
+      setSelectedTicket(res.data.data.ticket);
+    } catch (error) {
+      console.error('فشل في جلب تفاصيل التذكرة:', error);
+    } finally {
+      setIsFetchingDetails(false);
+    }
+  };
+
+  // 3. إنشاء تذكرة جديدة
+  const handleCreateTicket = async (e) => {
+    e.preventDefault();
+    if (!newSubject.trim() || !newMessage.trim()) return;
+
+    try {
+      setIsSending(true);
+      await api.post('/tickets', {
+        subject: newSubject,
+        category: newCategory,
+        message: newMessage
+      });
+      
+      // تصفير الحقول وإغلاق النافذة وتحديث القائمة
+      setNewSubject('');
+      setNewMessage('');
+      setIsModalOpen(false);
+      fetchMyTickets();
+    } catch (error) {
+      console.error('فشل في إنشاء التذكرة:', error);
+      alert('حدث خطأ أثناء فتح التذكرة.');
+    } finally {
+      setIsSending(false);
+    }
+  };
+
+  // 4. إرسال رد على التذكرة المفتوحة
+  const handleReply = async (e) => {
+    e.preventDefault();
+    if (!replyText.trim() || !selectedTicket) return;
+
+    try {
+      setIsSending(true);
+      const res = await api.post(`/tickets/${selectedTicket._id}/reply`, {
+        message: replyText
+      });
+      
+      // تحديث التذكرة الحالية بالبيانات الجديدة القادمة من الخادم
+      setSelectedTicket(res.data.data.ticket);
+      setReplyText('');
+      
+      // تحديث القائمة الجانبية لتعكس الحالة الجديدة ووقت التحديث
+      fetchMyTickets();
+    } catch (error) {
+      console.error('فشل في إرسال الرد:', error);
+      alert(error.response?.data?.message || 'فشل إرسال الرد');
+    } finally {
+      setIsSending(false);
+    }
+  };
+
+  useGSAP(() => {
+    if (!isLoading) {
+      gsap.fromTo(".ticket-card", 
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5, stagger: 0.1, ease: "power2.out" }
+      );
+    }
+  }, { scope: container, dependencies: [isLoading] });
+
+  // تنسيق حالة التذكرة
   const getStatusBadge = (status) => {
-    const label = t.dashboard.ticketStatus[status.toLowerCase()] || status;
+    const label = t.dashboard?.ticketStatus?.[status.toLowerCase()] || status;
     switch(status) {
-      case 'Answered': return { icon: <AlertCircle className="w-4 h-4"/>, color: 'text-orange-600', bg: 'bg-orange-50', border: 'border-orange-100', label };
-      case 'Open': return { icon: <Clock className="w-4 h-4"/>, color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100', label };
-      case 'Closed': return { icon: <CheckCircle2 className="w-4 h-4"/>, color: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-100', label };
+      case 'CUSTOMER_REPLY':
+      case 'OPEN': return { icon: <Clock className="w-4 h-4"/>, color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100', label: 'مفتوحة' };
+      case 'ANSWERED': return { icon: <AlertCircle className="w-4 h-4"/>, color: 'text-orange-600', bg: 'bg-orange-50', border: 'border-orange-100', label: 'تم الرد' };
+      case 'CLOSED': return { icon: <CheckCircle2 className="w-4 h-4"/>, color: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-100', label: 'مغلقة' };
       default: return { icon: <HelpCircle className="w-4 h-4"/>, color: 'text-gray-600', bg: 'bg-gray-50', border: 'border-gray-100', label };
     }
   };
 
-  const categoryLabel = (category) => t.dashboard.ticketCategory[category.toLowerCase()] || category;
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleString(t.dir === 'rtl' ? 'ar-JO' : 'en-US', {
+      month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+    });
+  };
 
   return (
     <div ref={container} className="w-full flex flex-col gap-6 relative">
@@ -89,16 +144,16 @@ export default function SupportTickets() {
             <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
               <MessageSquare className="w-5 h-5" />
             </div>
-            {t.dashboard.supportTickets}
+            {t.dashboard?.supportTickets || 'تذاكر الدعم الفني'}
           </h2>
-          <p className="text-gray-500 font-medium mt-1">{t.dashboard.fastAssistance}</p>
+          <p className="text-gray-500 font-medium mt-1">{t.dashboard?.fastAssistance || 'نحن هنا لمساعدتك في أسرع وقت'}</p>
         </div>
 
         <button 
           onClick={() => setIsModalOpen(true)}
           className="bg-gray-900 hover:bg-black text-white px-6 py-3.5 rounded-2xl font-bold text-sm transition-all shadow-[0_10px_25px_rgba(0,0,0,0.15)] flex items-center justify-center gap-2"
         >
-          <Plus className="w-5 h-5" /> {t.dashboard.openNewTicket}
+          <Plus className="w-5 h-5" /> {t.dashboard?.openNewTicket || 'فتح تذكرة جديدة'}
         </button>
       </div>
 
@@ -107,34 +162,44 @@ export default function SupportTickets() {
         
         {/* Tickets List (Left Column) */}
         <div className="lg:col-span-1 flex flex-col gap-4">
-          <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest px-2">{t.dashboard.yourTickets}</h3>
+          <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest px-2">{t.dashboard?.yourTickets || 'تذاكرك'}</h3>
           
-          {tickets.map((ticket) => {
-            const config = getStatusBadge(ticket.status);
-            const isSelected = selectedTicket?.id === ticket.id;
+          {isLoading ? (
+            <div className="flex justify-center p-8"><Loader2 className="w-8 h-8 animate-spin text-blue-600" /></div>
+          ) : tickets.length === 0 ? (
+            <div className="bg-gray-50 border border-dashed border-gray-200 rounded-2xl p-6 text-center text-gray-500 text-sm font-medium">
+              لا توجد تذاكر مفتوحة حالياً.
+            </div>
+          ) : (
+            tickets.map((ticket) => {
+              const config = getStatusBadge(ticket.status);
+              const isSelected = selectedTicket?._id === ticket._id;
 
-            return (
-              <div 
-                key={ticket.id}
-                onClick={() => setSelectedTicket(ticket)}
-                className={`ticket-card bg-white border rounded-[1.5rem] p-5 cursor-pointer transition-all duration-300 ${
-                  isSelected ? 'border-blue-500 ring-2 ring-blue-500/20 shadow-md' : 'border-gray-200 hover:border-gray-300'
-                }`}
-              >
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-mono font-bold text-gray-400">{ticket.id}</span>
-                  <span className={`text-[10px] font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full flex items-center gap-1 ${config.bg} ${config.color}`}>
-                    {config.icon} {config.label}
-                  </span>
+              return (
+                <div 
+                  key={ticket._id}
+                  onClick={() => handleSelectTicket(ticket._id)}
+                  className={`ticket-card bg-white border rounded-[1.5rem] p-5 cursor-pointer transition-all duration-300 ${
+                    isSelected ? 'border-blue-500 ring-2 ring-blue-500/20 shadow-md' : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-[10px] font-mono font-bold text-gray-400">
+                      {ticket._id.substring(ticket._id.length - 6).toUpperCase()}
+                    </span>
+                    <span className={`text-[10px] font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full flex items-center gap-1 ${config.bg} ${config.color}`}>
+                      {config.icon} {config.label}
+                    </span>
+                  </div>
+                  <h4 className="font-bold text-gray-900 text-base mb-2 line-clamp-1">{ticket.subject}</h4>
+                  <div className="flex items-center justify-between text-xs text-gray-400 font-medium">
+                    <span>{ticket.category}</span>
+                    <span>{formatDate(ticket.updatedAt)}</span>
+                  </div>
                 </div>
-                <h4 className="font-bold text-gray-900 text-base mb-2 line-clamp-1">{ticket.subject}</h4>
-                <div className="flex items-center justify-between text-xs text-gray-400 font-medium">
-                  <span>{categoryLabel(ticket.category)}</span>
-                  <span>{ticket.date}</span>
-                </div>
-              </div>
-            );
-          })}
+              );
+            })
+          )}
         </div>
 
         {/* Chat / Ticket Details (Right Columns) */}
@@ -145,47 +210,69 @@ export default function SupportTickets() {
               {/* Ticket Header */}
               <div className="border-b border-gray-100 pb-4 mb-6 flex items-center justify-between">
                 <div>
-                  <span className="text-xs font-mono font-bold text-blue-600">{selectedTicket.id}</span>
+                  <span className="text-xs font-mono font-bold text-blue-600">ID: {selectedTicket._id}</span>
                   <h3 className="text-xl font-black text-gray-900 mt-1">{selectedTicket.subject}</h3>
                 </div>
-                <span className="text-xs text-gray-400 font-medium">{selectedTicket.date}</span>
+                <span className="text-xs text-gray-400 font-medium">{formatDate(selectedTicket.createdAt)}</span>
               </div>
 
               {/* Messages Flow */}
               <div className="flex-1 overflow-y-auto space-y-4 pr-2 mb-6">
-                {selectedTicket.messages.map((msg, index) => (
-                  <div key={index} className={`flex flex-col ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}>
-                    <div className={`max-w-[80%] p-4 rounded-2xl text-sm font-medium leading-relaxed ${
-                      msg.sender === 'user' 
-                        ? 'bg-blue-600 text-white rounded-br-none' 
-                        : 'bg-gray-100 text-gray-800 rounded-bl-none'
-                    }`}>
-                      {msg.text}
-                    </div>
-                    <span className="text-[10px] text-gray-400 mt-1 px-1">{msg.time}</span>
-                  </div>
-                ))}
+                {isFetchingDetails ? (
+                  <div className="flex justify-center items-center h-full"><Loader2 className="w-8 h-8 animate-spin text-blue-600" /></div>
+                ) : (
+                  selectedTicket.messages?.map((msg, index) => {
+                    const isSupport = msg.isAdmin;
+                    return (
+                      <div key={index} className={`flex flex-col ${!isSupport ? 'items-start' : 'items-end'}`}>
+                        <span className="text-[10px] font-bold text-gray-400 mb-1 px-1">
+                          {!isSupport ? selectedTicket.user?.name : 'الدعم الفني'}
+                        </span>
+                        <div className={`max-w-[80%] p-4 rounded-2xl text-sm font-medium leading-relaxed ${
+                          !isSupport 
+                            ? 'bg-blue-600 text-white rounded-tr-none' 
+                            : 'bg-gray-100 text-gray-800 rounded-tl-none'
+                        }`}>
+                          {msg.message}
+                        </div>
+                        <span className="text-[10px] text-gray-400 mt-1 px-1">{formatDate(msg.createdAt)}</span>
+                      </div>
+                    );
+                  })
+                )}
               </div>
 
               {/* Reply Input */}
-              <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
-                <input 
-                  type="text" 
-                  placeholder={t.dashboard.typeReply} 
-                  dir={t.dir}
-                  className="flex-1 bg-gray-50 border border-gray-200 rounded-2xl py-3 px-4 text-sm font-medium text-gray-900 focus:outline-none focus:border-blue-500 transition-all"
-                />
-                <button className="w-12 h-12 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl flex items-center justify-center shrink-0 transition-colors shadow-sm">
-                  <Send className="w-5 h-5 rtl:rotate-180" />
-                </button>
-              </div>
+              {selectedTicket.status !== 'CLOSED' ? (
+                <form onSubmit={handleReply} className="flex items-center gap-3 pt-4 border-t border-gray-100">
+                  <input 
+                    type="text" 
+                    value={replyText}
+                    onChange={(e) => setReplyText(e.target.value)}
+                    placeholder={t.dashboard?.typeReply || 'اكتب ردك هنا...'} 
+                    dir={t.dir}
+                    className="flex-1 bg-gray-50 border border-gray-200 rounded-2xl py-3 px-4 text-sm font-medium text-gray-900 focus:outline-none focus:border-blue-500 transition-all"
+                  />
+                  <button 
+                    type="submit" 
+                    disabled={isSending || !replyText.trim()}
+                    className="w-12 h-12 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white rounded-2xl flex items-center justify-center shrink-0 transition-colors shadow-sm"
+                  >
+                    {isSending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5 rtl:rotate-180" />}
+                  </button>
+                </form>
+              ) : (
+                <div className="pt-4 border-t border-gray-100 text-center text-sm font-bold text-red-500">
+                  هذه التذكرة مغلقة. لا يمكنك إضافة ردود جديدة.
+                </div>
+              )}
 
             </div>
           ) : (
             <div className="bg-white border border-gray-200 rounded-[2rem] p-12 flex flex-col items-center justify-center text-center h-[600px]">
               <MessageSquare className="w-16 h-16 text-gray-300 mb-4" />
-              <h3 className="text-xl font-black text-gray-900 mb-2">{t.dashboard.selectTicket}</h3>
-              <p className="text-gray-500 font-medium max-w-sm">{t.dashboard.selectTicketSub}</p>
+              <h3 className="text-xl font-black text-gray-900 mb-2">{t.dashboard?.selectTicket || 'اختر تذكرة لعرض التفاصيل'}</h3>
+              <p className="text-gray-500 font-medium max-w-sm">{t.dashboard?.selectTicketSub || 'قم باختيار تذكرة من القائمة الجانبية لمتابعة المحادثة مع الدعم الفني.'}</p>
             </div>
           )}
         </div>
@@ -201,17 +288,17 @@ export default function SupportTickets() {
               <X className="w-5 h-5" />
             </button>
 
-            <h3 className="text-2xl font-black text-gray-900 mb-2">{t.dashboard.openNewTicket}</h3>
-            <p className="text-sm text-gray-500 font-medium mb-6">{t.dashboard.describeIssue}</p>
+            <h3 className="text-2xl font-black text-gray-900 mb-2">{t.dashboard?.openNewTicket || 'فتح تذكرة جديدة'}</h3>
+            <p className="text-sm text-gray-500 font-medium mb-6">{t.dashboard?.describeIssue || 'يرجى وصف المشكلة بوضوح لنتمكن من مساعدتك.'}</p>
 
             <form onSubmit={handleCreateTicket} className="flex flex-col gap-4">
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">{t.dashboard.subject}</label>
+                <label className="block text-sm font-bold text-gray-700 mb-2">{t.dashboard?.subject || 'الموضوع'}</label>
                 <input 
                   type="text" 
                   value={newSubject}
                   onChange={(e) => setNewSubject(e.target.value)}
-                  placeholder={t.dashboard.subjectPlaceholder} 
+                  placeholder="مثال: مشكلة في طلب رقم..." 
                   dir={t.dir}
                   className="w-full bg-gray-50 border border-gray-200 rounded-2xl py-3 px-4 text-sm font-medium text-gray-900 focus:outline-none focus:border-blue-500 transition-all"
                   required
@@ -219,20 +306,39 @@ export default function SupportTickets() {
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">{t.dashboard.message}</label>
+                <label className="block text-sm font-bold text-gray-700 mb-2">القسم</label>
+                <select
+                  value={newCategory}
+                  onChange={(e) => setNewCategory(e.target.value)}
+                  className="w-full bg-gray-50 border border-gray-200 rounded-2xl py-3 px-4 text-sm font-medium text-gray-900 focus:outline-none focus:border-blue-500 transition-all"
+                >
+                  <option value="ORDER">مشكلة في طلب</option>
+                  <option value="PAYMENT">مشكلة مالية / دفع</option>
+                  <option value="SERVICE_ISSUE">استفسار عن خدمة</option>
+                  <option value="OTHER">أخرى</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">{t.dashboard?.message || 'الرسالة'}</label>
                 <textarea 
                   rows="4" 
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
-                  placeholder={t.dashboard.messagePlaceholder} 
+                  placeholder="اكتب تفاصيل مشكلتك هنا..." 
                   dir={t.dir}
                   className="w-full bg-gray-50 border border-gray-200 rounded-2xl p-4 text-sm font-medium text-gray-900 focus:outline-none focus:border-blue-500 transition-all resize-none"
                   required
                 ></textarea>
               </div>
 
-              <button type="submit" className="w-full bg-blue-600 hover:bg-blue-500 text-white py-4 rounded-2xl font-bold text-sm transition-all shadow-[0_10px_25px_rgba(37,99,235,0.25)] mt-2">
-                {t.dashboard.submitTicket}
+              <button 
+                type="submit" 
+                disabled={isSending}
+                className="w-full bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white py-4 rounded-2xl font-bold text-sm transition-all shadow-[0_10px_25px_rgba(37,99,235,0.25)] mt-2 flex justify-center items-center gap-2"
+              >
+                {isSending ? <Loader2 className="w-5 h-5 animate-spin" /> : null}
+                {t.dashboard?.submitTicket || 'إرسال التذكرة'}
               </button>
             </form>
 
