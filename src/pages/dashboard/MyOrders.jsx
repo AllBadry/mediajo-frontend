@@ -403,8 +403,29 @@ export default function MyOrders() {
               </button>
             </div>
 
-            <div className="p-3 bg-amber-50 border border-amber-100 rounded-md text-xs text-amber-800 font-medium mb-5">
-              {o.bankNote} <span className="font-black">(JOD {payingOrder.totalPrice?.toFixed(2)})</span>
+            <div className="rounded-md border border-amber-200 bg-amber-50 p-4 mb-5">
+              <div className="flex items-center gap-2 mb-2">
+                <Banknote className="w-4 h-4 text-amber-700" />
+                <span className="text-sm font-black text-amber-900">{o.transferTitle}</span>
+              </div>
+              <div className="space-y-1.5 text-xs font-medium text-amber-800">
+                <div className="flex justify-between items-center gap-2">
+                  <span className="text-amber-700">{o.transferMethodLabel}</span>
+                  <span className="font-black">{o.transferMethod}</span>
+                </div>
+                <div className="flex justify-between items-center gap-2">
+                  <span className="text-amber-700">{o.transferNumberLabel}</span>
+                  <span className="font-black text-base tracking-widest" dir="ltr">{o.transferNumber}</span>
+                </div>
+                <div className="flex justify-between items-center gap-2">
+                  <span className="text-amber-700">{o.transferBeneficiaryLabel}</span>
+                  <span className="font-black">{o.transferBeneficiary}</span>
+                </div>
+              </div>
+              <div className="mt-2.5 pt-2.5 border-t border-amber-200 flex justify-between items-center text-xs font-bold text-amber-800">
+                <span>{d.total}</span>
+                <span className="font-black text-sm">JOD {payingOrder.totalPrice?.toFixed(2)}</span>
+              </div>
             </div>
 
             <form onSubmit={handleUpload} className="space-y-4">
