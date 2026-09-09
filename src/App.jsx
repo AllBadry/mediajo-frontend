@@ -18,6 +18,7 @@ import ChatGPT from './pages/ChatGPT';
 import Canva from './pages/Canva';
 import Coursera from './pages/Coursera';
 import Auth from './pages/Auth';
+import ForgotPassword from './pages/ForgotPassword';
 import ContactUs from './pages/ContactUs';
 import CartPage from './pages/CartPage';
 
@@ -84,6 +85,10 @@ function AppRoutes() {
 
       {/* صفحة تسجيل الدخول */}
       <Route path="/auth" element={<GuestRoute><Auth /></GuestRoute>} />
+
+      {/* استعادة كلمة المرور */}
+      <Route path="/forgot-password" element={<GuestRoute><ForgotPassword /></GuestRoute>} />
+      <Route path="/reset-password" element={<GuestRoute><ForgotPassword /></GuestRoute>} />
 
       {/* صفحة تواصل معنا */}
       <Route path="/contact" element={<ContactUs />} />

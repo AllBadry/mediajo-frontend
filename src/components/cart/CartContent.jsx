@@ -181,8 +181,12 @@ export default function CartContent({ onCheckout = () => {} }) {
 
                   <div className="flex items-center gap-4 w-28 justify-end">
                     <span className="font-black text-gray-900 text-lg">{(item.price * item.productQty).toFixed(2)}</span>
-                    <button onClick={() => handleRemove(item.id)} className="text-gray-300 hover:text-red-500 transition-colors p-2 rounded-full hover:bg-red-50">
-                      <Trash2 className="w-5 h-5" />
+                    <button
+                      onClick={() => handleRemove(item.id)}
+                      className="flex items-center gap-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 p-2 rounded-xl transition-colors text-xs font-bold"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                      <span>{d.remove}</span>
                     </button>
                   </div>
                 </div>

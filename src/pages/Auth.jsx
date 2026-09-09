@@ -279,7 +279,7 @@ export default function Auth() {
                       <label className="flex items-center gap-2 text-sm font-bold text-gray-700">
                         <LockIcon className="w-4 h-4 text-gray-400" /> {t.auth.password}
                       </label>
-                      <button type="button" className="text-xs font-semibold text-blue-600 hover:text-blue-500">{t.auth.forgot}</button>
+                      <Link to="/forgot-password" className="text-xs font-semibold text-blue-600 hover:text-blue-500">{t.auth.forgot}</Link>
                     </div>
                     <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="••••••••" className={inputClass} required />
                   </div>
