@@ -63,8 +63,8 @@ export default function Hero() {
               {t.home.heroTitle1}
             </h1>
             <div className="flex items-center gap-4 my-3 ms-2">
-              <div className="h-[2px] w-12 bg-gray-300"></div>
-              <span className="text-3xl lg:text-4xl text-gray-400 font-light italic">vs</span>
+              <div className="h-[2px] w-12 bg-blue-500"></div>
+              <span className="text-3xl lg:text-4xl text-blue-600 font-semibold leading-none">»</span>
             </div>
             <h1 className="text-6xl sm:text-7xl lg:text-[6.5rem] leading-[0.9] font-medium text-[#1e2022] tracking-tighter">
               {t.home.heroTitle2}

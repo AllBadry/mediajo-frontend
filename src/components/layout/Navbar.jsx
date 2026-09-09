@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { 
   LogIn, 
   LogOut,
@@ -11,7 +12,9 @@ import {
   Headphones,
   Film,
   LayoutDashboard,
-  ShoppingCart
+  ShoppingCart,
+  Menu,
+  X
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
@@ -56,6 +59,13 @@ export default function Navbar() {
   const { t, lang, toggleLang } = useLanguage();
   const { isAuthenticated, user, logout } = useAuth();
   const cartCount = useCartStore(selectItemCount);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const close = () => setMobileOpen(false);
+
+  const handleLogout = () => {
+    logout();
+    close();
+  };
 
   return (
     <nav dir={t.dir} className="bg-white/90 backdrop-blur-xl border-b border-gray-100 px-6 lg:px-12 py-4 flex justify-between items-center sticky top-0 z-50">
@@ -256,16 +266,16 @@ export default function Navbar() {
       </div>
 
       {/* =========================================
-          الأكشن الجانبي + زر اللغة
+          الأكشن الجانبي + زر اللغة + قائمة الجوال
           ========================================= */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3">
         {/* أيقونة السلة */}
         <Link
           to={isAuthenticated ? '/dashboard/cart' : '/cart'}
           title="Cart"
-          className="relative flex items-center justify-center w-11 h-11 rounded-full border border-gray-200 text-gray-600 hover:text-black hover:bg-gray-50 hover:border-gray-300 transition-all"
+          className="relative flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-gray-200 text-gray-600 hover:text-black hover:bg-gray-50 hover:border-gray-300 transition-all shrink-0"
         >
-          <ShoppingCart className="w-4.5 h-4.5" />
+          <ShoppingCart className="w-5 h-5" />
           {cartCount > 0 && (
             <span className="absolute -top-1 -right-1 rtl:-right-auto rtl:-left-1 min-w-5 h-5 px-1 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 text-white text-[11px] font-bold flex items-center justify-center shadow-sm">
               {cartCount}
@@ -277,48 +287,163 @@ export default function Navbar() {
         <button
           onClick={toggleLang}
           dir="ltr"
-          className="flex items-center gap-2 px-4 py-2.5 rounded-full border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all"
+          className="flex items-center gap-2 px-3 sm:px-4 py-2.5 rounded-full border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all shrink-0"
         >
           <Languages className="w-4 h-4" />
-          {lang === 'en' ? t.toggle.ar : t.toggle.en}
+          <span className="hidden sm:inline">{lang === 'en' ? t.toggle.ar : t.toggle.en}</span>
         </button>
 
-        {isAuthenticated ? (
-          <>
-            <div className="flex items-center">
-              <NotificationBell />
-            </div>
-            <Link
-              to="/products"
-              className="hidden sm:flex items-center gap-2 bg-gray-900 text-white border-2 border-gray-900 px-4 py-2 text-xs font-bold uppercase tracking-wider hover:bg-white hover:text-gray-900 transition-colors shadow-[2px_2px_0px_0px_#d1d5db]"
-            >
-              <Sparkles className="w-4 h-4" /> {t.dashboard.newOrder}
-            </Link>
+        {/* كتلة الأكشن (سطح المكتب فقط — الأكبر من lg) */}
+        <div className="hidden lg:flex items-center gap-3">
+          {isAuthenticated ? (
+            <>
+              <div className="flex items-center">
+                <NotificationBell />
+              </div>
+              <Link
+                to="/products"
+                className="hidden xl:flex items-center gap-2 bg-gray-900 text-white border-2 border-gray-900 px-4 py-2 text-xs font-bold uppercase tracking-wider hover:bg-white hover:text-gray-900 transition-colors shadow-[2px_2px_0px_0px_#d1d5db]"
+              >
+                <Sparkles className="w-4 h-4" /> {t.dashboard.newOrder}
+              </Link>
+              <Link 
+                to="/dashboard"
+                className={`flex items-center gap-2 bg-[#1e2022] hover:bg-black text-white px-5 py-2.5 rounded-full font-medium text-sm transition-all shadow-[0_4px_10px_rgba(0,0,0,0.1)] hover:-translate-y-0.5 ${isActive('/dashboard') ? 'ring-2 ring-blue-500' : ''}`}
+              >
+                <LayoutDashboard className="w-4 h-4" />
+                <span className="max-w-[110px] truncate">{user?.name || t.nav.dashboard}</span>
+              </Link>
+              <button
+                onClick={logout}
+                title={t.auth.signOut}
+                className="flex items-center justify-center w-11 h-11 rounded-full border border-gray-200 text-gray-500 hover:text-red-600 hover:border-red-200 transition-all"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
+            </>
+          ) : (
             <Link 
-              to="/dashboard"
-              className={`flex items-center gap-2 bg-[#1e2022] hover:bg-black text-white px-6 py-2.5 rounded-full font-medium text-sm transition-all shadow-[0_4px_10px_rgba(0,0,0,0.1)] hover:-translate-y-0.5 ${isActive('/dashboard') ? 'ring-2 ring-blue-500' : ''}`}
+              to="/auth"
+              className="flex items-center gap-2 bg-[#1e2022] hover:bg-black text-white px-6 py-2.5 rounded-full font-medium text-sm transition-all shadow-[0_4px_10px_rgba(0,0,0,0.1)] hover:-translate-y-0.5"
             >
-              <LayoutDashboard className="w-4 h-4" />
-              <span>{user?.name || t.nav.dashboard}</span>
+              <span>{t.nav.signIn}</span>
+              <LogIn className="w-4 h-4" />
             </Link>
-            <button
-              onClick={logout}
-              title={t.auth.signOut}
-              className="flex items-center justify-center w-11 h-11 rounded-full border border-gray-200 text-gray-500 hover:text-red-600 hover:border-red-200 transition-all"
-            >
-              <LogOut className="w-4 h-4" />
-            </button>
-          </>
-        ) : (
-          <Link 
-            to="/auth"
-            className="flex items-center gap-2 bg-[#1e2022] hover:bg-black text-white px-6 py-2.5 rounded-full font-medium text-sm transition-all shadow-[0_4px_10px_rgba(0,0,0,0.1)] hover:-translate-y-0.5"
-          >
-            <span>{t.nav.signIn}</span>
-            <LogIn className="w-4 h-4" />
-          </Link>
-        )}
+          )}
+        </div>
+
+        {/* زر قائمة الجوال */}
+        <button
+          onClick={() => setMobileOpen(true)}
+          className="lg:hidden flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-gray-200 text-gray-700 hover:bg-gray-50 transition-all shrink-0"
+          aria-label="Open menu"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
       </div>
+
+      {/* =========================================
+          قائمة الجوال (Drawer)
+          ========================================= */}
+      {mobileOpen && (
+        <div className="fixed inset-0 z-[90] lg:hidden">
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={close}></div>
+          <div dir={t.dir} className="absolute top-0 bottom-0 left-0 rtl:left-auto rtl:right-0 w-[85vw] max-w-[340px] bg-white shadow-2xl flex flex-col">
+            {/* الرأس */}
+            <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+              <div className="flex items-center gap-3">
+                <span className="text-2xl font-bold tracking-tight bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
+                  MediaJo
+                </span>
+                <div className="flex items-center gap-1">
+                  <div className="w-2.5 h-6 bg-gradient-to-b from-pink-500 to-orange-400 rounded-sm skew-x-12 shadow-sm"></div>
+                  <div className="w-3.5 h-3.5 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full shadow-sm"></div>
+                </div>
+              </div>
+              <button onClick={close} className="w-9 h-9 rounded-full flex items-center justify-center border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors" aria-label="Close menu">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* الروابط */}
+            <nav className="flex-1 overflow-y-auto px-3 py-5 flex flex-col gap-1">
+              <Link to="/" onClick={close} className="flex items-center px-4 py-3 rounded-xl text-sm font-bold text-gray-800 hover:bg-gray-50 transition-colors">
+                {t.nav.home}
+              </Link>
+              <Link to="/products" onClick={close} className="flex items-center px-4 py-3 rounded-xl text-sm font-bold text-gray-800 hover:bg-gray-50 transition-colors">
+                {t.nav.products}
+              </Link>
+
+              <p className="px-4 pt-4 pb-1 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">{t.nav.services}</p>
+              <Link to="/products/youtube" onClick={close} className="flex items-center px-4 py-3 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
+                {t.nav.youtube}
+              </Link>
+              <Link to="/products/instagram" onClick={close} className="flex items-center px-4 py-3 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
+                {t.nav.instagram}
+              </Link>
+              <Link to="/products/tiktok" onClick={close} className="flex items-center px-4 py-3 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
+                {t.nav.tiktok}
+              </Link>
+              <Link to="/products/facebook" onClick={close} className="flex items-center px-4 py-3 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
+                {t.nav.facebook}
+              </Link>
+
+              <Link to="/about" onClick={close} className="flex items-center px-4 py-3 rounded-xl text-sm font-bold text-gray-800 hover:bg-gray-50 transition-colors">
+                {t.nav.about}
+              </Link>
+              <Link to="/contact" onClick={close} className="flex items-center px-4 py-3 rounded-xl text-sm font-bold text-gray-800 hover:bg-gray-50 transition-colors">
+                {t.nav.contact}
+              </Link>
+
+              {isAuthenticated && (
+                <>
+                  <p className="px-4 pt-4 pb-1 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">{t.dashboard.menu}</p>
+                  <Link to="/dashboard" onClick={close} className="flex items-center px-4 py-3 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
+                    {t.dashboard.overview}
+                  </Link>
+                  <Link to="/dashboard/orders" onClick={close} className="flex items-center px-4 py-3 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
+                    {t.dashboard.myOrders}
+                  </Link>
+                  <Link to="/dashboard/wallet" onClick={close} className="flex items-center px-4 py-3 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
+                    {t.dashboard.wallet.title}
+                  </Link>
+                  <Link to="/dashboard/notifications" onClick={close} className="flex items-center px-4 py-3 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
+                    {t.dashboard.notifications.title}
+                  </Link>
+                </>
+              )}
+            </nav>
+
+            {/* الأسفل: اللغة + تسجيل الدخول/الخروج */}
+            <div className="p-4 border-t border-gray-100 flex flex-col gap-2">
+              <button
+                onClick={toggleLang}
+                dir="ltr"
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-full border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+              >
+                <Languages className="w-4 h-4" /> {lang === 'en' ? t.toggle.ar : t.toggle.en}
+              </button>
+              {isAuthenticated ? (
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center justify-center gap-2 py-3 rounded-full bg-red-50 text-red-600 font-bold text-sm hover:bg-red-100 transition-colors"
+                >
+                  <LogOut className="w-4 h-4" /> {t.auth.signOut}
+                </button>
+              ) : (
+                <Link
+                  to="/auth"
+                  onClick={close}
+                  className="w-full flex items-center justify-center gap-2 py-3 rounded-full bg-[#1e2022] text-white font-bold text-sm"
+                >
+                  <span>{t.nav.signIn}</span>
+                  <LogIn className="w-4 h-4" />
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
     </nav>
   );

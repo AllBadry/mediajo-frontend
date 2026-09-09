@@ -99,6 +99,43 @@ export default function CustomerDashboardLayout() {
 
         {/* Page Content Wrapper */}
         <main className="flex-1 min-w-0 flex flex-col relative">
+
+          {/* شريط تنقل الجوال (Horizontal Scroll Tabs) — يظهر تحت الـ md فقط */}
+          <nav className="md:hidden sticky top-[76px] z-30 bg-white/95 backdrop-blur border-b border-gray-100 px-3 py-2.5 flex gap-2 overflow-x-auto scrollbar-hide">
+            {menuItems.map((item) => (
+              <NavLink
+                key={item.id}
+                to={item.path}
+                end={item.path === '/dashboard'}
+                className={({ isActive }) => `flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors shrink-0 ${
+                  isActive ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                {item.icon}
+                {item.label}
+                {item.badge > 0 && (
+                  <span className="w-4 h-4 rounded-full bg-red-500 text-white text-[10px] flex items-center justify-center font-black">
+                    {item.badge}
+                  </span>
+                )}
+              </NavLink>
+            ))}
+            <NavLink
+              to="/dashboard/profile"
+              className={({ isActive }) => `flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors shrink-0 ${
+                isActive ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              <User className="w-4 h-4" /> {t.dashboard.profileSettings}
+            </NavLink>
+            <button
+              onClick={handleSignOut}
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold whitespace-nowrap shrink-0 bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
+            >
+              <LogOut className="w-4 h-4" /> {t.auth.signOut}
+            </button>
+          </nav>
+
           <div className="p-6 lg:p-10 w-full flex flex-col gap-6 pb-24">
             <Outlet /> 
           </div>

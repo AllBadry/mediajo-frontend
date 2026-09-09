@@ -319,12 +319,12 @@ export default function Products() {
           ========================================= */}
       <section className="subs-section relative w-full py-24 px-6 lg:px-12 bg-gray-50/50 border-t border-gray-100">
         <div className="max-w-[85rem] mx-auto text-center">
-          <div className="max-w-4xl mx-auto bg-white rounded-[3rem] border border-gray-200 p-12 md:p-20 flex flex-col items-center justify-center relative overflow-hidden shadow-sm">
-            <div className="w-24 h-24 bg-gradient-to-br from-blue-600 to-purple-600 rounded-[2rem] flex items-center justify-center shadow-[0_20px_50px_rgba(79,70,229,0.3)] mb-8 relative z-10">
-              <MonitorPlay className="w-10 h-10 text-white" />
+          <div className="max-w-4xl mx-auto bg-white rounded-[2rem] md:rounded-[3rem] border border-gray-200 p-7 sm:p-10 md:p-20 flex flex-col items-center justify-center relative overflow-hidden shadow-sm text-center">
+            <div className="w-20 h-20 md:w-24 md:h-24 bg-gradient-to-br from-blue-600 to-purple-600 rounded-[1.5rem] md:rounded-[2rem] flex items-center justify-center shadow-[0_20px_50px_rgba(79,70,229,0.3)] mb-6 md:mb-8 relative z-10">
+              <MonitorPlay className="w-9 h-9 md:w-10 md:h-10 text-white" />
             </div>
-            <h3 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight mb-4 relative z-10">{t.products.subsComingSoon}</h3>
-            <p className="text-gray-500 font-medium text-lg max-w-xl mx-auto relative z-10">{t.products.subsComingSoonSub}</p>
+            <h3 className="text-3xl sm:text-4xl md:text-5xl font-black text-gray-900 tracking-tight mb-3 md:mb-4 relative z-10">{t.products.subsComingSoon}</h3>
+            <p className="text-gray-500 font-medium text-base sm:text-lg max-w-xl mx-auto relative z-10">{t.products.subsComingSoonSub}</p>
           </div>
         </div>
       </section>
@@ -333,13 +333,13 @@ export default function Products() {
           4. Trust & FAQ Section - (ثابت كما هو)
           ========================================= */}
       <section className="relative w-full py-24 px-6 lg:px-12 bg-[#131416] text-white">
-        <div className="max-w-[85rem] mx-auto flex flex-col lg:flex-row gap-20">
+        <div className="max-w-[85rem] mx-auto flex flex-col lg:flex-row gap-10 lg:gap-20">
           
           <div className="lg:w-5/12">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full text-xs font-mono tracking-widest uppercase mb-6 text-gray-300 border border-white/10">
               <Star className="w-4 h-4 text-yellow-400" /> {t.products.trustBadge}
             </div>
-            <h2 className="text-5xl font-black tracking-tighter mb-8">{t.products.trustTitle}</h2>
+            <h2 className="text-4xl md:text-5xl font-black tracking-tighter mb-8">{t.products.trustTitle}</h2>
             <ul className="space-y-6">
               <li className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center shrink-0">
