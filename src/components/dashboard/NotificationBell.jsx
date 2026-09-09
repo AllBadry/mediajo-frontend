@@ -20,16 +20,29 @@ export default function NotificationBell() {
   const [unread, setUnread] = useState(0);
   const [loading, setLoading] = useState(false);
   const wrapRef = useRef(null);
+  const prevUnread = useRef(null);
+
+  const playAlert = useCallback(() => {
+    if (document.hidden) return;
+    try {
+      new Audio('/alert.wav').play().catch(() => {});
+    } catch {
+      /* تجاهل تعذّر تشغيل الصوت */
+    }
+  }, []);
 
   const fetchAll = useCallback(async () => {
     try {
       const { data } = await api.get('/api/notifications');
+      const count = data?.data?.unreadCount || 0;
+      if (prevUnread.current !== null && count > prevUnread.current) playAlert();
+      prevUnread.current = count;
       setItems(data?.data?.notifications || []);
-      setUnread(data?.data?.unreadCount || 0);
+      setUnread(count);
     } catch {
       /* تجاهل أخطاء الجلب (عند انقطاع الاتصال) */
     }
-  }, []);
+  }, [playAlert]);
 
   useEffect(() => {
     fetchAll();
