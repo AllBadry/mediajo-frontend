@@ -164,7 +164,7 @@ export default function Products() {
     <div ref={container} dir={t.dir} className="page-enter min-h-screen bg-gray-50 font-sans overflow-hidden">
       
       {/* =========================================
-          1. Hero Section (ثابت كما هو)
+          1. Hero Section (تم إصلاح التداخل والمسافات)
           ========================================= */}
       <section className="relative w-full pt-20 pb-14 md:pt-32 md:pb-24 flex flex-col items-center justify-center bg-white">
         <div className="float-1 absolute top-[20%] left-[15%] w-4 h-4 bg-blue-600 rounded-full"></div>
@@ -175,39 +175,47 @@ export default function Products() {
           <path className="svg-line" d="M 200 200 C 400 200, 600 400, 1000 300" fill="transparent" stroke="#cbd5e1" strokeWidth="2" strokeDasharray="4 4" />
         </svg>
 
-        <div className="relative z-10 flex flex-col items-center gap-2 md:gap-0">
-          <div className="flex flex-col md:flex-row items-center justify-center md:-mb-6 z-10 relative">
-            <div className="hero-pill-1 bg-white border-[1.5px] border-gray-200 rounded-full px-7 py-2.5 md:px-12 md:py-6 shadow-[0_10px_30px_rgba(0,0,0,0.05)]">
-              <h1 className="text-2xl sm:text-3xl md:text-[5.5rem] font-black tracking-tighter text-gray-900 leading-none">{t.products.hero1}</h1>
+        {/* الحاوية الرئيسية: تم استخدام gap-4 بدلاً من المسافات السلبية العنيفة لإعطاء تنفس للتصميم */}
+        <div className="relative z-10 flex flex-col items-center gap-4 md:gap-3">
+          
+          {/* الصف الأول */}
+          <div className="flex flex-col md:flex-row items-center justify-center relative">
+            <div className="hero-pill-1 relative z-20 bg-white border-[1.5px] border-gray-200 rounded-full px-8 py-4 md:px-12 md:py-5 shadow-[0_10px_30px_rgba(0,0,0,0.05)]">
+              <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-[5.5rem] font-black tracking-tighter text-gray-900 leading-[1.1]">{t.products.hero1}</h1>
             </div>
-            <div className="hero-icon hidden md:flex w-48 h-24 bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-500 rounded-full -ml-12 items-center justify-end pr-6 shadow-[0_10px_30px_rgba(79,70,229,0.3)]">
+            {/* استخدام ltr و rtl لضبط اتجاه التداخل حسب لغة الموقع */}
+            <div className="hero-icon relative z-10 hidden md:flex w-40 h-20 bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-500 rounded-full items-center justify-end pr-5 shadow-[0_10px_30px_rgba(79,70,229,0.3)] ltr:-ml-12 rtl:-mr-12">
               <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center">
                 <Zap className="w-6 h-6 text-white" />
               </div>
             </div>
           </div>
 
-          <div className="flex flex-col md:flex-row items-center justify-center z-20 relative md:-mb-6 mt-4 md:mt-0">
-            <div className="hero-pill-2 bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 rounded-full px-7 py-2.5 md:px-14 md:py-6 shadow-[0_10px_40px_rgba(79,70,229,0.4)] flex items-center gap-6">
-              <h1 className="text-2xl sm:text-3xl md:text-[6rem] font-black tracking-tighter text-white leading-none">{t.products.hero2}</h1>
-              <div className="hidden md:flex w-16 h-16 bg-white/10 rounded-full items-center justify-center border border-white/20">
-                <TrendingUp className="w-8 h-8 text-white" />
+          {/* الصف الثاني */}
+          <div className="flex flex-col md:flex-row items-center justify-center relative">
+            <div className="hero-pill-2 relative z-20 bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 rounded-full px-8 py-4 md:px-14 md:py-5 shadow-[0_10px_40px_rgba(79,70,229,0.4)] flex items-center gap-4 md:gap-6">
+              <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-[6rem] font-black tracking-tighter text-white leading-[1.1]">{t.products.hero2}</h1>
+              <div className="hidden md:flex w-14 h-14 bg-white/10 rounded-full items-center justify-center border border-white/20">
+                <TrendingUp className="w-7 h-7 text-white" />
               </div>
             </div>
-            <div className="hero-icon hidden md:flex w-24 h-24 bg-white border-[1.5px] border-gray-200 rounded-full -ml-8 items-center justify-center shadow-[0_10px_30px_rgba(0,0,0,0.05)]">
+            {/* تم فصل الـ z-index لضمان اختفاء جزء من الدائرة خلف الفقاعة الرئيسية بشكل صحيح */}
+            <div className="hero-icon relative z-10 hidden md:flex w-24 h-24 bg-white border-[1.5px] border-gray-200 rounded-full items-center justify-center shadow-[0_10px_30px_rgba(0,0,0,0.05)] ltr:-ml-8 rtl:-mr-8">
               <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center">
                 <div className="w-3 h-3 bg-white rounded-full"></div>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center justify-center z-30 relative mt-4 md:mt-0 ml-0 md:ml-24">
-            <div className="hero-pill-3 bg-white border-[1.5px] border-gray-200 rounded-full px-7 py-2.5 md:px-14 md:py-6 shadow-[0_20px_50px_rgba(0,0,0,0.08)] flex items-center gap-4">
-              <h1 className="text-2xl sm:text-3xl md:text-[6rem] font-black tracking-tighter text-gray-900 leading-none">
+          {/* الصف الثالث */}
+          <div className="flex items-center justify-center relative md:ml-24 rtl:md:ml-0 rtl:md:mr-24">
+            <div className="hero-pill-3 relative z-20 bg-white border-[1.5px] border-gray-200 rounded-full px-8 py-4 md:px-14 md:py-5 shadow-[0_20px_50px_rgba(0,0,0,0.08)] flex items-center gap-4">
+              <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-[6rem] font-black tracking-tighter text-gray-900 leading-[1.1]">
                 {t.products.hero3} <span className="text-orange-400 animate-pulse">.</span>
               </h1>
             </div>
           </div>
+          
         </div>
       </section>
 
