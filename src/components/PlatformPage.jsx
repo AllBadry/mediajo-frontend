@@ -207,17 +207,20 @@ export default function PlatformPage({ platformId }) {
   // ثم داخلها حسب subGroup (مثال: عرب، أجانب)
   const groupedSections = useMemo(() => {
     const groups = platformProducts.reduce((acc, product) => {
-      const sec = product.groupName || 'خدمات أخرى';
-      const sub = product.subGroup || 'باقات أساسية';
+      // قراءة المستويات الثلاثة
+      const cat = product.category || 'خدمات عامة'; // القسم
+      const grp = product.groupName || 'باقات أساسية'; // المجموعة
+      const sub = product.subGroup || ''; // المجموعة الفرعية (ممكن تكون فارغة)
 
-      if (!acc[sec]) acc[sec] = {};
-      if (!acc[sec][sub]) acc[sec][sub] = [];
+      // بناء الشجرة الهرمية
+      if (!acc[cat]) acc[cat] = {};
+      if (!acc[cat][grp]) acc[cat][grp] = {};
+      if (!acc[cat][grp][sub]) acc[cat][grp][sub] = [];
 
-      acc[sec][sub].push(product);
+      acc[cat][grp][sub].push(product);
       return acc;
     }, {});
 
-    // تحويل الكائن إلى مصفوفة ليسهل عمل map عليها في الـ JSX
     return Object.entries(groups);
   }, [platformProducts]);
 
@@ -357,24 +360,24 @@ export default function PlatformPage({ platformId }) {
               {pp.notFound || "لا توجد باقات متاحة حالياً لهذه المنصة."}
             </div>
           ) : (
-            // عرض الباقات بعد تجميعها
-            groupedSections.map(([sectionName, subGroups], si) => (
-              <div key={si} className="price-section">
+            // عرض الباقات بعد تجميعها (قسم -> مجموعة -> مجموعة فرعية)
+            groupedSections.map(([categoryName, groups], ci) => (
+              <div key={ci} className="price-section mb-12">
                 
-                {/* رأس القسم (مثال: المتابعين) */}
+                {/* 1. رأس القسم (Category) مثل: المتابعين */}
                 <div className="flex items-center gap-4 mb-12">
                   <div className={`w-14 h-14 bg-gradient-to-br ${theme.iconGradient} text-white rounded-full flex items-center justify-center text-xl font-black shadow-lg shrink-0`}>
-                    {String(si + 1).padStart(2, '0')}
+                    {String(ci + 1).padStart(2, '0')}
                   </div>
                   <div>
-                    <h2 className="text-3xl md:text-4xl font-black tracking-tight text-gray-900">{sectionName}</h2>
+                    <h2 className="text-3xl md:text-4xl font-black tracking-tight text-gray-900">{categoryName}</h2>
                     <p className="text-sm text-gray-500 font-bold tracking-widest uppercase mt-1">{platformName}</p>
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-16">
-                  {/* المجموعات الفرعية داخل القسم (مثال: عرب، بدون ضمان) */}
-                  {Object.entries(subGroups).map(([subGroupName, productsList], gi) => (
+                <div className="flex flex-col gap-10">
+                  {/* 2. المجموعات داخل القسم (Group) مثل: متابعين عرب */}
+                  {Object.entries(groups).map(([groupName, subGroups], gi) => (
                     <div key={gi} className="bg-white rounded-[2.5rem] p-6 md:p-10 border border-gray-200 shadow-[0_15px_40px_rgba(0,0,0,0.03)]">
                       
                       <div className="flex flex-wrap items-center justify-between gap-4 mb-8 pb-6 border-b border-gray-100">
@@ -383,20 +386,37 @@ export default function PlatformPage({ platformId }) {
                             <TrendingUp className="w-6 h-6" />
                           </div>
                           <div>
-                            <h3 className="text-2xl font-black text-gray-900">{subGroupName}</h3>
+                            <h3 className="text-2xl font-black text-gray-900">{groupName}</h3>
                           </div>
                         </div>
                       </div>
 
-                      <TierCards 
-                        productsList={productsList} 
-                        itemName={sectionName}
-                        theme={theme}
-                        orderNow={pp.orderNow}
-                        onAdd={requestAdd}
-                        addedText={pp.added}
-                        addedId={addedId}
-                      />
+                      <div className="flex flex-col gap-12">
+                        {/* 3. المجموعات الفرعية (SubGroup) مثل: مع ضمان */}
+                        {Object.entries(subGroups).map(([subGroupName, productsList], si) => (
+                          <div key={si}>
+                            {/* إذا كان هناك اسم للمجموعة الفرعية، اعرضه كعنوان صغير */}
+                            {subGroupName && (
+                              <h4 className="text-lg font-bold text-gray-700 mb-4 flex items-center gap-2">
+                                <Sparkles className="w-5 h-5 text-indigo-500" />
+                                {subGroupName}
+                              </h4>
+                            )}
+                            
+                            {/* 4. عرض الكروت الفعلية للمنتجات */}
+                            <TierCards 
+                              productsList={productsList} 
+                              itemName={categoryName}
+                              theme={theme}
+                              orderNow={pp.orderNow}
+                              onAdd={requestAdd}
+                              addedText={pp.added}
+                              addedId={addedId}
+                            />
+                          </div>
+                        ))}
+                      </div>
+
                     </div>
                   ))}
                 </div>
@@ -404,7 +424,6 @@ export default function PlatformPage({ platformId }) {
               </div>
             ))
           )}
-
         </div>
       </section>
 
