@@ -82,12 +82,9 @@ export default function CartContent({ onCheckout = () => {} }) {
   const discount = promoApplied ? subtotal * 0.1 : 0;
   const total = Math.max(0, subtotal - discount);
 
-  // دالة الحذف مع الأنيميشن
+  // حذف فوري ومضمون: لا نعتمد على onComplete للأنيميشن
   const handleRemove = (id) => {
-    gsap.to(`#cart-item-${id}`, {
-      x: -50, opacity: 0, height: 0, marginBottom: 0, padding: 0, duration: 0.4,
-      onComplete: () => removeItem(id),
-    });
+    removeItem(id);
   };
 
   useGSAP(() => {
