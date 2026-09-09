@@ -152,6 +152,7 @@ export default function MyOrders() {
         order.orderNumber?.toLowerCase().includes(q) ||
         order.targetLink?.toLowerCase().includes(q) ||
         order.items?.some((i) => i.name?.toLowerCase().includes(q)) ||
+        order.totalPrice?.toString().toLowerCase().includes(q) ||
         Object.values(order.items?.[0]?.dynamicInputs || {}).some((v) => String(v).toLowerCase().includes(q))
       );
     });

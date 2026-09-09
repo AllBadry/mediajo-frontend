@@ -57,7 +57,8 @@ export default function Notifications() {
         setUnread((u) => Math.max(0, u - 1));
       } catch { /* تجاهل */ }
     }
-    if (item.link) navigate(item.link);
+    const link = item.link && item.link.startsWith('/orders/') ? '/dashboard/orders' : item.link;
+    if (link) navigate(link);
   };
 
   const relative = (iso) => {

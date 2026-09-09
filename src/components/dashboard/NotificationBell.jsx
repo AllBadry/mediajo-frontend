@@ -70,7 +70,9 @@ export default function NotificationBell() {
       }
     }
     setOpen(false);
-    if (item.link) navigate(item.link);
+    // أي إشعار برابط صفحة الطلب الخاصة بالأدمن → يُعاد توجيهه لصفحة "طلباتي"
+    const link = item.link && item.link.startsWith('/orders/') ? '/dashboard/orders' : item.link;
+    if (link) navigate(link);
   };
 
   const relative = (iso) => {
