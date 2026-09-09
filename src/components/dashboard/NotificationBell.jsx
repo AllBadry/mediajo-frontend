@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Bell, CheckCheck, Loader2 } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 import api from '../../api/client';
+import { playSound } from '../../utils/sound';
 
 // جرّس الإشعارات داخل لوحة تحكم العميل
 export default function NotificationBell() {
@@ -24,11 +25,7 @@ export default function NotificationBell() {
 
   const playAlert = useCallback(() => {
     if (document.hidden) return;
-    try {
-      new Audio('/alert.wav').play().catch(() => {});
-    } catch {
-      /* تجاهل تعذّر تشغيل الصوت */
-    }
+    playSound('/alert.wav');
   }, []);
 
   const fetchAll = useCallback(async () => {

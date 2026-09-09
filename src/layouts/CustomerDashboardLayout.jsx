@@ -9,6 +9,7 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import NotificationBell from '../components/dashboard/NotificationBell';
+import TicketSoundWatcher from '../components/dashboard/TicketSoundWatcher';
 
 export default function CustomerDashboardLayout() {
   const container = useRef();
@@ -126,6 +127,7 @@ export default function CustomerDashboardLayout() {
             </Link>
             
             <NotificationBell />
+            <TicketSoundWatcher />
           </div>
         </header>
 
