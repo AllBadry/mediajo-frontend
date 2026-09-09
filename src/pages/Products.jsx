@@ -276,7 +276,7 @@ export default function Products() {
                             </div>
                             <div className="flex items-baseline gap-1 bg-white px-4 py-2 rounded-xl shadow-sm border border-gray-100">
                               <span className={`text-2xl font-black ${platform.themeColor}`}>{service.price}</span>
-                              <span className="text-xs font-bold text-gray-400">$</span>
+                              <span className="text-xs font-bold text-gray-400">JOD</span>
                             </div>
                           </div>
                         ))}
