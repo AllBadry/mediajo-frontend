@@ -35,15 +35,10 @@ export default function CustomerDashboardLayout() {
     return t.dashboard.dashboardOverview;
   };
 
-  // ==========================================
-  // GSAP Animations (Sharp, Expo Easing for Tech Vibe)
-  // ==========================================
+  // GSAP Animations (Snappy, Expo Easing for Tech Vibe)
   useGSAP(() => {
-    gsap.from(".sidebar", { x: -30, opacity: 0, duration: 0.8, ease: "expo.out" });
-    gsap.from(".topbar", { y: -20, opacity: 0, duration: 0.8, delay: 0.1, ease: "expo.out" });
-    gsap.from(".menu-item", { 
-      x: -10, opacity: 0, duration: 0.5, stagger: 0.05, delay: 0.2, ease: "power2.out" 
-    });
+    gsap.from(".sidebar", { x: -50, opacity: 0, duration: 0.7, ease: "expo.out" });
+    gsap.from(".topbar", { y: -20, opacity: 0, duration: 0.7, delay: 0.1, ease: "expo.out" });
   }, { scope: container });
 
   const unseenTickets = useTicketStore((s) => s.unseen);
@@ -58,53 +53,48 @@ export default function CustomerDashboardLayout() {
   ];
 
   return (
-    // استخدام خلفية سوداء عميقة مع لون نص أبيض/رمادي
-    <div ref={container} dir={t.dir} className="flex min-h-screen bg-[#050505] text-gray-300 font-sans selection:bg-white selection:text-black">
+    <div ref={container} dir={t.dir} className="flex min-h-screen bg-[#F5F5F7] font-sans text-gray-900 selection:bg-blue-600 selection:text-white">
       
+      {/* Background Tech Grid (GitHub Universe / Google I/O style) */}
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-40" 
+           style={{ backgroundImage: 'radial-gradient(#d1d5db 1px, transparent 1px)', backgroundSize: '24px 24px' }}>
+      </div>
+
       {/* =========================================
-          1. Sidebar (Executive Dark Theme)
+          1. Sidebar (Strict & Geometric)
           ========================================= */}
-      <aside className="sidebar w-64 bg-[#0a0a0a] border-r border-white/5 flex flex-col hidden md:flex md:sticky md:top-0 md:h-screen shrink-0 z-30 shadow-[4px_0_24px_rgba(0,0,0,0.5)]">
-        
-        {/* Logo Section */}
-        <div className="h-20 flex items-center px-8 border-b border-white/5 relative overflow-hidden">
-          {/* Subtle top glow line */}
-          <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-          
-          <Link to="/" className="flex items-center gap-3 group w-full">
-            <span className="text-xl font-bold tracking-tight text-white group-hover:text-gray-300 transition-colors">MediaJo</span>
-            {/* Sharp geometric accent instead of a skewed pill */}
-            <div className="flex flex-col gap-[2px] ml-auto rtl:ml-0 rtl:mr-auto">
-              <div className="w-1.5 h-1.5 bg-white"></div>
-              <div className="w-1.5 h-1.5 bg-gray-600"></div>
+      <aside className="sidebar w-64 bg-white border-r border-gray-200 flex flex-col hidden md:flex md:sticky md:top-0 md:h-screen shrink-0 z-20 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
+        <div className="h-20 flex items-center px-8 border-b border-gray-200 bg-gray-50/50">
+          <Link to="/" className="flex items-center gap-2 group w-full">
+            <span className="text-xl font-black tracking-tighter text-gray-900 uppercase">MediaJo</span>
+            {/* Suprematic geometric accent */}
+            <div className="flex gap-0.5 ml-auto rtl:ml-0 rtl:mr-auto">
+              <div className="w-2 h-4 bg-blue-600"></div>
+              <div className="w-2 h-4 bg-emerald-500"></div>
             </div>
           </Link>
         </div>
 
-        <nav className="flex-1 px-4 py-8 flex flex-col gap-1.5">
-          <p className="px-4 text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em] mb-4">{t.dashboard.menu}</p>
+        <nav className="flex-1 px-4 py-8 flex flex-col gap-1">
+          <p className="px-4 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-4">{t.dashboard.menu}</p>
           
           {menuItems.map((item) => (
             <NavLink
               key={item.id}
               to={item.path}
               end={item.path === '/dashboard'}
-              className={({ isActive }) => `menu-item flex items-center justify-between px-4 py-2.5 rounded-md transition-all duration-300 font-medium text-sm group ${
+              className={({ isActive }) => `flex items-center justify-between px-4 py-2.5 transition-all duration-200 font-bold text-sm ${
                 isActive 
-                  ? 'bg-white/10 text-white border-l-2 border-white rtl:border-l-0 rtl:border-r-2 shadow-inner shadow-white/5' 
-                  : 'text-gray-400 hover:bg-white/5 hover:text-white border-l-2 border-transparent rtl:border-l-0 rtl:border-r-2'
+                  ? 'bg-gray-100 text-gray-900 border-l-4 border-blue-600 rtl:border-l-0 rtl:border-r-4' 
+                  : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900 border-l-4 border-transparent rtl:border-l-0 rtl:border-r-4'
               }`}
             >
               <div className="flex items-center gap-3">
-                <span className={`transition-transform duration-300 ${item.path === location.pathname ? 'scale-110 text-white' : 'text-gray-500 group-hover:text-gray-300'}`}>
-                  {item.icon}
-                </span>
-                <span>{item.label}</span>
+                {item.icon}
+                <span className="tracking-tight">{item.label}</span>
               </div>
-              
-              {/* Badge with sharp edges */}
               {item.badge > 0 && (
-                <span className="px-1.5 py-0.5 rounded-sm text-[10px] font-bold bg-white text-black">
+                <span className="px-1.5 py-0.5 text-[10px] font-black bg-red-600 text-white shadow-sm">
                   {item.badge}
                 </span>
               )}
@@ -112,61 +102,48 @@ export default function CustomerDashboardLayout() {
           ))}
         </nav>
 
-        <div className="p-4 border-t border-white/5 bg-[#080808]">
+        <div className="p-4 border-t border-gray-200 bg-gray-50">
           <NavLink 
             to="/dashboard/profile" 
-            className={({ isActive }) => `flex items-center gap-3 px-4 py-3 w-full text-left rounded-md transition-colors font-medium text-sm mb-1 ${isActive ? 'bg-white/10 text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'}`}
+            className={({ isActive }) => `flex items-center gap-3 px-4 py-3 w-full text-left transition-colors font-bold text-sm mb-1 ${isActive ? 'bg-gray-200 text-gray-900' : 'text-gray-500 hover:bg-gray-200 hover:text-gray-900'}`}
           >
             <User className="w-4 h-4" /> {t.dashboard.profileSettings}
           </NavLink>
-          <button onClick={handleSignOut} className="flex items-center gap-3 px-4 py-3 w-full text-left rounded-md hover:bg-red-500/10 hover:text-red-400 text-gray-400 font-medium text-sm transition-colors">
+          <button onClick={handleSignOut} className="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-red-50 text-gray-500 hover:text-red-600 font-bold text-sm transition-colors">
             <LogOut className="w-4 h-4" /> {t.auth.signOut}
           </button>
         </div>
       </aside>
 
       {/* =========================================
-          2. Main Content Area (Tech / Glassmorphism Vibe)
+          2. Main Content Area
           ========================================= */}
-      <main className="flex-1 min-w-0 flex flex-col relative overflow-hidden">
+      <main className="flex-1 min-w-0 flex flex-col relative z-10">
         
-        {/* Background Elements (Inspired by ElevenLabs / Abstract Suprematic) */}
-        {/* Subtle grainy/mesh glow instead of solid colorful blobs */}
-        <div className="absolute top-[-10%] right-[-5%] w-[50vw] h-[50vw] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900/10 via-transparent to-transparent blur-3xl -z-10 pointer-events-none mix-blend-screen"></div>
-        <div className="absolute bottom-[-10%] left-[-5%] w-[40vw] h-[40vw] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-purple-900/10 via-transparent to-transparent blur-3xl -z-10 pointer-events-none mix-blend-screen"></div>
-        
-        {/* CSS Noise overlay for that premium "Enterprise" texture */}
-        <div className="absolute inset-0 opacity-[0.015] mix-blend-overlay pointer-events-none -z-10" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")' }}></div>
-
-        {/* Topbar (Sleek Glassmorphism) */}
-        <header className="topbar h-20 px-6 lg:px-10 flex items-center justify-between sticky top-0 bg-[#050505]/70 backdrop-blur-xl border-b border-white/5 z-20">
+        {/* Topbar (Strict Borders) */}
+        <header className="topbar h-20 px-6 lg:px-10 flex items-center justify-between sticky top-0 bg-white/90 backdrop-blur-md border-b border-gray-200 z-30">
           <div className="flex items-center gap-3">
-            {/* Decorative breadcrumb-like accent */}
-            <div className="hidden sm:flex items-center gap-2 text-gray-600 text-xs font-mono uppercase tracking-wider">
-              <span>System</span>
+            <div className="hidden sm:flex items-center gap-2 text-gray-400 text-xs font-mono uppercase tracking-widest">
+              <span>Terminal</span>
               <ChevronRight className="w-3 h-3 rtl:rotate-180" />
             </div>
-            <h1 className="text-xl font-bold text-white tracking-tight">{getPageTitle()}</h1>
+            <h1 className="text-xl font-black text-gray-900 tracking-tight uppercase">{getPageTitle()}</h1>
           </div>
           
-          <div className="flex items-center gap-5">
-            <Link 
-              to="/products" 
-              className="hidden sm:flex items-center gap-2 bg-white text-black px-4 py-2 rounded-md text-xs font-bold uppercase tracking-wider hover:bg-gray-200 transition-colors shadow-[0_0_15px_rgba(255,255,255,0.1)]"
-            >
+          <div className="flex items-center gap-4">
+            <Link to="/products" className="hidden sm:flex items-center gap-2 bg-gray-900 text-white border border-gray-900 px-4 py-2 text-xs font-bold uppercase tracking-wider hover:bg-white hover:text-gray-900 transition-colors">
               <Sparkles className="w-3 h-3" /> {t.dashboard.newOrder}
             </Link>
             
-            {/* Notification icons container */}
-            <div className="flex items-center gap-3 border-l border-white/10 pl-5 rtl:border-l-0 rtl:border-r rtl:pl-0 rtl:pr-5">
-              <NotificationBell className="text-gray-400 hover:text-white transition-colors" />
+            <div className="flex items-center gap-3 border-l border-gray-200 pl-4 rtl:border-l-0 rtl:border-r rtl:pl-0 rtl:pr-4">
+              <NotificationBell className="text-gray-600 hover:text-gray-900" />
               <TicketSoundWatcher />
             </div>
           </div>
         </header>
 
-        {/* Dynamic Content Area */}
-        <div className="p-6 lg:p-10 max-w-[1400px] w-full mx-auto flex flex-col gap-6 pb-24 relative z-10">
+        {/* Page Content */}
+        <div className="p-6 lg:p-10 max-w-[1400px] w-full mx-auto flex flex-col gap-6 pb-24">
           <Outlet /> 
         </div>
       </main>
