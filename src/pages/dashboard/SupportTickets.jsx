@@ -147,20 +147,14 @@ export default function SupportTickets() {
     <div ref={container} className="w-full flex flex-col gap-6 relative">
       
       {/* Header & New Ticket Button */}
-      <div className="bg-white border border-gray-200 rounded-[2rem] p-6 md:p-8 shadow-[0_4px_20px_rgba(0,0,0,0.02)] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-black text-gray-900 tracking-tight flex items-center gap-3">
-            <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
-              <MessageSquare className="w-5 h-5" />
-            </div>
-            {t.dashboard?.supportTickets || 'تذاكر الدعم الفني'}
-          </h2>
-          <p className="text-gray-500 font-medium mt-1">{t.dashboard?.fastAssistance || 'نحن هنا لمساعدتك في أسرع وقت'}</p>
-        </div>
+      <div className="bg-white border border-gray-200 rounded-lg p-6 md:p-8 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-gray-400 flex items-center gap-2">
+          <MessageSquare className="w-4 h-4" /> {t.dashboard?.supportTickets || 'تذاكر الدعم الفني'}
+        </span>
 
         <button 
           onClick={() => setIsModalOpen(true)}
-          className="bg-gray-900 hover:bg-black text-white px-6 py-3.5 rounded-2xl font-bold text-sm transition-all shadow-[0_10px_25px_rgba(0,0,0,0.15)] flex items-center justify-center gap-2"
+          className="bg-gray-900 hover:bg-black text-white px-6 py-3.5 rounded-lg font-bold text-sm transition-all shadow-[0_10px_25px_rgba(0,0,0,0.15)] flex items-center justify-center gap-2"
         >
           <Plus className="w-5 h-5" /> {t.dashboard?.openNewTicket || 'فتح تذكرة جديدة'}
         </button>
@@ -176,7 +170,7 @@ export default function SupportTickets() {
           {isLoading ? (
             <div className="flex justify-center p-8"><Loader2 className="w-8 h-8 animate-spin text-blue-600" /></div>
           ) : tickets.length === 0 ? (
-            <div className="bg-gray-50 border border-dashed border-gray-200 rounded-2xl p-6 text-center text-gray-500 text-sm font-medium">
+            <div className="bg-gray-50 border border-dashed border-gray-200 rounded-lg p-6 text-center text-gray-500 text-sm font-medium">
               لا توجد تذاكر مفتوحة حالياً.
             </div>
           ) : (
@@ -188,7 +182,7 @@ export default function SupportTickets() {
                 <div 
                   key={ticket._id}
                   onClick={() => handleSelectTicket(ticket._id)}
-                  className={`ticket-card bg-white border rounded-[1.5rem] p-5 cursor-pointer transition-all duration-300 ${
+                  className={`ticket-card bg-white border rounded-lg p-5 cursor-pointer transition-all duration-300 ${
                     isSelected ? 'border-blue-500 ring-2 ring-blue-500/20 shadow-md' : 'border-gray-200 hover:border-gray-300'
                   }`}
                 >
@@ -214,7 +208,7 @@ export default function SupportTickets() {
         {/* Chat / Ticket Details (Right Columns) */}
         <div className="lg:col-span-2">
           {selectedTicket ? (
-            <div className="bg-white border border-gray-200 rounded-[2rem] p-6 md:p-8 shadow-[0_4px_20px_rgba(0,0,0,0.02)] flex flex-col h-[600px]">
+            <div className="bg-white border border-gray-200 rounded-lg p-6 md:p-8 shadow-[0_4px_20px_rgba(0,0,0,0.02)] flex flex-col h-[600px]">
               
               {/* Ticket Header */}
               <div className="border-b border-gray-100 pb-4 mb-6 flex items-center justify-between">
@@ -237,7 +231,7 @@ export default function SupportTickets() {
                         <span className="text-[10px] font-bold text-gray-400 mb-1 px-1">
                           {!isSupport ? selectedTicket.user?.name : 'الدعم الفني'}
                         </span>
-                        <div className={`max-w-[80%] p-4 rounded-2xl text-sm font-medium leading-relaxed ${
+                        <div className={`max-w-[80%] p-4 rounded-lg text-sm font-medium leading-relaxed ${
                           !isSupport 
                             ? 'bg-blue-600 text-white rounded-tr-none' 
                             : 'bg-gray-100 text-gray-800 rounded-tl-none'
@@ -260,12 +254,12 @@ export default function SupportTickets() {
                     onChange={(e) => setReplyText(e.target.value)}
                     placeholder={t.dashboard?.typeReply || 'اكتب ردك هنا...'} 
                     dir={t.dir}
-                    className="flex-1 bg-gray-50 border border-gray-200 rounded-2xl py-3 px-4 text-sm font-medium text-gray-900 focus:outline-none focus:border-blue-500 transition-all"
+                    className="flex-1 bg-gray-50 border border-gray-200 rounded-lg py-3 px-4 text-sm font-medium text-gray-900 focus:outline-none focus:border-blue-500 transition-all"
                   />
                   <button 
                     type="submit" 
                     disabled={isSending || !replyText.trim()}
-                    className="w-12 h-12 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white rounded-2xl flex items-center justify-center shrink-0 transition-colors shadow-sm"
+                    className="w-12 h-12 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white rounded-lg flex items-center justify-center shrink-0 transition-colors shadow-sm"
                   >
                     {isSending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5 rtl:rotate-180" />}
                   </button>
@@ -278,7 +272,7 @@ export default function SupportTickets() {
 
             </div>
           ) : (
-            <div className="bg-white border border-gray-200 rounded-[2rem] p-12 flex flex-col items-center justify-center text-center h-[600px]">
+            <div className="bg-white border border-gray-200 rounded-lg p-12 flex flex-col items-center justify-center text-center h-[600px]">
               <MessageSquare className="w-16 h-16 text-gray-300 mb-4" />
               <h3 className="text-xl font-black text-gray-900 mb-2">{t.dashboard?.selectTicket || 'اختر تذكرة لعرض التفاصيل'}</h3>
               <p className="text-gray-500 font-medium max-w-sm">{t.dashboard?.selectTicketSub || 'قم باختيار تذكرة من القائمة الجانبية لمتابعة المحادثة مع الدعم الفني.'}</p>
@@ -291,7 +285,7 @@ export default function SupportTickets() {
       {/* Modal: فتح تذكرة جديدة */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-[2rem] max-w-md w-full p-8 shadow-2xl relative animate-in fade-in zoom-in duration-200">
+          <div className="bg-white rounded-lg max-w-md w-full p-8 shadow-2xl relative animate-in fade-in zoom-in duration-200">
             
             <button onClick={() => setIsModalOpen(false)} className="absolute top-6 right-6 text-gray-400 hover:text-gray-900">
               <X className="w-5 h-5" />
@@ -309,7 +303,7 @@ export default function SupportTickets() {
                   onChange={(e) => setNewSubject(e.target.value)}
                   placeholder="مثال: مشكلة في طلب رقم..." 
                   dir={t.dir}
-                  className="w-full bg-gray-50 border border-gray-200 rounded-2xl py-3 px-4 text-sm font-medium text-gray-900 focus:outline-none focus:border-blue-500 transition-all"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 px-4 text-sm font-medium text-gray-900 focus:outline-none focus:border-blue-500 transition-all"
                   required
                 />
               </div>
@@ -319,7 +313,7 @@ export default function SupportTickets() {
                 <select
                   value={newCategory}
                   onChange={(e) => setNewCategory(e.target.value)}
-                  className="w-full bg-gray-50 border border-gray-200 rounded-2xl py-3 px-4 text-sm font-medium text-gray-900 focus:outline-none focus:border-blue-500 transition-all"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 px-4 text-sm font-medium text-gray-900 focus:outline-none focus:border-blue-500 transition-all"
                 >
                   <option value="ORDER">مشكلة في طلب</option>
                   <option value="PAYMENT">مشكلة مالية / دفع</option>
@@ -336,7 +330,7 @@ export default function SupportTickets() {
                   onChange={(e) => setNewMessage(e.target.value)}
                   placeholder="اكتب تفاصيل مشكلتك هنا..." 
                   dir={t.dir}
-                  className="w-full bg-gray-50 border border-gray-200 rounded-2xl p-4 text-sm font-medium text-gray-900 focus:outline-none focus:border-blue-500 transition-all resize-none"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-lg p-4 text-sm font-medium text-gray-900 focus:outline-none focus:border-blue-500 transition-all resize-none"
                   required
                 ></textarea>
               </div>
@@ -344,7 +338,7 @@ export default function SupportTickets() {
               <button 
                 type="submit" 
                 disabled={isSending}
-                className="w-full bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white py-4 rounded-2xl font-bold text-sm transition-all shadow-[0_10px_25px_rgba(37,99,235,0.25)] mt-2 flex justify-center items-center gap-2"
+                className="w-full bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white py-4 rounded-lg font-bold text-sm transition-all shadow-[0_10px_25px_rgba(37,99,235,0.25)] mt-2 flex justify-center items-center gap-2"
               >
                 {isSending ? <Loader2 className="w-5 h-5 animate-spin" /> : null}
                 {t.dashboard?.submitTicket || 'إرسال التذكرة'}

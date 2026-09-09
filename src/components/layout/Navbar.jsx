@@ -18,6 +18,7 @@ import { useLanguage } from '../../context/LanguageContext';
 import { useAuth } from '../../context/AuthContext';
 import { useCartStore, selectItemCount } from '../../store/cartStore';
 import { Languages } from 'lucide-react';
+import NotificationBell from '../dashboard/NotificationBell';
 
 // ==========================================
 // 1. الأيقونات المخصصة (Custom Brand SVGs)
@@ -284,6 +285,15 @@ export default function Navbar() {
 
         {isAuthenticated ? (
           <>
+            <div className="flex items-center">
+              <NotificationBell />
+            </div>
+            <Link
+              to="/products"
+              className="hidden sm:flex items-center gap-2 bg-gray-900 text-white border-2 border-gray-900 px-4 py-2 text-xs font-bold uppercase tracking-wider hover:bg-white hover:text-gray-900 transition-colors shadow-[2px_2px_0px_0px_#d1d5db]"
+            >
+              <Sparkles className="w-4 h-4" /> {t.dashboard.newOrder}
+            </Link>
             <Link 
               to="/dashboard"
               className={`flex items-center gap-2 bg-[#1e2022] hover:bg-black text-white px-6 py-2.5 rounded-full font-medium text-sm transition-all shadow-[0_4px_10px_rgba(0,0,0,0.1)] hover:-translate-y-0.5 ${isActive('/dashboard') ? 'ring-2 ring-blue-500' : ''}`}

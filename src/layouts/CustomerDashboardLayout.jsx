@@ -1,14 +1,13 @@
 import React, { useRef } from 'react';
-import { NavLink, Link, useNavigate, Outlet, useLocation } from 'react-router-dom';
+import { NavLink, useNavigate, Outlet } from 'react-router-dom';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { 
   LayoutDashboard, ShoppingBag, ShoppingCart, MessageSquare, 
-  User, LogOut, Sparkles, Wallet, BellRing, ChevronRight
+  User, LogOut, Wallet, BellRing
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
-import NotificationBell from '../components/dashboard/NotificationBell';
 import TicketSoundWatcher from '../components/dashboard/TicketSoundWatcher';
 import { useTicketStore } from '../store/ticketStore';
 
@@ -17,28 +16,15 @@ export default function CustomerDashboardLayout() {
   const { logout } = useAuth();
   const { t } = useLanguage();
   const navigate = useNavigate();
-  const location = useLocation();
 
   const handleSignOut = () => {
     logout();
     navigate('/');
   };
 
-  const getPageTitle = () => {
-    const path = location.pathname;
-    if (path.includes('orders')) return t.dashboard.myOrders;
-    if (path.includes('wallet')) return t.dashboard.wallet.title;
-    if (path.includes('cart')) return t.dashboard.yourCart;
-    if (path.includes('tickets')) return t.dashboard.supportTickets;
-    if (path.includes('profile')) return t.dashboard.profileSettings;
-    if (path.includes('notifications')) return t.dashboard.notifications.title;
-    return t.dashboard.dashboardOverview;
-  };
-
   // GSAP Animations (Snappy, Expo Easing for Tech Vibe)
   useGSAP(() => {
-    gsap.from(".topbar", { y: -100, opacity: 0, duration: 0.8, ease: "expo.out" });
-    gsap.from(".sidebar", { x: -50, opacity: 0, duration: 0.8, delay: 0.2, ease: "expo.out" });
+    gsap.from(".sidebar", { x: -50, opacity: 0, duration: 0.8, delay: 0.1, ease: "expo.out" });
   }, { scope: container });
 
   const unseenTickets = useTicketStore((s) => s.unseen);
@@ -55,59 +41,21 @@ export default function CustomerDashboardLayout() {
   return (
     <div ref={container} dir={t.dir} className="min-h-screen bg-[#f8f9fa] font-sans text-gray-900 flex flex-col selection:bg-blue-600 selection:text-white">
       
+      {/* TicketSoundWatcher (يراقب تذاكر الدعم ويشغّل صوت التنبيه) */}
+      <TicketSoundWatcher />
+
       {/* Background Tech Grid */}
       <div className="fixed inset-0 z-0 pointer-events-none opacity-50" 
            style={{ backgroundImage: 'radial-gradient(#d1d5db 1px, transparent 1px)', backgroundSize: '24px 24px' }}>
       </div>
 
       {/* =========================================
-          1. Top Navbar (Full Width - Contains Logo)
-          ========================================= */}
-      <header className="topbar h-20 w-full bg-white border-b-2 border-gray-200 sticky top-0 z-40 flex items-center justify-between px-6 lg:px-10 shadow-sm">
-        <div className="flex items-center gap-6 lg:gap-10">
-          
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group">
-            <span className="text-2xl font-black tracking-tighter text-gray-900 uppercase group-hover:text-blue-600 transition-colors">MediaJo</span>
-            <div className="flex gap-0.5 ml-1">
-              <div className="w-2.5 h-5 bg-blue-600"></div>
-              <div className="w-2.5 h-5 bg-emerald-500"></div>
-            </div>
-          </Link>
-
-          {/* Page Title & Breadcrumb (Separated by strict border) */}
-          <div className="hidden md:flex items-center gap-3 border-l-2 border-gray-200 pl-6 rtl:border-l-0 rtl:border-r-2 rtl:pl-0 rtl:pr-6">
-            <div className="flex items-center gap-2 text-gray-400 text-[10px] font-bold font-mono uppercase tracking-[0.2em]">
-              <span>System</span>
-              <ChevronRight className="w-3 h-3 rtl:rotate-180" />
-            </div>
-            <h1 className="text-xl font-black text-gray-900 tracking-tight uppercase">{getPageTitle()}</h1>
-          </div>
-        </div>
-        
-        {/* Actions (Right Side) */}
-        <div className="flex items-center gap-5">
-          <Link 
-            to="/products" 
-            className="hidden sm:flex items-center gap-2 bg-gray-900 text-white border-2 border-gray-900 px-5 py-2 text-xs font-bold uppercase tracking-wider hover:bg-white hover:text-gray-900 transition-colors shadow-[2px_2px_0px_0px_#d1d5db]"
-          >
-            <Sparkles className="w-4 h-4" /> {t.dashboard.newOrder}
-          </Link>
-          
-          <div className="flex items-center gap-4 border-l-2 border-gray-200 pl-5 rtl:border-l-0 rtl:border-r-2 rtl:pl-0 rtl:pr-5">
-            <NotificationBell className="text-gray-600 hover:text-gray-900 transition-colors" />
-            <TicketSoundWatcher />
-          </div>
-        </div>
-      </header>
-
-      {/* =========================================
-          2. Main Layout (Sidebar + Content)
+          Main Layout (Sidebar + Content)
           ========================================= */}
       <div className="flex flex-1 relative z-10 max-w-[1920px] mx-auto w-full">
         
-        {/* Sidebar (Under Navbar, Strict Geometric Style) */}
-        <aside className="sidebar w-64 bg-white border-r-2 border-gray-200 hidden md:flex flex-col sticky top-20 h-[calc(100vh-5rem)] shrink-0">
+        {/* Sidebar (Under Site Navbar, Strict Geometric Style) */}
+        <aside className="sidebar w-64 bg-white border-r-2 border-gray-200 hidden md:flex flex-col sticky top-[76px] h-[calc(100vh-76px)] shrink-0">
           
           <nav className="flex-1 px-4 py-8 flex flex-col gap-1 overflow-y-auto">
             <p className="px-4 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-4">{t.dashboard.menu}</p>

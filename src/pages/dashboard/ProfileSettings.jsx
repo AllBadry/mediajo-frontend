@@ -98,30 +98,22 @@ export default function ProfileSettings() {
     }
   };
 
-  const inputClass = "w-full py-3.5 px-4 bg-white border border-gray-200 rounded-2xl text-sm font-medium text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition-all";
+  const inputClass = "w-full py-3.5 px-4 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition-all";
 
   return (
     <div ref={container} className="w-full max-w-4xl mx-auto flex flex-col gap-8">
       
-      {/* رأس الصفحة */}
-      <div>
-        <h2 className="text-2xl font-black text-gray-900 tracking-tight flex items-center gap-3">
-          <div className="w-10 h-10 bg-gray-900 text-white rounded-xl flex items-center justify-center">
-            <User className="w-5 h-5" />
-          </div>
-          {t.dashboard.profileSettings}
-        </h2>
-        <p className="text-gray-500 font-medium mt-1">{t.dashboard.manageAccount}</p>
-      </div>
-
       {/* بطاقة تعديل المعلومات الشخصية */}
-      <div className="profile-card bg-white border border-gray-200 rounded-[2rem] p-8 shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
-        <h3 className="text-xl font-black text-gray-900 mb-6 flex items-center gap-2">
-          <ShieldCheck className="w-5 h-5 text-blue-600" /> {t.dashboard.personalInfo}
+      <div className="profile-card bg-white border border-gray-200 rounded-lg p-8 shadow-sm">
+        <h3 className="text-lg font-black text-gray-900 mb-6 flex items-center gap-3">
+          <span className="w-9 h-9 bg-gray-50 border border-gray-100 text-gray-500 rounded-md flex items-center justify-center">
+            <ShieldCheck className="w-4 h-4" />
+          </span>
+          {t.dashboard.personalInfo}
         </h3>
 
         {profileMsg.text && (
-          <div className={`mb-6 p-4 rounded-2xl text-sm font-semibold flex items-center gap-2 ${profileMsg.type === 'success' ? 'bg-green-50 text-green-700 border border-green-100' : 'bg-red-50 text-red-600 border border-red-100'}`}>
+          <div className={`mb-6 p-4 rounded-lg text-sm font-semibold flex items-center gap-2 ${profileMsg.type === 'success' ? 'bg-green-50 text-green-700 border border-green-100' : 'bg-red-50 text-red-600 border border-red-100'}`}>
             {profileMsg.type === 'success' ? <CheckCircle2 className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
             {profileMsg.text}
           </div>
@@ -175,7 +167,7 @@ export default function ProfileSettings() {
             <button 
               type="submit" 
               disabled={loadingProfile}
-              className="bg-gray-900 hover:bg-black text-white px-8 py-3.5 rounded-2xl font-bold text-sm transition-all shadow-[0_10px_25px_rgba(0,0,0,0.15)] flex items-center gap-2 disabled:opacity-70"
+              className="bg-gray-900 hover:bg-black text-white px-8 py-3.5 rounded-lg font-bold text-sm transition-all shadow-[0_10px_25px_rgba(0,0,0,0.15)] flex items-center gap-2 disabled:opacity-70"
             >
               {loadingProfile ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
               {t.dashboard.saveChanges}
@@ -185,13 +177,16 @@ export default function ProfileSettings() {
       </div>
 
       {/* بطاقة تغيير كلمة المرور */}
-      <div className="profile-card bg-white border border-gray-200 rounded-[2rem] p-8 shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
-        <h3 className="text-xl font-black text-gray-900 mb-6 flex items-center gap-2">
-          <Lock className="w-5 h-5 text-blue-600" /> {t.dashboard.securityPassword}
+      <div className="profile-card bg-white border border-gray-200 rounded-lg p-8 shadow-sm">
+        <h3 className="text-lg font-black text-gray-900 mb-6 flex items-center gap-3">
+          <span className="w-9 h-9 bg-gray-50 border border-gray-100 text-gray-500 rounded-md flex items-center justify-center">
+            <Lock className="w-4 h-4" />
+          </span>
+          {t.dashboard.securityPassword}
         </h3>
 
         {passMsg.text && (
-          <div className={`mb-6 p-4 rounded-2xl text-sm font-semibold flex items-center gap-2 ${passMsg.type === 'success' ? 'bg-green-50 text-green-700 border border-green-100' : 'bg-red-50 text-red-600 border border-red-100'}`}>
+          <div className={`mb-6 p-4 rounded-lg text-sm font-semibold flex items-center gap-2 ${passMsg.type === 'success' ? 'bg-green-50 text-green-700 border border-green-100' : 'bg-red-50 text-red-600 border border-red-100'}`}>
             {passMsg.type === 'success' ? <CheckCircle2 className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
             {passMsg.text}
           </div>
@@ -235,7 +230,7 @@ export default function ProfileSettings() {
             <button 
               type="submit" 
               disabled={loadingPass}
-              className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3.5 rounded-2xl font-bold text-sm transition-all shadow-[0_10px_25px_rgba(37,99,235,0.25)] flex items-center gap-2 disabled:opacity-70"
+              className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3.5 rounded-lg font-bold text-sm transition-all shadow-[0_10px_25px_rgba(37,99,235,0.25)] flex items-center gap-2 disabled:opacity-70"
             >
               {loadingPass ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
               {t.dashboard.updatePassword}

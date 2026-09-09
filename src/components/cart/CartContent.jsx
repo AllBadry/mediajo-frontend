@@ -125,10 +125,10 @@ export default function CartContent({ onCheckout = () => {} }) {
               <div 
                 key={item.id} 
                 id={`cart-item-${item.id}`}
-                className="cart-item bg-white border border-gray-200 rounded-[1.5rem] p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-5 hover:shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all overflow-hidden"
+                className="cart-item bg-white border border-gray-200 rounded-lg p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-5 hover:shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all overflow-hidden"
               >
                 <div className="flex items-center gap-4 flex-1">
-                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${tone.bg} ${tone.color}`}>
+                  <div className={`w-14 h-14 rounded-lg flex items-center justify-center shrink-0 ${tone.bg} ${tone.color}`}>
                     {tone.icon}
                   </div>
                   <div>
@@ -180,7 +180,7 @@ export default function CartContent({ onCheckout = () => {} }) {
                     <span className="font-black text-gray-900 text-lg">{(item.price * item.productQty).toFixed(2)}</span>
                     <button
                       onClick={() => handleRemove(item.id)}
-                      className="flex items-center gap-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 p-2 rounded-xl transition-colors text-xs font-bold"
+                      className="flex items-center gap-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 p-2 rounded-md transition-colors text-xs font-bold"
                     >
                       <Trash2 className="w-4 h-4" />
                       <span>{d.remove}</span>
@@ -191,7 +191,7 @@ export default function CartContent({ onCheckout = () => {} }) {
             );
           })
         ) : (
-          <div className="bg-white border border-gray-200 rounded-[2rem] p-12 flex flex-col items-center justify-center text-center h-full min-h-[300px]">
+          <div className="bg-white border border-gray-200 rounded-lg p-12 flex flex-col items-center justify-center text-center h-full min-h-[300px]">
             <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mb-4">
               <ShoppingCart className="w-10 h-10 text-gray-300" />
             </div>
@@ -203,7 +203,7 @@ export default function CartContent({ onCheckout = () => {} }) {
 
       {/* القسم الثاني: ملخص الطلب */}
       <div className="summary-card w-full lg:w-[380px] shrink-0">
-        <div className="bg-gray-900 rounded-[2rem] p-8 text-white sticky top-28 shadow-2xl relative overflow-hidden">
+        <div className="bg-gray-900 rounded-lg p-8 text-white sticky top-28 shadow-2xl relative overflow-hidden">
           <div className="absolute -top-20 -right-20 w-48 h-48 bg-blue-500/20 rounded-full blur-3xl pointer-events-none"></div>
           
           <h3 className="text-xl font-black mb-6 relative z-10">{d.orderSummary}</h3>
@@ -215,7 +215,7 @@ export default function CartContent({ onCheckout = () => {} }) {
               placeholder={d.promoCode} 
               value={promoCode}
               onChange={(e) => setPromoCode(e.target.value)}
-              className="w-full bg-white/10 border border-white/20 rounded-xl py-3 pl-11 pr-24 text-sm font-medium text-white placeholder-gray-400 focus:outline-none focus:border-blue-400 transition-all rtl:pr-11 rtl:pl-24"
+              className="w-full bg-white/10 border border-white/20 rounded-md py-3 pl-11 pr-24 text-sm font-medium text-white placeholder-gray-400 focus:outline-none focus:border-blue-400 transition-all rtl:pr-11 rtl:pl-24"
             />
             <button 
               onClick={() => setPromoApplied(!!promoCode.trim())}
@@ -249,7 +249,7 @@ export default function CartContent({ onCheckout = () => {} }) {
           <button 
             onClick={onCheckout}
             disabled={items.length === 0}
-            className="w-full bg-blue-600 hover:bg-blue-500 disabled:bg-gray-700 disabled:text-gray-500 text-white py-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-[0_10px_25px_rgba(37,99,235,0.3)] disabled:shadow-none relative z-10 group"
+            className="w-full bg-blue-600 hover:bg-blue-500 disabled:bg-gray-700 disabled:text-gray-500 text-white py-4 rounded-md font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-[0_10px_25px_rgba(37,99,235,0.3)] disabled:shadow-none relative z-10 group"
           >
             <ShoppingCart className="w-5 h-5" /> 
             {d.checkoutSecurely}

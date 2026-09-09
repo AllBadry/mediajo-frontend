@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { useEffect } from 'react';
-import { ShoppingBag, CheckCircle2, Clock, Search, Filter, XCircle, ExternalLink, Package, Upload, X, Loader2, Banknote, Mail, ChevronLeft, ChevronRight } from 'lucide-react';
+import { CheckCircle2, Clock, Search, XCircle, ExternalLink, Package, Upload, X, Loader2, Banknote, Mail, ChevronLeft, ChevronRight } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { useLanguage } from '../../context/LanguageContext';
@@ -223,42 +223,27 @@ export default function MyOrders() {
     <div ref={container} className="w-full flex flex-col gap-6">
 
       {/* ===== Header ===== */}
-      <div className="bg-white border border-gray-200 rounded-[2rem] p-6 md:p-8">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
-          <div>
-            <h2 className="text-2xl font-black text-gray-900 tracking-tight flex items-center gap-3">
-              <div className="w-10 h-10 bg-gray-100 text-gray-900 rounded-xl flex items-center justify-center">
-                <ShoppingBag className="w-5 h-5" />
-              </div>
-              {o.title}
-            </h2>
-            <p className="text-gray-500 font-medium mt-2">{o.subtitle}</p>
-          </div>
-
-          <div className="flex items-center gap-3 w-full md:w-auto">
-            <div className="relative flex-1 md:w-64">
-              <Search className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder={d.searchOrders}
-                className="w-full bg-gray-50 border border-gray-200 rounded-full py-2.5 pl-10 pr-4 text-sm font-medium text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition-all"
-                dir={t.dir}
-              />
-            </div>
-            <button className="w-10 h-10 bg-gray-50 border border-gray-200 rounded-full flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors shrink-0">
-              <Filter className="w-4 h-4" />
-            </button>
+      <div className="bg-white border border-gray-200 rounded-lg p-6 md:p-8 shadow-sm">
+        <div className="flex items-center gap-3 w-full mb-5">
+          <div className="relative flex-1 w-full">
+            <Search className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder={d.searchOrders}
+              className="w-full bg-gray-50 border border-gray-200 rounded-lg py-2.5 pl-10 pr-4 text-sm font-medium text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition-all"
+              dir={t.dir}
+            />
           </div>
         </div>
 
-        <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide">
           {filters.map((f) => (
             <button
               key={f.key}
               onClick={() => setFilter(f.key)}
-              className={`px-5 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all ${
+              className={`px-5 py-2 rounded-md text-sm font-bold whitespace-nowrap transition-all ${
                 filter === f.key ? 'bg-gray-900 text-white shadow-md' : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
               }`}
             >
@@ -269,7 +254,7 @@ export default function MyOrders() {
       </div>
 
       {/* ===== Error ===== */}
-      {error && <div className="bg-red-50 text-red-600 p-4 rounded-2xl text-sm font-medium">{error}</div>}
+      {error && <div className="bg-red-50 text-red-600 p-4 rounded-lg text-sm font-medium">{error}</div>}
 
       {/* ===== Loading ===== */}
       {isLoading ? (
@@ -283,7 +268,7 @@ export default function MyOrders() {
           {paged.map((order) => {
             const canPay = order.paymentStatus === 'unpaid' || order.paymentStatus === 'rejected';
             return (
-              <div key={order._id} className="order-item bg-white border border-gray-200 rounded-[1.5rem] p-6 hover:shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:border-gray-300 transition-all duration-300">
+              <div key={order._id} className="order-item bg-white border border-gray-200 rounded-lg p-5 hover:shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:border-gray-300 transition-all duration-300">
                 {/* Top: number + badges */}
                 <div className="flex items-start justify-between gap-4 mb-4">
                   <div className="flex items-center gap-3 flex-wrap">
@@ -326,14 +311,14 @@ export default function MyOrders() {
                   <div className="flex items-center gap-3">
                     <button
                       onClick={() => setDetailOrder(order)}
-                      className="flex items-center gap-2 text-sm font-bold text-gray-600 hover:text-gray-900 bg-gray-50 hover:bg-gray-100 px-4 py-2 rounded-xl transition-colors"
+                      className="flex items-center gap-2 text-sm font-bold text-gray-600 hover:text-gray-900 bg-gray-50 hover:bg-gray-100 px-4 py-2 rounded-md transition-colors"
                     >
                       {d.viewDetails} <ExternalLink className="w-4 h-4 rtl:rotate-180" />
                     </button>
                     {canPay && (
                       <button
                         onClick={() => openPay(order)}
-                        className="flex items-center gap-2 text-sm font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-5 py-2 rounded-xl transition-colors"
+                        className="flex items-center gap-2 text-sm font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-5 py-2 rounded-md transition-colors"
                       >
                         <Banknote className="w-4 h-4" /> {o.payNow}
                       </button>
@@ -341,7 +326,7 @@ export default function MyOrders() {
                     {order.paymentStatus === 'pending_review' && (
                       <button
                         onClick={() => openPay(order)}
-                        className="flex items-center gap-2 text-sm font-bold text-yellow-700 bg-yellow-50 hover:bg-yellow-100 px-4 py-2 rounded-xl transition-colors"
+                        className="flex items-center gap-2 text-sm font-bold text-yellow-700 bg-yellow-50 hover:bg-yellow-100 px-4 py-2 rounded-md transition-colors"
                       >
                         <Upload className="w-4 h-4" /> {ar ? 'إعادة الرفع' : 'Re-upload'}
                       </button>
@@ -359,7 +344,7 @@ export default function MyOrders() {
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={safePage === 1}
-              className="w-10 h-10 rounded-xl border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center transition-colors"
+              className="w-10 h-10 rounded-md border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center transition-colors"
               aria-label={ar ? 'السابق' : 'Previous'}
             >
               <ChevronLeft className="w-4 h-4 rtl:rotate-180" />
@@ -371,7 +356,7 @@ export default function MyOrders() {
                 <button
                   key={n}
                   onClick={() => setPage(n)}
-                  className={`min-w-[40px] h-10 px-2 rounded-xl text-sm font-bold transition-all ${
+                  className={`min-w-[40px] h-10 px-2 rounded-md text-sm font-bold transition-all ${
                     n === safePage ? 'bg-gray-900 text-white shadow-md' : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
                   }`}
                 >
@@ -382,7 +367,7 @@ export default function MyOrders() {
             <button
               onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
               disabled={safePage === pageCount}
-              className="w-10 h-10 rounded-xl border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center transition-colors"
+              className="w-10 h-10 rounded-md border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center transition-colors"
               aria-label={ar ? 'التالي' : 'Next'}
             >
               <ChevronRight className="w-4 h-4 rtl:rotate-180" />
@@ -392,7 +377,7 @@ export default function MyOrders() {
         </>
       ) : (
         /* ===== Empty ===== */
-        <div className="bg-white border border-gray-200 rounded-[2rem] p-12 flex flex-col items-center justify-center text-center">
+        <div className="bg-white border border-gray-200 rounded-lg p-12 flex flex-col items-center justify-center text-center">
           <Package className="w-16 h-16 text-gray-300 mb-4" />
           <h3 className="text-xl font-black text-gray-900 mb-2">{d.noOrdersFound}</h3>
           <p className="text-gray-500 font-medium max-w-sm">{o.subtitle}</p>
@@ -402,10 +387,10 @@ export default function MyOrders() {
       {/* ===== نافذة رفع الإيصال ===== */}
       {payingOrder && (
         <div className="fixed inset-0 z-[110] flex items-start justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto" onClick={() => !uploading && setPayingOrder(null)}>
-          <div className="bg-white rounded-[2rem] w-full max-w-md p-8 m-auto" dir={t.dir} onClick={(e) => e.stopPropagation()}>
+          <div className="bg-white rounded-lg w-full max-w-md p-8 m-auto" dir={t.dir} onClick={(e) => e.stopPropagation()}>
             <div className="flex items-start justify-between mb-5">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center">
+                <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center">
                   <Banknote className="w-6 h-6" />
                 </div>
                 <div>
@@ -418,7 +403,7 @@ export default function MyOrders() {
               </button>
             </div>
 
-            <div className="p-3 bg-amber-50 border border-amber-100 rounded-xl text-xs text-amber-800 font-medium mb-5">
+            <div className="p-3 bg-amber-50 border border-amber-100 rounded-md text-xs text-amber-800 font-medium mb-5">
               {o.bankNote} <span className="font-black">(JOD {payingOrder.totalPrice?.toFixed(2)})</span>
             </div>
 
@@ -428,7 +413,7 @@ export default function MyOrders() {
                 <input
                   value={receiptName}
                   onChange={(e) => setReceiptName(e.target.value)}
-                  className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-md px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
                   dir={t.dir}
                 />
               </div>
@@ -438,13 +423,13 @@ export default function MyOrders() {
                   type="email"
                   value={receiptEmail}
                   onChange={(e) => setReceiptEmail(e.target.value)}
-                  className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-md px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
                   dir={t.dir}
                 />
               </div>
               <div>
                 <label className="block text-xs font-bold text-gray-600 mb-1.5">{o.receiptLabel}</label>
-                <label className="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-gray-200 rounded-xl px-4 py-6 cursor-pointer hover:border-emerald-400 transition-colors bg-gray-50">
+                <label className="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-gray-200 rounded-md px-4 py-6 cursor-pointer hover:border-emerald-400 transition-colors bg-gray-50">
                   <Upload className="w-6 h-6 text-gray-400" />
                   <span className="text-xs font-medium text-gray-500">{receiptFile ? receiptFile.name : o.chooseFile}</span>
                   <input
@@ -457,7 +442,7 @@ export default function MyOrders() {
               </div>
 
               {uploadMsg && (
-                <div className={`p-3 rounded-xl text-sm font-medium ${uploadMsg === o.uploadSuccess ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-600'}`}>
+                <div className={`p-3 rounded-md text-sm font-medium ${uploadMsg === o.uploadSuccess ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-600'}`}>
                   {uploadMsg}
                 </div>
               )}
@@ -465,7 +450,7 @@ export default function MyOrders() {
               <button
                 type="submit"
                 disabled={uploading}
-                className="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 disabled:bg-gray-200 disabled:text-gray-400 text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all"
+                className="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 disabled:bg-gray-200 disabled:text-gray-400 text-white rounded-md font-bold text-sm flex items-center justify-center gap-2 transition-all"
               >
                 {uploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Upload className="w-4 h-4" />} {uploading ? o.uploading : o.uploadBtn}
               </button>
@@ -477,7 +462,7 @@ export default function MyOrders() {
       {/* ===== نافذة تفاصيل الطلب ===== */}
       {detailOrder && (
         <div className="fixed inset-0 z-[110] flex items-start justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto" onClick={() => setDetailOrder(null)}>
-          <div className="bg-white rounded-[2rem] w-full max-w-lg p-8 m-auto" dir={t.dir} onClick={(e) => e.stopPropagation()}>
+          <div className="bg-white rounded-lg w-full max-w-lg p-8 m-auto" dir={t.dir} onClick={(e) => e.stopPropagation()}>
             <div className="flex items-start justify-between mb-6">
               <div>
                 <h3 className="text-xl font-black text-gray-900">{o.detailsTitle}</h3>
@@ -489,19 +474,19 @@ export default function MyOrders() {
             </div>
 
             <div className="grid grid-cols-2 gap-3 mb-5">
-              <div className="bg-gray-50 rounded-xl p-3">
+              <div className="bg-gray-50 rounded-md p-3">
                 <span className="block text-xs text-gray-500 font-bold mb-1">{o.statusLabel}</span>
                 <span className="font-bold text-gray-800 text-sm">{stLabel(detailOrder.status)}</span>
               </div>
-              <div className="bg-gray-50 rounded-xl p-3">
+              <div className="bg-gray-50 rounded-md p-3">
                 <span className="block text-xs text-gray-500 font-bold mb-1">{o.paymentStatusLabel}</span>
                 <span className="font-bold text-gray-800 text-sm">{payLabel(detailOrder.paymentStatus)}</span>
               </div>
-              <div className="bg-gray-50 rounded-xl p-3">
+              <div className="bg-gray-50 rounded-md p-3">
                 <span className="block text-xs text-gray-500 font-bold mb-1">{d.placedOn}</span>
                 <span className="font-bold text-gray-800 text-sm">{fmtDate(detailOrder.createdAt)}</span>
               </div>
-              <div className="bg-gray-50 rounded-xl p-3">
+              <div className="bg-gray-50 rounded-md p-3">
                 <span className="block text-xs text-gray-500 font-bold mb-1">{d.total}</span>
                 <span className="font-bold text-gray-800 text-sm">{detailOrder.totalPrice?.toFixed(2)} JOD</span>
               </div>
@@ -510,7 +495,7 @@ export default function MyOrders() {
             <h4 className="font-black text-gray-900 text-sm mb-3">{ar ? 'العناصر' : 'Items'}</h4>
             <div className="space-y-2 mb-5">
               {detailOrder.items?.map((item, idx) => (
-                <div key={idx} className="p-3 bg-gray-50 rounded-xl border border-gray-100">
+                <div key={idx} className="p-3 bg-gray-50 rounded-md border border-gray-100">
                   <div className="flex items-center justify-between gap-2">
                     <span className="font-bold text-gray-900 text-sm">{item.name} <span className="text-xs text-gray-500 font-medium">×{item.quantity ?? 1}</span></span>
                     <span className="font-bold text-gray-900 text-sm">{(item.price || 0).toFixed(2)} JOD</span>
@@ -532,20 +517,20 @@ export default function MyOrders() {
               <div>
                 <h4 className="font-black text-gray-900 text-sm mb-2">{ar ? 'إيصال التحويل المرفوع' : 'Uploaded receipt'}</h4>
                 <a href={fullReceiptUrl(detailOrder.paymentProof)} target="_blank" rel="noreferrer">
-                  <img src={fullReceiptUrl(detailOrder.paymentProof)} alt="receipt" className="w-full max-h-56 object-contain rounded-xl border border-gray-200 hover:opacity-90 transition-opacity" />
+                  <img src={fullReceiptUrl(detailOrder.paymentProof)} alt="receipt" className="w-full max-h-56 object-contain rounded-md border border-gray-200 hover:opacity-90 transition-opacity" />
                 </a>
               </div>
             ) : detailOrder.paymentStatus === 'paid' ? (
-              <div className="p-3 bg-emerald-50 text-emerald-700 rounded-xl text-sm font-medium flex items-center gap-2">
+              <div className="p-3 bg-emerald-50 text-emerald-700 rounded-md text-sm font-medium flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 shrink-0" /> {ar ? 'تم تأكيد الدفع — خُصِمت قيمته من رصيدك MJ ولا يحتاج إيصالاً.' : 'Payment confirmed — charged from your MJ balance, no receipt needed.'}
               </div>
             ) : (
-              <div className="p-3 bg-amber-50 text-amber-800 rounded-xl text-sm font-medium flex items-center gap-2">
+              <div className="p-3 bg-amber-50 text-amber-800 rounded-md text-sm font-medium flex items-center gap-2">
                 <Mail className="w-4 h-4 shrink-0" /> {ar ? 'لم يتم رفع الإيصال بعد.' : 'No receipt uploaded yet.'}
               </div>
             )}
 
-            <button onClick={() => setDetailOrder(null)} className="mt-6 w-full py-3 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-xl font-bold text-sm transition-colors">
+            <button onClick={() => setDetailOrder(null)} className="mt-6 w-full py-3 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-md font-bold text-sm transition-colors">
               {ar ? 'إغلاق' : 'Close'}
             </button>
           </div>

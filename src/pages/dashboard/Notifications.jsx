@@ -94,8 +94,8 @@ export default function Notifications() {
     <div className="w-full max-w-3xl mx-auto">
       {/* الرأس: عدد غير المقروء + تعليم الكل مقروء */}
       <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2 text-sm text-gray-500 font-bold">
-          <span className="w-9 h-9 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center">
+        <div className="flex items-center gap-2 text-sm text-gray-600 font-bold">
+          <span className="w-9 h-9 bg-gray-50 border border-gray-100 text-gray-500 rounded-md flex items-center justify-center">
             <Bell className="w-4 h-4" />
           </span>
           {unread > 0
@@ -120,7 +120,7 @@ export default function Notifications() {
 
       {/* قائمة الإشعارات */}
       {items.length === 0 ? (
-        <div className="bg-white rounded-2xl border border-gray-100 px-6 py-20 flex flex-col items-center text-center shadow-sm">
+        <div className="bg-white rounded-lg border border-gray-100 px-6 py-20 flex flex-col items-center text-center shadow-sm">
           <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
             <Bell className="w-7 h-7 text-gray-300" />
           </div>
@@ -128,7 +128,7 @@ export default function Notifications() {
           <p className="text-sm text-gray-400 font-medium mt-1.5 max-w-xs">{n.emptySub}</p>
         </div>
       ) : (
-        <div className="bg-white rounded-2xl border border-gray-100 divide-y divide-gray-50 shadow-sm overflow-hidden">
+        <div className="bg-white rounded-lg border border-gray-100 divide-y divide-gray-50 shadow-sm overflow-hidden">
           {items.map((item) => (
             <button
               key={item._id}
@@ -137,7 +137,7 @@ export default function Notifications() {
                 item.read ? 'hover:bg-gray-50' : 'bg-blue-50/40 hover:bg-blue-50'
               }`}
             >
-              <span className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${
+              <span className={`w-10 h-10 rounded-md flex items-center justify-center shrink-0 ${
                 item.read ? 'bg-gray-100 text-gray-400' : 'bg-blue-100 text-blue-600'
               }`}>
                 <Bell className="w-4.5 h-4.5" />
