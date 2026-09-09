@@ -424,6 +424,8 @@ export default function PlatformPage({ platformId }) {
               </div>
             ))
           )}
+
+          
         </div>
       </section>
 

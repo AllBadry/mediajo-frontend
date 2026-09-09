@@ -4,8 +4,6 @@ import api from '../api/client';
 
 const CART_KEY = 'mediajo-cart';
 
-export const SERVICE_FEE = 1.5;
-
 // تطبيع عناصر السلة القادمة من أي مصدر (localStorage قديم / سيرفر)
 // لضمان وجود productQty دائماً وعدم ظهور "Subtotal (0)"
 const normalizeItems = (items) =>

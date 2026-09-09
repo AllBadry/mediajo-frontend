@@ -23,6 +23,7 @@ const paymentStatusKeys = {
 const orderStatusKeys = {
   pending_payment: 'awaitingPayment',
   processing: 'processing',
+  manual_review: 'manualReview',
   completed: 'completed',
   cancelled: 'cancelled',
 };

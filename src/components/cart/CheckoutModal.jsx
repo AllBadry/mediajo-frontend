@@ -4,7 +4,7 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { useLanguage } from '../../context/LanguageContext';
 import { useAuth } from '../../context/AuthContext';
-import { useCartStore, selectSubtotal, selectItemCount, SERVICE_FEE } from '../../store/cartStore';
+import { useCartStore, selectSubtotal, selectItemCount } from '../../store/cartStore';
 import api from '../../api/client';
 import PackageInputModal from './PackageInputModal';
 
@@ -33,8 +33,7 @@ export default function CheckoutModal({ open, onClose }) {
   const [productsIndex, setProductsIndex] = useState({});
   const [missingInput, setMissingInput] = useState(null); // { item, product } بانتظار تعبئة المدخلات
 
-  const fees = subtotal > 0 ? SERVICE_FEE : 0;
-  const total = subtotal + fees;
+  const total = subtotal;
   // ما يعادله بالعملات MJ (1 دينار = 10 MJ)
   const mjNeeded = Math.round(total * 10);
   const hasMjBalance = mjBalance != null;
@@ -251,10 +250,6 @@ export default function CheckoutModal({ open, onClose }) {
                 <div className="flex justify-between text-gray-500">
                   <span>{d.subtotal} ({count})</span>
                   <span>{subtotal.toFixed(2)} JOD</span>
-                </div>
-                <div className="flex justify-between text-gray-500">
-                  <span>{d.serviceFee}</span>
-                  <span>{fees.toFixed(2)} JOD</span>
                 </div>
                 <div className="flex justify-between text-gray-900 font-black text-base">
                   <span>{d.total}</span>

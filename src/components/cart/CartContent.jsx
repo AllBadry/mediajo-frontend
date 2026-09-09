@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { ShoppingCart, Trash2, Plus, Minus, Tag, ArrowRight, ShieldCheck, Headphones, MonitorPlay, Sparkles, PenTool, GraduationCap, Pencil } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
-import { useCartStore, selectSubtotal, selectItemCount, SERVICE_FEE } from '../../store/cartStore';
+import { useCartStore, selectSubtotal, selectItemCount } from '../../store/cartStore';
 import { useLanguage } from '../../context/LanguageContext';
 import PackageInputModal from './PackageInputModal';
 
@@ -79,9 +79,8 @@ export default function CartContent({ onCheckout = () => {} }) {
   const [promoApplied, setPromoApplied] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
 
-  const fees = subtotal > 0 ? SERVICE_FEE : 0;
   const discount = promoApplied ? subtotal * 0.1 : 0;
-  const total = Math.max(0, subtotal + fees - discount);
+  const total = Math.max(0, subtotal - discount);
 
   // دالة الحذف مع الأنيميشن
   const handleRemove = (id) => {
@@ -229,10 +228,6 @@ export default function CartContent({ onCheckout = () => {} }) {
             <div className="flex justify-between">
               <span>{d.subtotal}</span>
               <span className="text-white">{subtotal.toFixed(2)} JOD</span>
-            </div>
-            <div className="flex justify-between">
-              <span>{d.serviceFee}</span>
-              <span className="text-white">{fees.toFixed(2)} JOD</span>
             </div>
             {discount > 0 && (
               <div className="flex justify-between text-emerald-400">

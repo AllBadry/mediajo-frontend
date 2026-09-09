@@ -172,7 +172,7 @@ export default function Navbar() {
               </h3>
               <div className="flex flex-col gap-2">
                 
-                <Link to="/products/netflix" className="flex gap-4 p-3 hover:bg-gray-50 rounded-xl transition-colors group/link border border-transparent hover:border-gray-100">
+                <Link to="/products" className="flex gap-4 p-3 hover:bg-gray-50 rounded-xl transition-colors group/link border border-transparent hover:border-gray-100">
                   <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center group-hover/link:bg-red-100 transition-colors">
                     <Film className="w-5 h-5 text-gray-500 group-hover/link:text-red-600" />
                   </div>
@@ -182,7 +182,7 @@ export default function Navbar() {
                   </div>
                 </Link>
 
-                <Link to="/products/spotify" className="flex gap-4 p-3 hover:bg-gray-50 rounded-xl transition-colors group/link border border-transparent hover:border-gray-100">
+                <Link to="/products" className="flex gap-4 p-3 hover:bg-gray-50 rounded-xl transition-colors group/link border border-transparent hover:border-gray-100">
                   <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center group-hover/link:bg-green-100 transition-colors">
                     <Headphones className="w-5 h-5 text-gray-500 group-hover/link:text-green-600" />
                   </div>
@@ -192,7 +192,7 @@ export default function Navbar() {
                   </div>
                 </Link>
 
-                <Link to="/products/shahid" className="flex gap-4 p-3 hover:bg-gray-50 rounded-xl transition-colors group/link border border-transparent hover:border-gray-100">
+                <Link to="/products" className="flex gap-4 p-3 hover:bg-gray-50 rounded-xl transition-colors group/link border border-transparent hover:border-gray-100">
                   <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center group-hover/link:bg-orange-100 transition-colors">
                     <MonitorPlay className="w-5 h-5 text-gray-500 group-hover/link:text-orange-600" />
                   </div>
@@ -212,7 +212,7 @@ export default function Navbar() {
               </h3>
               <div className="flex flex-col gap-2">
                 
-                <Link to="/products/chatgpt" className="flex gap-4 p-3 hover:bg-gray-50 rounded-xl transition-colors group/link border border-transparent hover:border-gray-100">
+                <Link to="/products" className="flex gap-4 p-3 hover:bg-gray-50 rounded-xl transition-colors group/link border border-transparent hover:border-gray-100">
                   <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center group-hover/link:bg-emerald-100 transition-colors">
                     <Sparkles className="w-5 h-5 text-gray-500 group-hover/link:text-emerald-600" />
                   </div>
@@ -222,7 +222,7 @@ export default function Navbar() {
                   </div>
                 </Link>
 
-                <Link to="/products/canva" className="flex gap-4 p-3 hover:bg-gray-50 rounded-xl transition-colors group/link border border-transparent hover:border-gray-100">
+                <Link to="/products" className="flex gap-4 p-3 hover:bg-gray-50 rounded-xl transition-colors group/link border border-transparent hover:border-gray-100">
                   <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center group-hover/link:bg-blue-100 transition-colors">
                     <PenTool className="w-5 h-5 text-gray-500 group-hover/link:text-blue-600" />
                   </div>
@@ -232,7 +232,7 @@ export default function Navbar() {
                   </div>
                 </Link>
 
-                <Link to="/products/coursera" className="flex gap-4 p-3 hover:bg-gray-50 rounded-xl transition-colors group/link border border-transparent hover:border-gray-100">
+                <Link to="/products" className="flex gap-4 p-3 hover:bg-gray-50 rounded-xl transition-colors group/link border border-transparent hover:border-gray-100">
                   <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center group-hover/link:bg-blue-100 transition-colors">
                     <GraduationCap className="w-5 h-5 text-gray-500 group-hover/link:text-blue-700" />
                   </div>
