@@ -4,7 +4,7 @@ import { Zap, ShieldCheck, Globe, Code2, ArrowUpRight } from 'lucide-react';
 
 export default function AboutUs() {
   return (
-    <div dir="ltr" className="min-h-screen bg-[#fafbfc] font-sans overflow-hidden">
+    <div dir="ltr" className="page-enter min-h-screen bg-[#fafbfc] font-sans overflow-hidden">
       
       
 

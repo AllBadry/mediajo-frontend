@@ -9,7 +9,7 @@ export default function ContactUs() {
   const [sent, setSent] = useState(false);
 
   return (
-    <section dir={t.dir} className="relative w-full min-h-screen bg-[#fafbfc] font-sans overflow-hidden pt-24 pb-20 px-6 lg:px-12">
+    <section dir={t.dir} className="page-enter relative w-full min-h-screen bg-[#fafbfc] font-sans overflow-hidden pt-24 pb-20 px-6 lg:px-12">
       
       {/* شبكة النقاط */}
       <div className="absolute inset-0 z-0 opacity-25" style={{ backgroundImage: 'radial-gradient(#cbd5e1 1px, transparent 1px)', backgroundSize: '32px 32px' }}></div>

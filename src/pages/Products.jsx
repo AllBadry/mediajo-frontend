@@ -153,8 +153,15 @@ export default function Products() {
     });
   }, { scope: container });
 
+  // أنيميشن دخول بطاقات المنصات بعد اكتمال جلب البيانات
+  useGSAP(() => {
+    if (!isLoading) {
+      gsap.from(".platform-card", { y: 40, opacity: 0, duration: 0.7, stagger: 0.12, ease: "power2.out", delay: 0.15 });
+    }
+  }, { scope: container, dependencies: [isLoading] });
+
   return (
-    <div ref={container} dir={t.dir} className="min-h-screen bg-gray-50 font-sans overflow-hidden">
+    <div ref={container} dir={t.dir} className="page-enter min-h-screen bg-gray-50 font-sans overflow-hidden">
       
       {/* =========================================
           1. Hero Section (ثابت كما هو)
@@ -224,7 +231,7 @@ export default function Products() {
             {groupedPlatforms.map((platform, index) => (
               <div 
                 key={index} 
-                className="w-full flex flex-col rounded-[3rem] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.08)] border border-gray-200 bg-white"
+                className="platform-card w-full flex flex-col rounded-[3rem] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.08)] border border-gray-200 bg-white"
               >
                 {/* الجزء العلوي: اللوحة الفنية (من الإعدادات الثابتة) */}
                 <div className={`relative w-full h-[350px] md:h-[400px] overflow-hidden ${platform.bgGradient || 'bg-gray-100'}`}>

@@ -2,6 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+/* أنيميشن دخول الصفحة (fade + rise) */
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-enter {
+  animation: pageFadeIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 @layer base {
   html {
     direction: rtl;
