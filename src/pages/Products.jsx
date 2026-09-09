@@ -164,53 +164,61 @@ export default function Products() {
     <div ref={container} dir={t.dir} className="page-enter min-h-screen bg-gray-50 font-sans overflow-hidden">
       
       {/* =========================================
-          1. Hero Section (تم إصلاح التداخل والمسافات)
+          1. Hero Section (Staggered Overlapping Layout)
           ========================================= */}
-      <section className="relative w-full pt-20 pb-14 md:pt-32 md:pb-24 flex flex-col items-center justify-center bg-white">
-        <div className="float-1 absolute top-[20%] left-[15%] w-4 h-4 bg-blue-600 rounded-full"></div>
-        <div className="float-2 absolute top-[25%] left-[18%] w-2 h-2 bg-red-500 rounded-full"></div>
-        <div className="float-3 absolute bottom-[20%] right-[20%] w-5 h-5 bg-orange-400 rounded-full"></div>
+      <section className="relative w-full pt-20 pb-20 md:pt-32 md:pb-32 flex flex-col items-center justify-center bg-white overflow-visible">
         
+        {/* أشكال زينة عائمة في الخلفية */}
+        <div className="float-1 absolute top-[15%] left-[10%] w-4 h-4 bg-blue-600 rounded-full"></div>
+        <div className="float-2 absolute top-[30%] left-[20%] w-3 h-3 bg-red-500 rounded-full"></div>
+        <div className="float-3 absolute bottom-[15%] right-[15%] w-5 h-5 bg-orange-400 rounded-full"></div>
+        
+        {/* مسار منحني كخلفية (كما في الصورة) */}
         <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
-          <path className="svg-line" d="M 200 200 C 400 200, 600 400, 1000 300" fill="transparent" stroke="#cbd5e1" strokeWidth="2" strokeDasharray="4 4" />
+          <path className="svg-line" d="M -100 300 C 300 300, 600 450, 1200 250" fill="transparent" stroke="#cbd5e1" strokeWidth="1.5" strokeDasharray="6 6" />
         </svg>
 
-        {/* الحاوية الرئيسية: تم استخدام gap-4 بدلاً من المسافات السلبية العنيفة لإعطاء تنفس للتصميم */}
-        <div className="relative z-10 flex flex-col items-center gap-4 md:gap-3">
+        <div className="relative z-10 flex flex-col items-center md:items-start w-full max-w-5xl mx-auto px-4">
           
-          {/* الصف الأول */}
-          <div className="flex flex-col md:flex-row items-center justify-center relative">
-            <div className="hero-pill-1 relative z-20 bg-white border-[1.5px] border-gray-200 rounded-full px-8 py-4 md:px-12 md:py-5 shadow-[0_10px_30px_rgba(0,0,0,0.05)]">
-              <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-[5.5rem] font-black tracking-tighter text-gray-900 leading-[1.1]">{t.products.hero1}</h1>
+          {/* ================= الصف الأول ================= */}
+          <div className="flex flex-col md:flex-row items-center justify-center md:justify-start w-full relative z-10">
+            {/* الفقاعة البيضاء */}
+            <div className="hero-pill-1 relative z-20 bg-white border-2 border-gray-100 rounded-full px-10 py-5 md:px-14 md:py-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
+              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-[6.5rem] font-black tracking-tighter text-gray-900 leading-[1.1] pb-1">
+                {t.products.hero1}
+              </h1>
             </div>
-            {/* استخدام ltr و rtl لضبط اتجاه التداخل حسب لغة الموقع */}
-            <div className="hero-icon relative z-10 hidden md:flex w-40 h-20 bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-500 rounded-full items-center justify-end pr-5 shadow-[0_10px_30px_rgba(79,70,229,0.3)] ltr:-ml-12 rtl:-mr-12">
-              <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center">
-                <Zap className="w-6 h-6 text-white" />
+            {/* الذيل الملون الممتد تحت الفقاعة */}
+            <div className="hero-icon relative z-10 hidden md:flex w-64 h-24 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full items-center justify-end pr-6 ltr:-ml-20 rtl:-mr-20">
+              <div className="w-14 h-14 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/30">
+                <Zap className="w-7 h-7 text-white" />
               </div>
             </div>
           </div>
 
-          {/* الصف الثاني */}
-          <div className="flex flex-col md:flex-row items-center justify-center relative">
-            <div className="hero-pill-2 relative z-20 bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 rounded-full px-8 py-4 md:px-14 md:py-5 shadow-[0_10px_40px_rgba(79,70,229,0.4)] flex items-center gap-4 md:gap-6">
-              <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-[6rem] font-black tracking-tighter text-white leading-[1.1]">{t.products.hero2}</h1>
-              <div className="hidden md:flex w-14 h-14 bg-white/10 rounded-full items-center justify-center border border-white/20">
-                <TrendingUp className="w-7 h-7 text-white" />
-              </div>
+          {/* ================= الصف الثاني (متداخل لأعلى) ================= */}
+          <div className="flex flex-col md:flex-row items-center justify-center md:justify-start w-full relative z-20 md:-mt-10 ltr:md:ml-12 rtl:md:mr-12">
+            {/* الفقاعة الملونة */}
+            <div className="hero-pill-2 relative z-30 bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 rounded-full px-10 py-5 md:px-16 md:py-6 shadow-[0_15px_40px_rgba(79,70,229,0.3)] flex items-center gap-4">
+              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-[6.5rem] font-black tracking-tighter text-white leading-[1.1] pb-1">
+                {t.products.hero2}
+              </h1>
             </div>
-            {/* تم فصل الـ z-index لضمان اختفاء جزء من الدائرة خلف الفقاعة الرئيسية بشكل صحيح */}
-            <div className="hero-icon relative z-10 hidden md:flex w-24 h-24 bg-white border-[1.5px] border-gray-200 rounded-full items-center justify-center shadow-[0_10px_30px_rgba(0,0,0,0.05)] ltr:-ml-8 rtl:-mr-8">
-              <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center">
-                <div className="w-3 h-3 bg-white rounded-full"></div>
+            {/* الدوائر المتداخلة على الجانب */}
+            <div className="hero-icon relative z-20 hidden md:flex items-center ltr:-ml-12 rtl:-mr-12">
+              <div className="w-20 h-20 bg-gray-50 border-[6px] border-white rounded-full flex items-center justify-center shadow-md relative z-30">
+                <div className="w-8 h-8 bg-gradient-to-br from-emerald-400 to-emerald-500 rounded-full"></div>
+              </div>
+              <div className="w-40 h-16 bg-white border-2 border-gray-100 rounded-full flex items-center justify-center shadow-sm relative z-20 ltr:-ml-8 rtl:-mr-8 pl-8 rtl:pr-8 rtl:pl-0">
+                <span className="text-xs font-bold text-gray-900 uppercase tracking-widest">{t.dashboard.systemOnline}</span>
               </div>
             </div>
           </div>
 
-          {/* الصف الثالث */}
-          <div className="flex items-center justify-center relative md:ml-24 rtl:md:ml-0 rtl:md:mr-24">
-            <div className="hero-pill-3 relative z-20 bg-white border-[1.5px] border-gray-200 rounded-full px-8 py-4 md:px-14 md:py-5 shadow-[0_20px_50px_rgba(0,0,0,0.08)] flex items-center gap-4">
-              <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-[6rem] font-black tracking-tighter text-gray-900 leading-[1.1]">
+          {/* ================= الصف الثالث (متداخل لأعلى ومُزاح بقوة) ================= */}
+          <div className="flex items-center justify-center md:justify-start w-full relative z-30 md:-mt-10 ltr:md:ml-48 rtl:md:mr-48">
+            <div className="hero-pill-3 relative z-30 bg-white border-2 border-gray-100 rounded-full px-10 py-5 md:px-16 md:py-6 shadow-[0_20px_50px_rgba(0,0,0,0.08)] flex items-center gap-4">
+              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-[6.5rem] font-black tracking-tighter text-gray-900 leading-[1.1] pb-1">
                 {t.products.hero3} <span className="text-orange-400 animate-pulse">.</span>
               </h1>
             </div>
