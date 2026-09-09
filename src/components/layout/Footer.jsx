@@ -50,20 +50,31 @@ export default function Footer() {
           <div className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-8">
             <div className="flex flex-col gap-6">
               <h4 className="text-sm font-bold tracking-widest uppercase text-white mb-2">{t.footer.platform}</h4>
-              {t.footer.platformLinks.map((link, idx) => (
-                <a key={idx} href="#" className="text-gray-400 hover:text-white transition-colors flex items-center gap-1 group font-light">
-                  {link} <ArrowUpRight className="w-3 h-3 opacity-0 -translate-x-2 translate-y-2 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-300" />
-                </a>
-              ))}
+              <Link to="/products/youtube" className="text-gray-400 hover:text-white transition-colors flex items-center gap-1 group font-light">
+                {t.nav.youtube} <ArrowUpRight className="w-3 h-3 opacity-0 -translate-x-2 translate-y-2 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-300" />
+              </Link>
+              <Link to="/products/facebook" className="text-gray-400 hover:text-white transition-colors flex items-center gap-1 group font-light">
+                {t.nav.facebook} <ArrowUpRight className="w-3 h-3 opacity-0 -translate-x-2 translate-y-2 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-300" />
+              </Link>
+              <Link to="/products/instagram" className="text-gray-400 hover:text-white transition-colors flex items-center gap-1 group font-light">
+                {t.nav.instagram} <ArrowUpRight className="w-3 h-3 opacity-0 -translate-x-2 translate-y-2 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-300" />
+              </Link>
+              <Link to="/products/tiktok" className="text-gray-400 hover:text-white transition-colors flex items-center gap-1 group font-light">
+                {t.nav.tiktok} <ArrowUpRight className="w-3 h-3 opacity-0 -translate-x-2 translate-y-2 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-300" />
+              </Link>
             </div>
 
             <div className="flex flex-col gap-6">
               <h4 className="text-sm font-bold tracking-widest uppercase text-white mb-2">{t.footer.company}</h4>
-              {t.footer.companyLinks.map((link, idx) => (
-                <a key={idx} href="#" className="text-gray-400 hover:text-white transition-colors flex items-center gap-1 group font-light">
-                  {link} <ArrowUpRight className="w-3 h-3 opacity-0 -translate-x-2 translate-y-2 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-300" />
-                </a>
-              ))}
+              <Link to="/about" className="text-gray-400 hover:text-white transition-colors flex items-center gap-1 group font-light">
+                {t.nav.about} <ArrowUpRight className="w-3 h-3 opacity-0 -translate-x-2 translate-y-2 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-300" />
+              </Link>
+              <Link to="/products" className="text-gray-400 hover:text-white transition-colors flex items-center gap-1 group font-light">
+                {t.nav.products} <ArrowUpRight className="w-3 h-3 opacity-0 -translate-x-2 translate-y-2 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-300" />
+              </Link>
+              <Link to="/contact" className="text-gray-400 hover:text-white transition-colors flex items-center gap-1 group font-light">
+                {t.nav.contact} <ArrowUpRight className="w-3 h-3 opacity-0 -translate-x-2 translate-y-2 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-300" />
+              </Link>
             </div>
 
             <div className="flex flex-col gap-6">
