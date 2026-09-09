@@ -166,7 +166,7 @@ export default function Products() {
       {/* =========================================
           1. Hero Section (ثابت كما هو)
           ========================================= */}
-      <section className="relative w-full pt-32 pb-24 flex flex-col items-center justify-center bg-white">
+      <section className="relative w-full pt-20 pb-14 md:pt-32 md:pb-24 flex flex-col items-center justify-center bg-white">
         <div className="float-1 absolute top-[20%] left-[15%] w-4 h-4 bg-blue-600 rounded-full"></div>
         <div className="float-2 absolute top-[25%] left-[18%] w-2 h-2 bg-red-500 rounded-full"></div>
         <div className="float-3 absolute bottom-[20%] right-[20%] w-5 h-5 bg-orange-400 rounded-full"></div>
@@ -177,8 +177,8 @@ export default function Products() {
 
         <div className="relative z-10 flex flex-col items-center gap-2 md:gap-0">
           <div className="flex flex-col md:flex-row items-center justify-center md:-mb-6 z-10 relative">
-            <div className="hero-pill-1 bg-white border-[1.5px] border-gray-200 rounded-full px-12 py-4 md:py-6 shadow-[0_10px_30px_rgba(0,0,0,0.05)]">
-              <h1 className="text-6xl md:text-[5.5rem] font-black tracking-tighter text-gray-900 leading-none">{t.products.hero1}</h1>
+            <div className="hero-pill-1 bg-white border-[1.5px] border-gray-200 rounded-full px-7 py-2.5 md:px-12 md:py-6 shadow-[0_10px_30px_rgba(0,0,0,0.05)]">
+              <h1 className="text-2xl sm:text-3xl md:text-[5.5rem] font-black tracking-tighter text-gray-900 leading-none">{t.products.hero1}</h1>
             </div>
             <div className="hero-icon hidden md:flex w-48 h-24 bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-500 rounded-full -ml-12 items-center justify-end pr-6 shadow-[0_10px_30px_rgba(79,70,229,0.3)]">
               <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center">
@@ -188,9 +188,9 @@ export default function Products() {
           </div>
 
           <div className="flex flex-col md:flex-row items-center justify-center z-20 relative md:-mb-6 mt-4 md:mt-0">
-            <div className="hero-pill-2 bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 rounded-full px-14 py-4 md:py-6 shadow-[0_10px_40px_rgba(79,70,229,0.4)] flex items-center gap-6">
-              <h1 className="text-6xl md:text-[6rem] font-black tracking-tighter text-white leading-none">{t.products.hero2}</h1>
-              <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center border border-white/20">
+            <div className="hero-pill-2 bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 rounded-full px-7 py-2.5 md:px-14 md:py-6 shadow-[0_10px_40px_rgba(79,70,229,0.4)] flex items-center gap-6">
+              <h1 className="text-2xl sm:text-3xl md:text-[6rem] font-black tracking-tighter text-white leading-none">{t.products.hero2}</h1>
+              <div className="hidden md:flex w-16 h-16 bg-white/10 rounded-full items-center justify-center border border-white/20">
                 <TrendingUp className="w-8 h-8 text-white" />
               </div>
             </div>
@@ -202,8 +202,8 @@ export default function Products() {
           </div>
 
           <div className="flex items-center justify-center z-30 relative mt-4 md:mt-0 ml-0 md:ml-24">
-            <div className="hero-pill-3 bg-white border-[1.5px] border-gray-200 rounded-full px-14 py-4 md:py-6 shadow-[0_20px_50px_rgba(0,0,0,0.08)] flex items-center gap-4">
-              <h1 className="text-6xl md:text-[6rem] font-black tracking-tighter text-gray-900 leading-none">
+            <div className="hero-pill-3 bg-white border-[1.5px] border-gray-200 rounded-full px-7 py-2.5 md:px-14 md:py-6 shadow-[0_20px_50px_rgba(0,0,0,0.08)] flex items-center gap-4">
+              <h1 className="text-2xl sm:text-3xl md:text-[6rem] font-black tracking-tighter text-gray-900 leading-none">
                 {t.products.hero3} <span className="text-orange-400 animate-pulse">.</span>
               </h1>
             </div>
@@ -227,14 +227,14 @@ export default function Products() {
             لا توجد منتجات حالياً.
           </div>
         ) : (
-          <div className="max-w-[85rem] mx-auto flex flex-col gap-16">
+          <div className="max-w-[85rem] mx-auto flex flex-col gap-10 md:gap-16">
             {groupedPlatforms.map((platform, index) => (
               <div 
                 key={index} 
                 className="platform-card w-full flex flex-col rounded-[3rem] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.08)] border border-gray-200 bg-white"
               >
                 {/* الجزء العلوي: اللوحة الفنية (من الإعدادات الثابتة) */}
-                <div className={`relative w-full h-[350px] md:h-[400px] overflow-hidden ${platform.bgGradient || 'bg-gray-100'}`}>
+                <div className={`relative w-full h-[220px] sm:h-[260px] md:h-[400px] overflow-hidden ${platform.bgGradient || 'bg-gray-100'}`}>
                   
                   <div className="absolute inset-0 pointer-events-none rtl:-scale-x-100">
                     {platform.shapes}
@@ -242,16 +242,16 @@ export default function Products() {
 
                   <div className={`absolute inset-0 bg-gradient-to-r rtl:bg-gradient-to-l ${platform.overlay} z-20`}></div>
 
-                  <div className="absolute inset-0 flex flex-col justify-center px-10 md:px-16 z-30">
+                  <div className="absolute inset-0 flex flex-col justify-center px-6 md:px-16 z-30">
                     {platform.popular && (
-                      <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/20 backdrop-blur-md rounded-full text-white text-sm font-bold w-max mb-6 border border-white/30">
+                      <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/20 backdrop-blur-md rounded-full text-white text-sm font-bold w-max mb-3 md:mb-6 border border-white/30">
                         <Zap className="w-3.5 h-3.5 text-amber-400" /> {t.products.mostPopular}
                       </span>
                     )}
-                    <h2 className="text-6xl md:text-[6rem] font-black text-white tracking-tighter leading-none drop-shadow-md">
+                    <h2 className="text-4xl md:text-[6rem] font-black text-white tracking-tighter leading-none drop-shadow-md">
                       {platform.title}
                     </h2>
-                    <p className="text-white/90 mt-6 text-xl md:text-2xl font-medium max-w-lg leading-relaxed drop-shadow-sm">
+                    <p className="text-white/90 mt-2 md:mt-6 text-xs sm:text-base md:text-2xl font-medium max-w-lg leading-relaxed drop-shadow-sm">
                       {t.products.elevate}
                     </p>
                   </div>
@@ -259,23 +259,23 @@ export default function Products() {
 
                 {/* الجزء السفلي: (الخدمات والأسعار من الباك إند) */}
                 {/* الجزء السفلي: (الخدمات والأسعار من الباك إند) */}
-                <div className="w-full bg-white p-10 md:p-16 flex flex-col lg:flex-row gap-12 items-center justify-between">
+                <div className="w-full bg-white p-6 md:p-16 flex flex-col lg:flex-row gap-8 md:gap-12 items-center justify-between">
                   
                   <div className="w-full lg:w-2/3">
                     {platform.services.length > 0 ? (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
                         {platform.services.map((service, i) => (
-                          <div key={i} className="flex items-center justify-between p-6 bg-gray-50 rounded-[1.5rem] border border-gray-100 hover:border-gray-200 hover:bg-white transition-all duration-300">
+                          <div key={i} className="flex items-center justify-between p-4 md:p-6 bg-gray-50 rounded-[1.5rem] border border-gray-100 hover:border-gray-200 hover:bg-white transition-all duration-300">
                             <div>
-                              <span className="text-base font-black text-gray-900 block mb-1">
+                              <span className="text-sm md:text-base font-black text-gray-900 block mb-1">
                                 {t.dir === 'rtl' && service.subGroup ? `${service.subGroup}` : service.name}
                               </span>
-                              <span className="text-sm text-gray-500 font-medium">
+                              <span className="text-xs md:text-sm text-gray-500 font-medium">
                                 {service.qty} {service.groupName}
                               </span>
                             </div>
-                            <div className="flex items-baseline gap-1 bg-white px-4 py-2 rounded-xl shadow-sm border border-gray-100">
-                              <span className={`text-2xl font-black ${platform.themeColor}`}>{service.price}</span>
+                            <div className="flex items-baseline gap-1 bg-white px-3 md:px-4 py-1.5 md:py-2 rounded-xl shadow-sm border border-gray-100">
+                              <span className={`text-lg md:text-2xl font-black ${platform.themeColor}`}>{service.price}</span>
                               <span className="text-xs font-bold text-gray-400">JOD</span>
                             </div>
                           </div>
@@ -297,7 +297,7 @@ export default function Products() {
                   <div className="w-full lg:w-1/3 flex flex-col items-center lg:items-end justify-center">
                     <div className="text-center lg:text-right mb-6">
                       <p className="text-gray-400 font-medium mb-1">{t.products.readyToBoost}</p>
-                      <h3 className="text-3xl font-black text-gray-900">{t.products.growthQ.replace('{name}', platform.title)}</h3>
+                      <h3 className="text-2xl md:text-3xl font-black text-gray-900">{t.products.growthQ.replace('{name}', platform.title)}</h3>
                     </div>
                     <Link 
                       to={platform.link} 

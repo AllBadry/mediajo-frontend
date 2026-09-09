@@ -68,7 +68,8 @@ export default function Navbar() {
   };
 
   return (
-    <nav dir={t.dir} className="bg-white/90 backdrop-blur-xl border-b border-gray-100 px-6 lg:px-12 py-4 flex justify-between items-center sticky top-0 z-50">
+    <>
+      <nav dir={t.dir} className="bg-white/90 backdrop-blur-xl border-b border-gray-100 px-6 lg:px-12 py-4 flex justify-between items-center sticky top-0 z-50">
       
       {/* =========================================
           الشعار (Logo)
@@ -341,11 +342,12 @@ export default function Navbar() {
           <Menu className="w-5 h-5" />
         </button>
       </div>
+    </nav>
 
       {/* =========================================
-          قائمة الجوال (Drawer)
+          قائمة الجوال (Drawer) — خارج nav حتى لا يحصرها backdrop-blur
           ========================================= */}
-      {mobileOpen && (
+    {mobileOpen && (
         <div className="fixed inset-0 z-[90] lg:hidden">
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={close}></div>
           <div dir={t.dir} className="absolute top-0 bottom-0 left-0 rtl:left-auto rtl:right-0 w-[85vw] max-w-[340px] bg-white shadow-2xl flex flex-col">
@@ -445,6 +447,6 @@ export default function Navbar() {
         </div>
       )}
 
-    </nav>
+    </>
   );
 }

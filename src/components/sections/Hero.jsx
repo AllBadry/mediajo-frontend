@@ -59,19 +59,19 @@ export default function Hero() {
 
           {/* العناوين الضخمة */}
           <div className="flex flex-col gap-0 select-none">
-            <h1 className="text-6xl sm:text-7xl lg:text-[6.5rem] leading-[0.9] font-medium text-[#1e2022] tracking-tighter">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[0.95] font-bold text-[#1e2022] tracking-tight">
               {t.home.heroTitle1}
             </h1>
-            <div className="flex items-center gap-4 my-3 ms-2">
-              <div className="h-[2px] w-12 bg-blue-500"></div>
-              <span className="text-3xl lg:text-4xl text-blue-600 font-semibold leading-none">»</span>
+            <div className="flex items-center gap-3 my-3 ms-2">
+              <div className="h-[2px] w-10 bg-blue-500"></div>
+              <span className="text-2xl md:text-3xl text-blue-600 font-semibold leading-none">»</span>
             </div>
-            <h1 className="text-6xl sm:text-7xl lg:text-[6.5rem] leading-[0.9] font-medium text-[#1e2022] tracking-tighter">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[0.95] font-bold text-[#1e2022] tracking-tight">
               {t.home.heroTitle2}
             </h1>
           </div>
 
-          <p className="mt-8 text-lg lg:text-xl text-gray-500 max-w-sm font-light leading-relaxed">
+          <p className="mt-6 md:mt-8 text-base sm:text-lg lg:text-xl text-gray-500 max-w-sm font-light leading-relaxed">
             {t.home.heroAbout}<strong className="font-semibold text-gray-800">{t.home.heroCliq}</strong>{t.home.heroAboutEnd}
           </p>
 
@@ -82,8 +82,8 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* النصف الأيمن: المجسمات الضخمة (يأخذ 7 أعمدة ليعطي مساحة للتنفس) */}
-        <div className="lg:col-span-7 relative h-[500px] lg:h-[650px] w-full flex items-center justify-center lg:justify-end transform scale-90 lg:scale-100">
+        {/* النصف الأيمن: المجسمات الثلاثية (تظهر فقط على الأيباد والحاسوب md فأعلى) */}
+        <div className="hidden md:flex lg:col-span-7 relative h-[420px] lg:h-[650px] w-full items-center justify-center lg:justify-end transform scale-[0.7] md:scale-90 lg:scale-100">
           
           <div className="relative w-full max-w-[600px] h-full">
             {/* 1. الدائرة العلوية (زر التشغيل) */}
@@ -130,6 +130,29 @@ export default function Hero() {
                 animation: 'floatFast 5.5s ease-in-out infinite 0.5s'
               }}
             ></div>
+          </div>
+        </div>
+
+        {/* بديل الجوال: بطاقة منصات بسيطة (تظهر فقط على الهاتف، وتختفي عند md فأعلى) */}
+        <div className="md:hidden relative w-full max-w-[320px] mx-auto mt-10">
+          <div className="rounded-3xl bg-white/90 backdrop-blur border border-gray-200 shadow-[0_20px_50px_rgba(0,0,0,0.08)] p-5">
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-sm font-bold tracking-tight text-gray-900">MediaJo</span>
+              <span className="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+            </div>
+            <div className="grid grid-cols-2 gap-2.5">
+              {[
+                { name: t.nav.youtube, color: 'bg-red-500' },
+                { name: t.nav.instagram, color: 'bg-pink-500' },
+                { name: t.nav.tiktok, color: 'bg-gray-900' },
+                { name: t.nav.facebook, color: 'bg-blue-600' },
+              ].map((p, i) => (
+                <div key={i} className="flex items-center gap-2.5 bg-gray-50 rounded-2xl px-3.5 py-3 border border-gray-100">
+                  <span className={`w-3 h-3 rounded-full ${p.color}`}></span>
+                  <span className="text-sm font-bold text-gray-800">{p.name}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
