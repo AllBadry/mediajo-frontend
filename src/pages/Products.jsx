@@ -108,31 +108,26 @@ export default function Products() {
 
   // 👈 تجميع المنتجات حسب المنصة (لكي نأخذ عينة لصفحة الهبوط)
   const groupedPlatforms = useMemo(() => {
-    if (!products.length) return [];
-    
-    // نستخرج المنصات الموجودة في الإعدادات البصرية
+    // نستخرج المنصات الأربعة من الإعدادات البصرية
     const keys = Object.keys(platformUIConfig);
     const result = [];
 
     keys.forEach(key => {
-      // نبحث عن المنتجات التي تتبع هذه المنصة وتكون تابعة لقسم السوشال ميديا
+      // نبحث عن المنتجات التي تتبع هذه المنصة في قاعدة البيانات
       const platformProducts = products.filter(
         p => p.platform === key && p.productType === 'SOCIAL_GROWTH'
       );
 
-      // إذا كان هناك منتجات لهذه المنصة، نقوم بدمجها مع التصميم البصري
-      if (platformProducts.length > 0) {
-        result.push({
-          ...platformUIConfig[key],
-          // نأخذ أول 4 منتجات فقط كـ (Preview) لتظهر في الكارت الرئيسي
-          services: platformProducts.slice(0, 4) 
-        });
-      }
+      // نقوم بدفع المنصة للمصفوفة بغض النظر هل يوجد بها منتجات أم لا!
+      result.push({
+        ...platformUIConfig[key],
+        // إذا كان هناك منتجات، نأخذ أول 4. إذا لم يكن، نعيد مصفوفة فارغة.
+        services: platformProducts.slice(0, 4) 
+      });
     });
 
     return result;
   }, [products]);
-
   // ==========================================
   // GSAP Animations
   // ==========================================
@@ -256,28 +251,42 @@ export default function Products() {
                 </div>
 
                 {/* الجزء السفلي: (الخدمات والأسعار من الباك إند) */}
+                {/* الجزء السفلي: (الخدمات والأسعار من الباك إند) */}
                 <div className="w-full bg-white p-10 md:p-16 flex flex-col lg:flex-row gap-12 items-center justify-between">
                   
-                  <div className="w-full lg:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    {platform.services.map((service, i) => (
-                      <div key={i} className="flex items-center justify-between p-6 bg-gray-50 rounded-[1.5rem] border border-gray-100 hover:border-gray-200 hover:bg-white transition-all duration-300">
-                        <div>
-                          {/* استخدمنا groupName من الباك إند كعنوان فرعي */}
-                          <span className="text-base font-black text-gray-900 block mb-1">
-                            {t.dir === 'rtl' && service.subGroup ? `${service.subGroup}` : service.name}
-                          </span>
-                          <span className="text-sm text-gray-500 font-medium">
-                            {service.qty} {service.groupName}
-                          </span>
-                        </div>
-                        <div className="flex items-baseline gap-1 bg-white px-4 py-2 rounded-xl shadow-sm border border-gray-100">
-                          <span className={`text-2xl font-black ${platform.themeColor}`}>{service.price}</span>
-                          <span className="text-xs font-bold text-gray-400">$</span>
-                        </div>
+                  <div className="w-full lg:w-2/3">
+                    {platform.services.length > 0 ? (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        {platform.services.map((service, i) => (
+                          <div key={i} className="flex items-center justify-between p-6 bg-gray-50 rounded-[1.5rem] border border-gray-100 hover:border-gray-200 hover:bg-white transition-all duration-300">
+                            <div>
+                              <span className="text-base font-black text-gray-900 block mb-1">
+                                {t.dir === 'rtl' && service.subGroup ? `${service.subGroup}` : service.name}
+                              </span>
+                              <span className="text-sm text-gray-500 font-medium">
+                                {service.qty} {service.groupName}
+                              </span>
+                            </div>
+                            <div className="flex items-baseline gap-1 bg-white px-4 py-2 rounded-xl shadow-sm border border-gray-100">
+                              <span className={`text-2xl font-black ${platform.themeColor}`}>{service.price}</span>
+                              <span className="text-xs font-bold text-gray-400">$</span>
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                    ))}
+                    ) : (
+                      // 👈 تصميم جميل يظهر إذا لم يكن هناك منتجات مضافة بعد في هذه المنصة
+                      <div className="flex flex-col items-center justify-center p-12 bg-gray-50 rounded-[2rem] border border-dashed border-gray-300 text-center">
+                        <MonitorPlay className="w-12 h-12 text-gray-400 mb-4" />
+                        <h4 className="text-xl font-bold text-gray-700 mb-2">باقات {platform.title} قريباً!</h4>
+                        <p className="text-sm text-gray-500 font-medium max-w-sm">
+                          نعمل حالياً على إضافة باقات حصرية ومميزة جداً لهذه المنصة. ابق بالقرب!
+                        </p>
+                      </div>
+                    )}
                   </div>
 
+                  {/* زر التوجه إلى صفحة المنصة يظهر دائماً */}
                   <div className="w-full lg:w-1/3 flex flex-col items-center lg:items-end justify-center">
                     <div className="text-center lg:text-right mb-6">
                       <p className="text-gray-400 font-medium mb-1">{t.products.readyToBoost}</p>
