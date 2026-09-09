@@ -10,6 +10,7 @@ import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import NotificationBell from '../components/dashboard/NotificationBell';
 import TicketSoundWatcher from '../components/dashboard/TicketSoundWatcher';
+import { useTicketStore } from '../store/ticketStore';
 
 export default function CustomerDashboardLayout() {
   const container = useRef();
@@ -43,12 +44,14 @@ export default function CustomerDashboardLayout() {
     gsap.from(".topbar", { y: -20, opacity: 0, duration: 0.8, delay: 0.2, ease: "power3.out" });
   }, { scope: container });
 
+  const unseenTickets = useTicketStore((s) => s.unseen);
+
   const menuItems = [
     { id: 'overview', path: '/dashboard', icon: <LayoutDashboard className="w-5 h-5" />, label: t.dashboard.overview },
     { id: 'orders', path: '/dashboard/orders', icon: <ShoppingBag className="w-5 h-5" />, label: t.dashboard.myOrders },
     { id: 'wallet', path: '/dashboard/wallet', icon: <Wallet className="w-5 h-5" />, label: t.dashboard.wallet.title },
     { id: 'cart', path: '/dashboard/cart', icon: <ShoppingCart className="w-5 h-5" />, label: t.dashboard.cart },
-    { id: 'tickets', path: '/dashboard/tickets', icon: <MessageSquare className="w-5 h-5" />, label: t.dashboard.supportTickets, badge: 1 },
+    { id: 'tickets', path: '/dashboard/tickets', icon: <MessageSquare className="w-5 h-5" />, label: t.dashboard.supportTickets, badge: unseenTickets },
     { id: 'notifications', path: '/dashboard/notifications', icon: <BellRing className="w-5 h-5" />, label: t.dashboard.notifications.title },
   ];
 

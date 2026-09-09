@@ -4,6 +4,7 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { useLanguage } from '../../context/LanguageContext';
 import api from '../../lib/axios';
+import { useTicketStore } from '../../store/ticketStore';
 
 export default function SupportTickets() {
   const container = useRef();
@@ -26,16 +27,23 @@ export default function SupportTickets() {
   // مدخل الرد
   const [replyText, setReplyText] = useState('');
 
+  const markAllSeen = useTicketStore((s) => s.markAllSeen);
+  const markTicketSeen = useTicketStore((s) => s.markTicketSeen);
+
   // 1. جلب قائمة تذاكر العميل عند التحميل
   useEffect(() => {
     fetchMyTickets();
+    // عند فتح الصفحة تعتبر التذاكر مشاهَدة وتُصفَّر الشارة
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchMyTickets = async () => {
     try {
       setIsLoading(true);
       const res = await api.get('/tickets/my-tickets');
-      setTickets(res.data.data.tickets);
+      const tickets = res.data.data.tickets;
+      setTickets(tickets);
+      markAllSeen(tickets);
     } catch (error) {
       console.error('فشل في جلب التذاكر:', error);
     } finally {
@@ -49,6 +57,7 @@ export default function SupportTickets() {
       setIsFetchingDetails(true);
       const res = await api.get(`/tickets/${ticketId}`);
       setSelectedTicket(res.data.data.ticket);
+      markTicketSeen(ticketId, tickets);
     } catch (error) {
       console.error('فشل في جلب تفاصيل التذكرة:', error);
     } finally {
