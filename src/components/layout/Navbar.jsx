@@ -412,6 +412,9 @@ export default function Navbar() {
                   <Link to="/dashboard/notifications" onClick={close} className="flex items-center px-4 py-3 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
                     {t.dashboard.notifications.title}
                   </Link>
+                  <Link to="/dashboard/profile" onClick={close} className="flex items-center px-4 py-3 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
+                    {t.dashboard.profileSettings}
+                  </Link>
                 </>
               )}
             </nav>

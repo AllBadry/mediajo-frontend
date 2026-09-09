@@ -100,48 +100,37 @@ export default function CustomerDashboardLayout() {
         {/* Page Content Wrapper */}
         <main className="flex-1 min-w-0 flex flex-col relative">
 
-          {/* شريط تنقل الجوال (Horizontal Scroll Tabs) — يظهر تحت الـ md فقط */}
-          <nav className="md:hidden sticky top-[76px] z-30 bg-white/95 backdrop-blur border-b border-gray-100 px-3 py-2.5 flex gap-2 overflow-x-auto scrollbar-hide">
-            {menuItems.map((item) => (
-              <NavLink
-                key={item.id}
-                to={item.path}
-                end={item.path === '/dashboard'}
-                className={({ isActive }) => `flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors shrink-0 ${
-                  isActive ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
-              >
-                {item.icon}
-                {item.label}
-                {item.badge > 0 && (
-                  <span className="w-4 h-4 rounded-full bg-red-500 text-white text-[10px] flex items-center justify-center font-black">
-                    {item.badge}
-                  </span>
-                )}
-              </NavLink>
-            ))}
-            <NavLink
-              to="/dashboard/profile"
-              className={({ isActive }) => `flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors shrink-0 ${
-                isActive ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-            >
-              <User className="w-4 h-4" /> {t.dashboard.profileSettings}
-            </NavLink>
-            <button
-              onClick={handleSignOut}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold whitespace-nowrap shrink-0 bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
-            >
-              <LogOut className="w-4 h-4" /> {t.auth.signOut}
-            </button>
-          </nav>
-
-          <div className="p-6 lg:p-10 w-full flex flex-col gap-6 pb-24">
+          <div className="p-6 lg:p-10 w-full flex flex-col gap-6 pb-32 md:pb-24">
             <Outlet /> 
           </div>
         </main>
         
       </div>
+
+      {/* شريط التنقل السفلي (يظهر فقط على الجوال — شعور التطبيقات) */}
+      <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur border-t border-gray-200 shadow-[0_-10px_30px_rgba(0,0,0,0.06)]">
+        <div className="grid grid-cols-6 max-w-lg mx-auto">
+          {menuItems.map((item) => (
+            <NavLink
+              key={item.id}
+              to={item.path}
+              end={item.path === '/dashboard'}
+              className={({ isActive }) => `relative flex flex-col items-center justify-center gap-1 py-2.5 text-[10px] font-bold whitespace-nowrap overflow-hidden transition-colors ${
+                isActive ? 'text-blue-600' : 'text-gray-500 hover:text-gray-900'
+              }`}
+            >
+              {item.icon}
+              <span className="leading-none tracking-tight max-w-full truncate">{item.label}</span>
+              {item.badge > 0 && (
+                <span className="absolute -top-0.5 -right-1 rtl:-right-auto rtl:-left-1 min-w-4 h-4 px-1 rounded-full bg-red-500 text-white text-[9px] flex items-center justify-center font-black">
+                  {item.badge}
+                </span>
+              )}
+            </NavLink>
+          ))}
+        </div>
+        <div className="h-[env(safe-area-inset-bottom)]"></div>
+      </nav>
     </div>
   );
 }
