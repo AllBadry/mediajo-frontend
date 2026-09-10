@@ -8,7 +8,7 @@ const CART_KEY = 'mediajo-cart';
 // لضمان وجود productQty دائماً وعدم ظهور "Subtotal (0)"
 const normalizeItems = (items) =>
   (items || [])
-    .filter((i) => i && typeof i === 'object' && i.id)
+    .filter((i) => i && typeof i === 'object' && i.id && i.isActive !== false)
     .map((i) => ({
       ...i,
       productQty: Number.isFinite(i.productQty) && i.productQty >= 1 ? Math.floor(i.productQty) : 1,
@@ -26,6 +26,8 @@ export const useCartStore = create(
 
       // إضافة منتج للسلة (يُدمج عند تكرار نفس المنتج)
       addItem: (item) => {
+        // رفض أي منتج معلَّم كمخفِيّ (حماية إضافية — لا يُعرضون للعملاء أصلاً)
+        if (!item || item.isActive === false) return;
         set((state) => {
           const found = state.items.find((i) => i.id === item.id);
           if (found) {
