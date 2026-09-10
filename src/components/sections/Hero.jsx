@@ -37,8 +37,8 @@ export default function Hero() {
   const shadowCube = getGradientExtrusion(55, 249, 115, 22, 225, 29, 72, 1.5, -0.8);
 
   return (
-    // التعديل هنا: إزالة justify-center واستبدالها بمسافات علوية (pt-28 md:pt-36) وإضافة border-t وتأثير ظل داخلي خفيف جداً للفصل
-    <section dir={t.dir} className="relative w-full min-h-[80vh] pt-28 md:pt-36 pb-20 bg-[#fafbfc] flex flex-col overflow-hidden font-sans border-t border-b border-gray-100 shadow-[inset_0_4px_20px_rgba(0,0,0,0.01)]">
+    // التعديل هنا: min-h محسوب بدقة للشاشة، توسيط عمودي (justify-center)، مسافة علوية خفيفة (pt-8 md:pt-12)
+    <section dir={t.dir} className="relative w-full min-h-[calc(100vh-80px)] pt-8 md:pt-12 pb-12 bg-[#fafbfc] flex flex-col justify-center overflow-hidden font-sans border-t border-b border-gray-100 shadow-[inset_0_4px_20px_rgba(0,0,0,0.01)]">
       
       {/* شبكة خلفية أكثر نعومة (Elegant Dot Grid) */}
       <div className="absolute inset-0 z-0 opacity-30" style={{ backgroundImage: 'radial-gradient(#cbd5e1 1px, transparent 1px)', backgroundSize: '32px 32px' }}></div>
@@ -46,17 +46,17 @@ export default function Hero() {
       {/* توهج خلفي خفيف لدمج العناصر */}
       <div className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-tr from-blue-50/50 to-purple-50/50 rounded-full blur-3xl -z-10 pointer-events-none"></div>
 
-      <div className="max-w-[85rem] w-full mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 relative z-10">
+      <div className="max-w-[85rem] w-full mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 relative z-10">
         
-        {/* النصف الأيسر: النصوص (Typography) يأخذ 5 أعمدة */}
-        <div className={`lg:col-span-5 flex flex-col justify-start ${t.dir === 'rtl' ? 'text-right' : 'text-left'}`}>
+        {/* النصف الأيسر: النصوص (Typography) */}
+        <div className={`lg:col-span-5 flex flex-col justify-center ${t.dir === 'rtl' ? 'text-right' : 'text-left'}`}>
           
           {/* محاكاة شعار Google I/O بتفاصيل أدق */}
-          <div className="flex items-center gap-2 mb-10 text-gray-900 group">
-            <span className="text-2xl font-bold tracking-tight group-hover:text-blue-600 transition-colors">MediaJo</span>
-            <div className="w-3 h-8 bg-gray-900 skew-x-12 ms-1 shadow-sm"></div>
-            <div className="w-5 h-5 bg-gray-900 rounded-full shadow-sm"></div>
-            <span className="text-2xl font-light tracking-widest text-gray-400 ms-1">26</span>
+          <div className="flex items-center gap-2 mb-8 md:mb-10 text-gray-900 group">
+            <span className="text-xl md:text-2xl font-bold tracking-tight group-hover:text-blue-600 transition-colors">MediaJo</span>
+            <div className="w-2 md:w-3 h-6 md:h-8 bg-gray-900 skew-x-12 ms-1 shadow-sm"></div>
+            <div className="w-4 h-4 md:w-5 md:h-5 bg-gray-900 rounded-full shadow-sm"></div>
+            <span className="text-xl md:text-2xl font-light tracking-widest text-gray-400 ms-1">26</span>
           </div>
 
           {/* العناوين الضخمة */}
@@ -64,20 +64,20 @@ export default function Hero() {
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[0.95] font-bold text-[#1e2022] tracking-tight">
               {t.home.heroTitle1}
             </h1>
-            <div className="flex items-center gap-3 my-4 ms-2">
-              <div className="h-[2px] w-10 bg-blue-500"></div>
-              <span className="text-2xl md:text-3xl text-blue-600 font-semibold leading-none">»</span>
+            <div className="flex items-center gap-3 my-3 md:my-4 ms-2">
+              <div className="h-[2px] w-8 md:w-10 bg-blue-500"></div>
+              <span className="text-xl md:text-3xl text-blue-600 font-semibold leading-none">»</span>
             </div>
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[0.95] font-bold text-[#1e2022] tracking-tight">
               {t.home.heroTitle2}
             </h1>
           </div>
 
-          <p className="mt-8 md:mt-10 text-base sm:text-lg lg:text-xl text-gray-500 max-w-sm font-light leading-relaxed">
+          <p className="mt-6 md:mt-8 text-base sm:text-lg lg:text-xl text-gray-500 max-w-sm font-light leading-relaxed">
             {t.home.heroAbout}<strong className="font-semibold text-gray-800">{t.home.heroCliq}</strong>{t.home.heroAboutEnd}
           </p>
 
-          <div className="mt-12 flex gap-4">
+          <div className="mt-8 md:mt-10 flex gap-4">
             <button className="px-8 py-3.5 bg-[#1e2022] text-white rounded-none font-bold uppercase tracking-wider hover:bg-black transition-all hover:-translate-y-1 shadow-[4px_4px_0px_0px_rgba(203,213,225,0.5)]">
               {t.home.heroBtn}
             </button>
@@ -85,12 +85,13 @@ export default function Hero() {
         </div>
 
         {/* النصف الأيمن: المجسمات الثلاثية */}
-        <div className="hidden md:flex lg:col-span-7 relative h-[420px] lg:h-[600px] w-full items-start justify-center lg:justify-end transform scale-[0.7] md:scale-90 lg:scale-100">
+        {/* التعديل هنا: تقليل الارتفاع قليلاً ليتناسب مع الشاشات */}
+        <div className="hidden md:flex lg:col-span-7 relative h-[380px] lg:h-[500px] w-full items-center justify-center lg:justify-end transform scale-[0.8] lg:scale-100">
           
-          <div className="relative w-full max-w-[600px] h-full mt-4">
+          <div className="relative w-full max-w-[550px] h-full">
             {/* 1. الدائرة العلوية (زر التشغيل) */}
             <div 
-              className="absolute top-[5%] right-[15%] w-56 h-56 bg-gradient-to-br from-white to-gray-50 rounded-full flex items-center justify-center transition-all duration-500 hover:scale-110 hover:brightness-105 z-40 cursor-pointer"
+              className="absolute top-[5%] right-[15%] w-48 h-48 lg:w-56 lg:h-56 bg-gradient-to-br from-white to-gray-50 rounded-full flex items-center justify-center transition-all duration-500 hover:scale-110 hover:brightness-105 z-40 cursor-pointer"
               style={{ 
                 boxShadow: shadowCircle,
                 transform: 'rotateX(25deg) rotateY(-20deg) rotateZ(15deg)',
@@ -98,14 +99,14 @@ export default function Hero() {
               }}
             >
               <div 
-                className="w-0 h-0 border-t-[25px] border-t-transparent border-l-[45px] border-l-blue-600 border-b-[25px] border-b-transparent transform translate-x-2"
+                className="w-0 h-0 border-t-[20px] lg:border-t-[25px] border-t-transparent border-l-[35px] lg:border-l-[45px] border-l-blue-600 border-b-[20px] lg:border-b-[25px] border-b-transparent transform translate-x-2"
                 style={{ filter: 'drop-shadow(3px 5px 8px rgba(37, 99, 235, 0.4))' }}
               ></div>
             </div>
 
             {/* 2. الصندوق المستطيل العمودي */}
             <div 
-              className="absolute top-[25%] left-[5%] w-48 h-72 bg-gradient-to-br from-white to-gray-50 rounded-[2rem] transition-all duration-500 hover:scale-110 z-20"
+              className="absolute top-[25%] left-[5%] w-40 h-60 lg:w-48 lg:h-72 bg-gradient-to-br from-white to-gray-50 rounded-[2rem] transition-all duration-500 hover:scale-110 z-20"
               style={{ 
                 boxShadow: shadowBox,
                 transform: 'rotateX(15deg) rotateY(-15deg) rotateZ(-12deg)',
@@ -115,7 +116,7 @@ export default function Hero() {
 
             {/* 3. الكبسولة الأفقية العريضة */}
             <div 
-              className="absolute bottom-[10%] right-[5%] w-72 h-28 bg-gradient-to-br from-white to-gray-50 rounded-full transition-all duration-500 hover:scale-110 z-30"
+              className="absolute bottom-[10%] right-[5%] w-60 h-24 lg:w-72 lg:h-28 bg-gradient-to-br from-white to-gray-50 rounded-full transition-all duration-500 hover:scale-110 z-30"
               style={{ 
                 boxShadow: shadowPill,
                 transform: 'rotateX(-25deg) rotateY(15deg) rotateZ(-20deg)',
@@ -125,7 +126,7 @@ export default function Hero() {
 
             {/* 4. المكعب الصغير المائل */}
             <div 
-              className="absolute top-[15%] left-[35%] w-28 h-28 bg-gradient-to-br from-white to-gray-50 rounded-3xl transition-all duration-500 hover:scale-110 z-10"
+              className="absolute top-[15%] left-[35%] w-24 h-24 lg:w-28 lg:h-28 bg-gradient-to-br from-white to-gray-50 rounded-3xl transition-all duration-500 hover:scale-110 z-10"
               style={{ 
                 boxShadow: shadowCube,
                 transform: 'rotateX(35deg) rotateY(25deg) rotateZ(45deg)',
@@ -136,7 +137,7 @@ export default function Hero() {
         </div>
 
         {/* بديل الجوال: بطاقة منصات بسيطة */}
-        <div className="md:hidden relative w-full max-w-[320px] mx-auto mt-12">
+        <div className="md:hidden relative w-full max-w-[320px] mx-auto mt-6">
           <div className="rounded-none bg-white/90 backdrop-blur border-2 border-gray-200 shadow-[4px_4px_0px_0px_#cbd5e1] p-5">
             <div className="flex items-center justify-between mb-5">
               <span className="text-sm font-bold tracking-tight text-gray-900 uppercase">MediaJo</span>
