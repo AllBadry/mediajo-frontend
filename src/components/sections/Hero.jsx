@@ -3,6 +3,7 @@ import { useLanguage } from '../../context/LanguageContext';
 
 export default function Hero() {
   const { t } = useLanguage();
+  
   // دالة توليد العمق ثلاثي الأبعاد مع تحسينات الفخامة (Soft Ambient Lighting)
   const getGradientExtrusion = (depth, r1, g1, b1, r2, g2, b2, xDir, yDir) => {
     let shadows = [];
@@ -36,21 +37,22 @@ export default function Hero() {
   const shadowCube = getGradientExtrusion(55, 249, 115, 22, 225, 29, 72, 1.5, -0.8);
 
   return (
-    <section dir={t.dir} className="relative w-full min-h-[75vh] bg-[#fafbfc] flex items-center justify-center overflow-hidden font-sans border-b border-gray-100">
+    // التعديل هنا: إزالة justify-center واستبدالها بمسافات علوية (pt-28 md:pt-36) وإضافة border-t وتأثير ظل داخلي خفيف جداً للفصل
+    <section dir={t.dir} className="relative w-full min-h-[80vh] pt-28 md:pt-36 pb-20 bg-[#fafbfc] flex flex-col overflow-hidden font-sans border-t border-b border-gray-100 shadow-[inset_0_4px_20px_rgba(0,0,0,0.01)]">
       
       {/* شبكة خلفية أكثر نعومة (Elegant Dot Grid) */}
       <div className="absolute inset-0 z-0 opacity-30" style={{ backgroundImage: 'radial-gradient(#cbd5e1 1px, transparent 1px)', backgroundSize: '32px 32px' }}></div>
 
       {/* توهج خلفي خفيف لدمج العناصر */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-tr from-blue-50/50 to-purple-50/50 rounded-full blur-3xl -z-10"></div>
+      <div className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-tr from-blue-50/50 to-purple-50/50 rounded-full blur-3xl -z-10 pointer-events-none"></div>
 
-      <div className="max-w-[85rem] w-full mx-auto px-6 py-12 lg:py-0 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 relative z-10 items-center">
+      <div className="max-w-[85rem] w-full mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 relative z-10">
         
         {/* النصف الأيسر: النصوص (Typography) يأخذ 5 أعمدة */}
-        <div className={`lg:col-span-5 flex flex-col justify-center ${t.dir === 'rtl' ? 'text-right' : 'text-left'}`}>
+        <div className={`lg:col-span-5 flex flex-col justify-start ${t.dir === 'rtl' ? 'text-right' : 'text-left'}`}>
           
           {/* محاكاة شعار Google I/O بتفاصيل أدق */}
-          <div className="flex items-center gap-2 mb-8 text-gray-900 group">
+          <div className="flex items-center gap-2 mb-10 text-gray-900 group">
             <span className="text-2xl font-bold tracking-tight group-hover:text-blue-600 transition-colors">MediaJo</span>
             <div className="w-3 h-8 bg-gray-900 skew-x-12 ms-1 shadow-sm"></div>
             <div className="w-5 h-5 bg-gray-900 rounded-full shadow-sm"></div>
@@ -62,7 +64,7 @@ export default function Hero() {
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[0.95] font-bold text-[#1e2022] tracking-tight">
               {t.home.heroTitle1}
             </h1>
-            <div className="flex items-center gap-3 my-3 ms-2">
+            <div className="flex items-center gap-3 my-4 ms-2">
               <div className="h-[2px] w-10 bg-blue-500"></div>
               <span className="text-2xl md:text-3xl text-blue-600 font-semibold leading-none">»</span>
             </div>
@@ -71,21 +73,21 @@ export default function Hero() {
             </h1>
           </div>
 
-          <p className="mt-6 md:mt-8 text-base sm:text-lg lg:text-xl text-gray-500 max-w-sm font-light leading-relaxed">
+          <p className="mt-8 md:mt-10 text-base sm:text-lg lg:text-xl text-gray-500 max-w-sm font-light leading-relaxed">
             {t.home.heroAbout}<strong className="font-semibold text-gray-800">{t.home.heroCliq}</strong>{t.home.heroAboutEnd}
           </p>
 
-          <div className="mt-10 flex gap-4">
-            <button className="px-8 py-3.5 bg-[#1e2022] text-white rounded-full font-medium hover:bg-black transition-all hover:-translate-y-1 shadow-[0_8px_20px_rgba(0,0,0,0.12)]">
+          <div className="mt-12 flex gap-4">
+            <button className="px-8 py-3.5 bg-[#1e2022] text-white rounded-none font-bold uppercase tracking-wider hover:bg-black transition-all hover:-translate-y-1 shadow-[4px_4px_0px_0px_rgba(203,213,225,0.5)]">
               {t.home.heroBtn}
             </button>
           </div>
         </div>
 
-        {/* النصف الأيمن: المجسمات الثلاثية (تظهر فقط على الأيباد والحاسوب md فأعلى) */}
-        <div className="hidden md:flex lg:col-span-7 relative h-[420px] lg:h-[650px] w-full items-center justify-center lg:justify-end transform scale-[0.7] md:scale-90 lg:scale-100">
+        {/* النصف الأيمن: المجسمات الثلاثية */}
+        <div className="hidden md:flex lg:col-span-7 relative h-[420px] lg:h-[600px] w-full items-start justify-center lg:justify-end transform scale-[0.7] md:scale-90 lg:scale-100">
           
-          <div className="relative w-full max-w-[600px] h-full">
+          <div className="relative w-full max-w-[600px] h-full mt-4">
             {/* 1. الدائرة العلوية (زر التشغيل) */}
             <div 
               className="absolute top-[5%] right-[15%] w-56 h-56 bg-gradient-to-br from-white to-gray-50 rounded-full flex items-center justify-center transition-all duration-500 hover:scale-110 hover:brightness-105 z-40 cursor-pointer"
@@ -133,23 +135,23 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* بديل الجوال: بطاقة منصات بسيطة (تظهر فقط على الهاتف، وتختفي عند md فأعلى) */}
-        <div className="md:hidden relative w-full max-w-[320px] mx-auto mt-10">
-          <div className="rounded-3xl bg-white/90 backdrop-blur border border-gray-200 shadow-[0_20px_50px_rgba(0,0,0,0.08)] p-5">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-sm font-bold tracking-tight text-gray-900">MediaJo</span>
-              <span className="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+        {/* بديل الجوال: بطاقة منصات بسيطة */}
+        <div className="md:hidden relative w-full max-w-[320px] mx-auto mt-12">
+          <div className="rounded-none bg-white/90 backdrop-blur border-2 border-gray-200 shadow-[4px_4px_0px_0px_#cbd5e1] p-5">
+            <div className="flex items-center justify-between mb-5">
+              <span className="text-sm font-bold tracking-tight text-gray-900 uppercase">MediaJo</span>
+              <span className="w-2.5 h-2.5 rounded-none bg-blue-600"></span>
             </div>
-            <div className="grid grid-cols-2 gap-2.5">
+            <div className="grid grid-cols-2 gap-3">
               {[
                 { name: t.nav.youtube, color: 'bg-red-500' },
                 { name: t.nav.instagram, color: 'bg-pink-500' },
                 { name: t.nav.tiktok, color: 'bg-gray-900' },
                 { name: t.nav.facebook, color: 'bg-blue-600' },
               ].map((p, i) => (
-                <div key={i} className="flex items-center gap-2.5 bg-gray-50 rounded-2xl px-3.5 py-3 border border-gray-100">
-                  <span className={`w-3 h-3 rounded-full ${p.color}`}></span>
-                  <span className="text-sm font-bold text-gray-800">{p.name}</span>
+                <div key={i} className="flex items-center gap-2.5 bg-gray-50 rounded-none px-3.5 py-3 border border-gray-100">
+                  <span className={`w-3 h-3 rounded-none ${p.color}`}></span>
+                  <span className="text-xs font-bold text-gray-800 uppercase tracking-wider">{p.name}</span>
                 </div>
               ))}
             </div>
