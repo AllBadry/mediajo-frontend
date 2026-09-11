@@ -58,6 +58,71 @@ export default function MyOrders() {
   const o = d.orders;
   const ar = t.dir === 'rtl';
 
+  // ─── حالات محايدة للعميل (تُشتق من المزود لكن بلا أي تفاصيل تشغيلية/أخطاء) ───
+  const neutralLabel = (key) => {
+    const map = ar
+      ? { delivered: 'مكتمل', processing: 'قيد التنفيذ', pending: 'بانتظار التسليم', issue: 'قيد المعالجة' }
+      : { delivered: 'Completed', processing: 'In progress', pending: 'Awaiting delivery', issue: 'Being processed' };
+    return map[key] || key;
+  };
+
+  const itemProgressPct = (item) => {
+    const s = parseInt(item.providerStartCount, 10) || 0;
+    const r = parseInt(item.providerRemains, 10) || 0;
+    const t = s + r;
+    return t > 0 ? Math.round((s / t) * 100) : null;
+  };
+
+  // حالة الطلب الظاهرة للعميل بترتيب منطقي آمن (بلا تسريب تفاصيل المزود)
+  const orderFulfill = (order) => {
+    const items = order.items || [];
+    const allDelivered = items.length > 0 && items.every((i) => i.fulfillmentStatus === 'delivered');
+
+    if (order.status === 'cancelled') return { key: 'cancelled', text: o.cancelled };
+    if (order.status === 'pending_payment') return { key: 'waiting', text: o.awaitingPayment };
+    if (order.status === 'manual_review') return { key: 'review', text: ar ? 'قيد المراجعة من الإدارة — سنتواصل معك' : 'Under review — we will contact you' };
+    if (allDelivered || order.status === 'completed') return { key: 'completed', text: d.status.completed };
+    if (items.some((i) => i.providerIssue)) return { key: 'issue', text: neutralLabel('issue') };
+
+    let start = 0, remains = 0, hasData = false;
+    for (const it of items) {
+      const s = parseInt(it.providerStartCount, 10) || 0;
+      const r = parseInt(it.providerRemains, 10) || 0;
+      if (s || r) hasData = true;
+      start += s; remains += r;
+    }
+    const total = start + remains;
+    return { key: 'processing', text: d.status.processing, start, remains, pct: hasData && total > 0 ? Math.round((start / total) * 100) : null };
+  };
+
+  const fulfillTones = {
+    completed: 'bg-emerald-50 text-emerald-700 border-emerald-100',
+    processing: 'bg-blue-50 text-blue-700 border-blue-100',
+    issue: 'bg-amber-50 text-amber-700 border-amber-100',
+    review: 'bg-amber-50 text-amber-700 border-amber-100',
+    waiting: 'bg-gray-100 text-gray-700 border-gray-200',
+    cancelled: 'bg-red-50 text-red-700 border-red-100',
+  };
+
+  const fulfillBadge = (order) => {
+    const f = orderFulfill(order);
+    return (
+      <span className={`flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-bold border ${fulfillTones[f.key] || fulfillTones.processing}`}>
+        {f.key === 'completed' ? <CheckCircle2 className="w-3 h-3" /> : <Clock className="w-3 h-3" />}
+        {f.text}
+        {f.key === 'processing' && f.pct != null ? ` ${f.pct}%` : ''}
+      </span>
+    );
+  };
+
+  // حالة تنفيذ عنصر واحد (محايدة)
+  const itemLine = (item) => {
+    if (item.fulfillmentStatus === 'delivered') return { key: 'delivered', text: neutralLabel('delivered'), cls: 'text-emerald-600' };
+    if (item.providerIssue || item.externalOrderId === 'FAILED_API') return { key: 'issue', text: neutralLabel('issue'), cls: 'text-amber-600' };
+    if (item.fulfillmentStatus === 'api_processing') return { key: 'processing', text: neutralLabel('processing'), cls: 'text-blue-600' };
+    return { key: 'pending', text: neutralLabel('pending'), cls: 'text-gray-500' };
+  };
+
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
@@ -101,10 +166,6 @@ export default function MyOrders() {
   }, [filter, searchTerm]);
 
   const payLabel = (status) => (paymentStatusKeys[status] ? o[paymentStatusKeys[status]] : status);
-  const stLabel = (status) => {
-    if (!orderStatusKeys[status]) return status;
-    return o[orderStatusKeys[status]] || d.status[orderStatusKeys[status]] || status;
-  };
   const typeLabel = (type) => (orderTypeKeys[type] ? o[orderTypeKeys[type]] : type);
 
   // شارة نوع الطلب
@@ -131,6 +192,7 @@ export default function MyOrders() {
     { key: 'All', label: d.all },
     { key: 'unpaid', label: o.awaitingPayment },
     { key: 'pending_review', label: o.awaitingReview },
+    { key: 'processing', label: d.status.processing },
     { key: 'paid', label: o.paid },
     { key: 'completed', label: d.status.completed },
     { key: 'rejected', label: o.rejected },
@@ -140,6 +202,7 @@ export default function MyOrders() {
     .filter((order) => {
       if (filter === 'unpaid') return order.paymentStatus === 'unpaid';
       if (filter === 'pending_review') return order.paymentStatus === 'pending_review';
+      if (filter === 'processing') return order.paymentStatus === 'paid' && order.status !== 'completed' && order.status !== 'cancelled';
       if (filter === 'paid') return order.paymentStatus === 'paid';
       if (filter === 'completed') return order.status === 'completed';
       if (filter === 'rejected') return order.paymentStatus === 'rejected';
@@ -275,6 +338,7 @@ export default function MyOrders() {
                     <span className="text-xs font-bold text-gray-400 bg-gray-100 px-2 py-0.5 rounded-md font-mono">{order.orderNumber}</span>
                     {typeBadge(order)}
                     {payBadge(order)}
+                    {(order.paymentStatus === 'paid' || order.status === 'manual_review' || order.status === 'cancelled') && fulfillBadge(order)}
                   </div>
                   <span className="text-xs text-gray-400 font-medium shrink-0">{d.placedOn} {fmtDate(order.createdAt)}</span>
                 </div>
@@ -287,6 +351,18 @@ export default function MyOrders() {
                         <div className="flex items-center gap-2 flex-wrap">
                           <span className="font-bold text-gray-900 text-sm">{item.name}</span>
                           <span className="text-xs text-gray-500 font-medium">×{item.quantity ?? 1}</span>
+                        </div>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <span className={`text-[10px] font-bold ${itemLine(item).cls}`}>● {itemLine(item).text}</span>
+                          {itemLine(item).key === 'processing' && itemProgressPct(item) != null && (
+                            <span className="text-[10px] text-gray-400 font-medium">— {itemProgressPct(item)}%</span>
+                          )}
+                          {itemLine(item).key === 'processing' && item.providerRemains && (
+                            <span className="text-[10px] text-gray-400 font-medium">· {ar ? `متبقي ${item.providerRemains}` : `${item.providerRemains} remaining`}</span>
+                          )}
+                          {item.adminDeliveryNote && (
+                            <span className="text-[10px] text-emerald-600 font-medium">{ar ? 'بيانات التسليم جاهزة ✓' : 'Delivery details ready ✓'}</span>
+                          )}
                         </div>
                         {item.dynamicInputs && Object.keys(item.dynamicInputs).length > 0 && (
                           <div className="flex flex-col gap-0.5 mt-1">
@@ -497,7 +573,7 @@ export default function MyOrders() {
             <div className="grid grid-cols-2 gap-3 mb-5">
               <div className="bg-gray-50 rounded-md p-3">
                 <span className="block text-xs text-gray-500 font-bold mb-1">{o.statusLabel}</span>
-                <span className="font-bold text-gray-800 text-sm">{stLabel(detailOrder.status)}</span>
+                <span className="font-bold text-gray-800 text-sm">{orderFulfill(detailOrder).text}{orderFulfill(detailOrder).key === 'processing' && orderFulfill(detailOrder).pct != null ? ` (${orderFulfill(detailOrder).pct}%)` : ''}</span>
               </div>
               <div className="bg-gray-50 rounded-md p-3">
                 <span className="block text-xs text-gray-500 font-bold mb-1">{o.paymentStatusLabel}</span>
@@ -521,6 +597,20 @@ export default function MyOrders() {
                     <span className="font-bold text-gray-900 text-sm">{item.name} <span className="text-xs text-gray-500 font-medium">×{item.quantity ?? 1}</span></span>
                     <span className="font-bold text-gray-900 text-sm">{(item.price || 0).toFixed(2)} JOD</span>
                   </div>
+                  <div className="flex items-center gap-2 mt-1.5">
+                    <span className={`text-[10px] font-bold ${itemLine(item).cls}`}>● {itemLine(item).text}</span>
+                    {itemLine(item).key === 'processing' && itemProgressPct(item) != null && (
+                      <span className="text-[10px] text-gray-400 font-medium">— {itemProgressPct(item)}%</span>
+                    )}
+                    {itemLine(item).key === 'processing' && item.providerRemains && (
+                      <span className="text-[10px] text-gray-400 font-medium">· {ar ? `متبقي ${item.providerRemains}` : `${item.providerRemains} remaining`}</span>
+                    )}
+                  </div>
+                  {item.adminDeliveryNote && (
+                    <div className="mt-1 text-xs text-emerald-700 bg-emerald-50 rounded px-2 py-1 font-medium">
+                      {ar ? 'بيانات التسليم:' : 'Delivery details:'} {item.adminDeliveryNote}
+                    </div>
+                  )}
                   {item.dynamicInputs && Object.keys(item.dynamicInputs).length > 0 && (
                     <div className="mt-1 flex flex-col gap-0.5">
                       {Object.entries(item.dynamicInputs)
