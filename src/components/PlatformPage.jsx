@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
@@ -117,7 +117,7 @@ const platformStyles = {
 // ==========================================
 // 3. مكون البطاقات (Tier Cards)
 // ==========================================
-function TierCards({ productsList, itemName, theme, orderNow, onAdd, addedText, addedId }) {
+function TierCards({ productsList, itemName, theme, orderNow, onAdd, addedText, addedId, onViewDetail }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {productsList.map((product) => (
@@ -128,7 +128,13 @@ function TierCards({ productsList, itemName, theme, orderNow, onAdd, addedText, 
           <div className={`absolute -top-12 left-1/2 -translate-x-1/2 w-32 h-32 ${theme.glow} opacity-0 group-hover/tier:opacity-100 rounded-full blur-2xl transition-opacity duration-500`}></div>
 
           <div className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1 z-10">{itemName}</div>
-          <div className="text-3xl md:text-4xl font-black tracking-tighter text-gray-900 mb-4 z-10">{product.qty}</div>
+          <button
+            onClick={(e) => { e.stopPropagation(); onViewDetail(product._id); }}
+            className="text-3xl md:text-4xl font-black tracking-tighter text-gray-900 mb-4 z-10 hover:text-indigo-600 transition-colors cursor-pointer underline decoration-dashed decoration-gray-300 underline-offset-4 hover:decoration-indigo-400"
+            title={product.name}
+          >
+            {product.qty}
+          </button>
 
           <div className="w-full h-px bg-gray-100 mb-4 z-10"></div>
 
@@ -160,6 +166,7 @@ export default function PlatformPage({ platformId }) {
 
   
   const container = useRef();
+  const navigate = useNavigate();
   const { t } = useLanguage();
   const pp = t.platformPage;
   const addItem = useCartStore((s) => s.addItem);
@@ -412,6 +419,7 @@ export default function PlatformPage({ platformId }) {
                               onAdd={requestAdd}
                               addedText={pp.added}
                               addedId={addedId}
+                              onViewDetail={(productId) => navigate(`/product/${productId}`)}
                             />
                           </div>
                         ))}

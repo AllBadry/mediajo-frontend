@@ -21,6 +21,7 @@ import Auth from './pages/Auth';
 import ForgotPassword from './pages/ForgotPassword';
 import ContactUs from './pages/ContactUs';
 import CartPage from './pages/CartPage';
+import ProductDetail from './pages/ProductDetail';
 
 // تخطيط وصفحات لوحة التحكم المتداخلة
 import CustomerDashboardLayout from './layouts/CustomerDashboardLayout';
@@ -60,6 +61,9 @@ function AppRoutes() {
       <Route path="/products/facebook" element={<Facebook />} />
       <Route path="/products/tiktok" element={<TikTok />} />
       <Route path="/products/youtube" element={<YouTube />} />
+
+      {/* صفحة تفاصيل المنتج */}
+      <Route path="/product/:id" element={<ProductDetail />} />
 
       {/* صفحات الاشتراكات */}
       <Route path="/products/netflix" element={<Netflix />} />
