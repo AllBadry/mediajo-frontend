@@ -164,7 +164,7 @@ export default function Products() {
     <div ref={container} dir={t.dir} className="page-enter min-h-screen bg-gray-50 font-sans overflow-hidden">
       
       {/* =========================================
-          1. Hero Section (Staggered Overlapping Layout)
+          1. Hero Section (Centered & Staggered Overlapping Layout)
           ========================================= */}
       <section className="relative w-full pt-20 pb-20 md:pt-32 md:pb-32 flex flex-col items-center justify-center bg-white overflow-visible">
         
@@ -173,15 +173,19 @@ export default function Products() {
         <div className="float-2 absolute top-[30%] left-[20%] w-3 h-3 bg-red-500 rounded-full"></div>
         <div className="float-3 absolute bottom-[15%] right-[15%] w-5 h-5 bg-orange-400 rounded-full"></div>
         
-        {/* مسار منحني كخلفية (كما في الصورة) */}
+        {/* مسار منحني كخلفية */}
         <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
           <path className="svg-line" d="M -100 300 C 300 300, 600 450, 1200 250" fill="transparent" stroke="#cbd5e1" strokeWidth="1.5" strokeDasharray="6 6" />
         </svg>
 
-        <div className="relative z-10 flex flex-col items-center md:items-start w-full max-w-5xl mx-auto px-4">
+        {/* 
+            تم إزالة md:items-start وإجبار الحاوية على items-center 
+            لضمان بقاء الكتلة كاملة في منتصف الشاشة 
+        */}
+        <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-5xl mx-auto px-4">
           
-          {/* ================= الصف الأول ================= */}
-          <div className="flex flex-col md:flex-row items-center justify-center md:justify-start w-full relative z-10">
+          {/* ================= الصف الأول (مُزاح قليلاً لليسار) ================= */}
+          <div className="flex flex-col md:flex-row items-center justify-center w-full relative z-10 md:-translate-x-12 rtl:md:translate-x-12 transition-transform">
             {/* الفقاعة البيضاء */}
             <div className="hero-pill-1 relative z-20 bg-white border-2 border-gray-100 rounded-full px-10 py-5 md:px-14 md:py-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
               <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-[6.5rem] font-black tracking-tighter text-gray-900 leading-[1.1] pb-1">
@@ -196,8 +200,8 @@ export default function Products() {
             </div>
           </div>
 
-          {/* ================= الصف الثاني (متداخل لأعلى) ================= */}
-          <div className="flex flex-col md:flex-row items-center justify-center md:justify-start w-full relative z-20 md:-mt-10 ltr:md:ml-12 rtl:md:mr-12">
+          {/* ================= الصف الثاني (في المنتصف تماماً + متداخل لأعلى) ================= */}
+          <div className="flex flex-col md:flex-row items-center justify-center w-full relative z-20 md:-mt-10">
             {/* الفقاعة الملونة */}
             <div className="hero-pill-2 relative z-30 bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 rounded-full px-10 py-5 md:px-16 md:py-6 shadow-[0_15px_40px_rgba(79,70,229,0.3)] flex items-center gap-4">
               <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-[6.5rem] font-black tracking-tighter text-white leading-[1.1] pb-1">
@@ -215,8 +219,8 @@ export default function Products() {
             </div>
           </div>
 
-          {/* ================= الصف الثالث (متداخل لأعلى ومُزاح بقوة) ================= */}
-          <div className="flex items-center justify-center md:justify-start w-full relative z-30 md:-mt-10 ltr:md:ml-48 rtl:md:mr-48">
+          {/* ================= الصف الثالث (مُزاح قليلاً لليمين + متداخل لأعلى) ================= */}
+          <div className="flex flex-col md:flex-row items-center justify-center w-full relative z-30 md:-mt-10 md:translate-x-16 rtl:md:-translate-x-16 transition-transform">
             <div className="hero-pill-3 relative z-30 bg-white border-2 border-gray-100 rounded-full px-10 py-5 md:px-16 md:py-6 shadow-[0_20px_50px_rgba(0,0,0,0.08)] flex items-center gap-4">
               <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-[6.5rem] font-black tracking-tighter text-gray-900 leading-[1.1] pb-1">
                 {t.products.hero3} <span className="text-orange-400 animate-pulse">.</span>
