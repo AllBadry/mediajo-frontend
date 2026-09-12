@@ -136,11 +136,19 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* بديل الجوال: ألوان متحركة خفيفة بدل المجسمات */}
+        {/* بديل الجوال: غيط متموج (Wavy Field) خفيف بدل المجسمات */}
         <div className="md:hidden absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
-          <div className="absolute w-64 h-64 bg-blue-100/40 rounded-full blur-3xl animate-[blobFloat_12s_ease-in-out_infinite] -top-10 -right-16"></div>
-          <div className="absolute w-56 h-56 bg-purple-100/40 rounded-full blur-3xl animate-[blobFloat_10s_ease-in-out_infinite_3s] top-1/3 -left-12"></div>
-          <div className="absolute w-48 h-48 bg-pink-100/30 rounded-full blur-3xl animate-[blobFloat_14s_ease-in-out_infinite_6s] bottom-8 right-1/4"></div>
+          <div className="absolute inset-0 animate-[fieldBob_14s_ease-in-out_infinite]">
+            <svg className="absolute left-0 w-[200%] h-40" style={{ top: '16%', color: '#dbeafe', opacity: 0.4, animation: 'waveSlide 18s linear infinite' }} viewBox="0 0 1200 120" preserveAspectRatio="none" fill="none">
+              <path d="M0,60 Q100,-60 200,60 T400,60 T600,60 T800,60 T1000,60 T1200,60 L1200,120 L0,120 Z" fill="currentColor" />
+            </svg>
+            <svg className="absolute left-0 w-[200%] h-44" style={{ top: '40%', color: '#ede9fe', opacity: 0.4, animation: 'waveSlide 12s linear infinite reverse' }} viewBox="0 0 1200 120" preserveAspectRatio="none" fill="none">
+              <path d="M0,60 Q100,-60 200,60 T400,60 T600,60 T800,60 T1000,60 T1200,60 L1200,120 L0,120 Z" fill="currentColor" />
+            </svg>
+            <svg className="absolute left-0 w-[200%] h-40" style={{ top: '62%', color: '#fecdd3', opacity: 0.3, animation: 'waveSlide 9s linear infinite' }} viewBox="0 0 1200 120" preserveAspectRatio="none" fill="none">
+              <path d="M0,60 Q100,-60 200,60 T400,60 T600,60 T800,60 T1000,60 T1200,60 L1200,120 L0,120 Z" fill="currentColor" />
+            </svg>
+          </div>
         </div>
       </div>
 
@@ -153,10 +161,13 @@ export default function Hero() {
           0%, 100% { transform: translateY(0) rotateX(15deg) rotateY(-15deg) rotateZ(-12deg); }
           50% { transform: translateY(-15px) rotateX(12deg) rotateY(-18deg) rotateZ(-10deg); }
         }
-        @keyframes blobFloat {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          33% { transform: translate(12px, -18px) scale(1.05); }
-          66% { transform: translate(-10px, 14px) scale(0.95); }
+        @keyframes waveSlide {
+          from { transform: translateX(0); }
+          to { transform: translateX(-50%); }
+        }
+        @keyframes fieldBob {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-8px); }
         }
       `}</style>
     </section>
