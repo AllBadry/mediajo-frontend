@@ -136,27 +136,11 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* بديل الجوال: بطاقة منصات بسيطة */}
-        <div className="md:hidden relative w-full max-w-[320px] mx-auto mt-6">
-          <div className="rounded-none bg-white/90 backdrop-blur border-2 border-gray-200 shadow-[4px_4px_0px_0px_#cbd5e1] p-5">
-            <div className="flex items-center justify-between mb-5">
-              <span className="text-sm font-bold tracking-tight text-gray-900 uppercase">MediaJo</span>
-              <span className="w-2.5 h-2.5 rounded-none bg-blue-600"></span>
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              {[
-                { name: t.nav.youtube, color: 'bg-red-500' },
-                { name: t.nav.instagram, color: 'bg-pink-500' },
-                { name: t.nav.tiktok, color: 'bg-gray-900' },
-                { name: t.nav.facebook, color: 'bg-blue-600' },
-              ].map((p, i) => (
-                <div key={i} className="flex items-center gap-2.5 bg-gray-50 rounded-none px-3.5 py-3 border border-gray-100">
-                  <span className={`w-3 h-3 rounded-none ${p.color}`}></span>
-                  <span className="text-xs font-bold text-gray-800 uppercase tracking-wider">{p.name}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+        {/* بديل الجوال: ألوان متحركة خفيفة بدل المجسمات */}
+        <div className="md:hidden absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
+          <div className="absolute w-64 h-64 bg-blue-100/40 rounded-full blur-3xl animate-[blobFloat_12s_ease-in-out_infinite] -top-10 -right-16"></div>
+          <div className="absolute w-56 h-56 bg-purple-100/40 rounded-full blur-3xl animate-[blobFloat_10s_ease-in-out_infinite_3s] top-1/3 -left-12"></div>
+          <div className="absolute w-48 h-48 bg-pink-100/30 rounded-full blur-3xl animate-[blobFloat_14s_ease-in-out_infinite_6s] bottom-8 right-1/4"></div>
         </div>
       </div>
 
@@ -168,6 +152,11 @@ export default function Hero() {
         @keyframes floatFast {
           0%, 100% { transform: translateY(0) rotateX(15deg) rotateY(-15deg) rotateZ(-12deg); }
           50% { transform: translateY(-15px) rotateX(12deg) rotateY(-18deg) rotateZ(-10deg); }
+        }
+        @keyframes blobFloat {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          33% { transform: translate(12px, -18px) scale(1.05); }
+          66% { transform: translate(-10px, 14px) scale(0.95); }
         }
       `}</style>
     </section>
