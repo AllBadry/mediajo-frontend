@@ -1,5 +1,5 @@
 import React from 'react';
-import { Zap, ShieldCheck, Globe, Code2, ArrowUpRight } from 'lucide-react';
+import { Zap, ShieldCheck, Globe, TrendingUp, ArrowUpRight } from 'lucide-react';
 
 
 export default function AboutUs() {
@@ -46,17 +46,17 @@ export default function AboutUs() {
           
           <div className="lg:col-span-5">
             <h2 className="text-4xl md:text-5xl font-medium tracking-tight text-gray-900 mb-6">
-              Beyond traditional services. We build digital infrastructure.
+              We don't just deliver. We build fame and engineer growth.
             </h2>
             <div className="w-20 h-1 bg-blue-600"></div>
           </div>
 
           <div className="lg:col-span-7 flex flex-col gap-8 text-xl lg:text-2xl text-gray-500 font-light leading-relaxed">
             <p>
-              MediaJo was founded with a singular vision: to revolutionize the SMM and digital services landscape in the region. We don't just deliver followers or accounts; we architect scalable growth engines for brands, influencers, and agencies.
+              MediaJo was built on a single promise: to make you impossible to miss. We don't just grow numbers on a screen — we engineer real presence for brands, creators, and rising stars, turning attention into momentum and momentum into a reputation that lasts.
             </p>
             <p>
-              By bridging the gap between high-end API automation and local payment solutions like <strong className="font-semibold text-gray-900">CliQ</strong>, we've created an ecosystem where speed meets uncompromised quality.
+              By combining smart automation with local payment solutions like <strong className="font-semibold text-gray-900">CliQ</strong>, we've built an ecosystem where speed meets uncompromised quality — so you focus on your craft while we handle the growth.
             </p>
           </div>
 
@@ -104,11 +104,11 @@ export default function AboutUs() {
               <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-purple-500/20 to-transparent rounded-full blur-3xl pointer-events-none"></div>
               
               <div className="w-14 h-14 bg-white/10 text-white rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform relative z-10">
-                <Code2 className="w-7 h-7" />
+                <TrendingUp className="w-7 h-7" />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-4 tracking-tight relative z-10">API-First Approach</h3>
+              <h3 className="text-2xl font-bold text-white mb-4 tracking-tight relative z-10">Growth Engineering</h3>
               <p className="text-gray-400 font-light leading-relaxed relative z-10">
-                Built for developers and resellers. Integrate our entire catalog directly into your own platform with 3 lines of code.
+                Every campaign is architected with intention: the right timing, the right audience, the right momentum. We turn your goals into a measurable upward curve.
               </p>
             </div>
 
