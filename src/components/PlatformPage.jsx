@@ -117,7 +117,7 @@ const platformStyles = {
 // ==========================================
 // 3. مكون البطاقات (Tier Cards)
 // ==========================================
-function TierCards({ productsList, itemName, theme, orderNow, onAdd, addedText, addedId, onViewDetail }) {
+function TierCards({ productsList, itemName, theme, orderNow, onAdd, addedText, addedId, onViewDetail, detailLabel }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {productsList.map((product) => (
@@ -128,31 +128,48 @@ function TierCards({ productsList, itemName, theme, orderNow, onAdd, addedText, 
           <div className={`absolute -top-12 left-1/2 -translate-x-1/2 w-32 h-32 ${theme.glow} opacity-0 group-hover/tier:opacity-100 rounded-full blur-2xl transition-opacity duration-500`}></div>
 
           <div className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1 z-10">{itemName}</div>
-          <button
-            onClick={(e) => { e.stopPropagation(); onViewDetail(product._id); }}
-            className="text-3xl md:text-4xl font-black tracking-tighter text-gray-900 mb-4 z-10 hover:text-indigo-600 transition-colors cursor-pointer underline decoration-dashed decoration-gray-300 underline-offset-4 hover:decoration-indigo-400"
-            title={product.name}
-          >
-            {product.qty}
-          </button>
+          <div className="text-3xl md:text-4xl font-black tracking-tighter text-gray-900 mb-2 z-10">{product.qty}</div>
+
+          {product.name && product.name !== itemName && (
+            <h5 className="text-sm font-bold text-gray-700 mb-3 z-10 leading-snug">{product.name}</h5>
+          )}
+
+          {product.features && product.features.length > 0 && (
+            <div className="flex flex-col gap-1 mb-3 z-10 w-full">
+              {product.features.slice(0, 2).map((feat, fi) => (
+                <span key={fi} className="inline-flex items-center justify-center gap-1 text-[11px] font-medium text-gray-500 leading-tight">
+                  <Check className="w-3 h-3 text-emerald-500 shrink-0" />
+                  <span className="truncate">{feat}</span>
+                </span>
+              ))}
+            </div>
+          )}
 
           <div className="w-full h-px bg-gray-100 mb-4 z-10"></div>
 
-          <div className="flex items-baseline gap-1 mb-6 z-10">
+          <div className="flex items-baseline gap-1 mb-5 z-10">
             <span className="text-2xl md:text-3xl font-black text-gray-900">{product.price.toFixed(2)}</span>
             <span className="text-xs font-bold text-gray-500">JOD</span>
           </div>
 
-          <button
-            onClick={() => onAdd(product)}
-            className={`mt-auto w-full py-3 bg-gray-100 text-gray-900 group-hover/tier:text-white rounded-xl font-bold text-sm transition-all duration-300 z-10 flex items-center justify-center gap-1.5 ${theme.btnHover} ${addedId === product._id ? '!bg-emerald-500 !text-white group-hover/tier:!bg-emerald-500' : ''}`}
-          >
-            {addedId === product._id ? (
-              <><Check className="w-4 h-4" /> {addedText}</>
-            ) : (
-              orderNow
-            )}
-          </button>
+          <div className="mt-auto w-full flex flex-col gap-2 z-10">
+            <button
+              onClick={() => onAdd(product)}
+              className={`w-full py-3 bg-gray-100 text-gray-900 group-hover/tier:text-white rounded-xl font-bold text-sm transition-all duration-300 flex items-center justify-center gap-1.5 ${theme.btnHover} ${addedId === product._id ? '!bg-emerald-500 !text-white group-hover/tier:!bg-emerald-500' : ''}`}
+            >
+              {addedId === product._id ? (
+                <><Check className="w-4 h-4" /> {addedText}</>
+              ) : (
+                orderNow
+              )}
+            </button>
+            <button
+              onClick={() => onViewDetail(product._id)}
+              className="w-full py-2.5 border-2 border-gray-200 text-gray-500 hover:text-indigo-600 hover:border-indigo-300 rounded-xl font-bold text-xs transition-all duration-300 flex items-center justify-center gap-1.5"
+            >
+              {detailLabel}
+            </button>
+          </div>
         </div>
       ))}
     </div>
@@ -419,6 +436,7 @@ export default function PlatformPage({ platformId }) {
                               onAdd={requestAdd}
                               addedText={pp.added}
                               addedId={addedId}
+                              detailLabel={pp.detail}
                               onViewDetail={(productId) => navigate(`/product/${productId}`)}
                             />
                           </div>
