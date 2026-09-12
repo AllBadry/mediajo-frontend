@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
 
 export default function Hero() {
@@ -78,9 +79,9 @@ export default function Hero() {
           </p>
 
           <div className="mt-8 md:mt-10 flex gap-4">
-            <button className="px-8 py-3.5 bg-[#1e2022] text-white rounded-none font-bold uppercase tracking-wider hover:bg-black transition-all hover:-translate-y-1 shadow-[4px_4px_0px_0px_rgba(203,213,225,0.5)]">
+            <Link to="/products" className="inline-flex px-8 py-3.5 bg-[#1e2022] text-white rounded-none font-bold uppercase tracking-wider hover:bg-black transition-all hover:-translate-y-1 shadow-[4px_4px_0px_0px_rgba(203,213,225,0.5)]">
               {t.home.heroBtn}
-            </button>
+            </Link>
           </div>
         </div>
 
