@@ -38,14 +38,37 @@ export default function Hero() {
   const shadowCube = getGradientExtrusion(55, 249, 115, 22, 225, 29, 72, 1.5, -0.8);
 
   return (
-    // التعديل هنا: min-h محسوب بدقة للشاشة، توسيط عمودي (justify-center)، مسافة علوية خفيفة (pt-8 md:pt-12)
     <section dir={t.dir} className="relative w-full min-h-[calc(100vh-80px)] pt-8 md:pt-12 pb-12 bg-[#fafbfc] flex flex-col justify-center overflow-hidden font-sans border-t border-b border-gray-100 shadow-[inset_0_4px_20px_rgba(0,0,0,0.01)]">
       
       {/* شبكة خلفية أكثر نعومة (Elegant Dot Grid) */}
       <div className="absolute inset-0 z-0 opacity-30" style={{ backgroundImage: 'radial-gradient(#cbd5e1 1px, transparent 1px)', backgroundSize: '32px 32px' }}></div>
 
-      {/* توهج خلفي خفيف لدمج العناصر */}
-      <div className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-tr from-blue-50/50 to-purple-50/50 rounded-full blur-3xl -z-10 pointer-events-none"></div>
+      {/* توهج خلفي خفيف لدمج العناصر للكمبيوتر */}
+      <div className="hidden md:block absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-tr from-blue-50/50 to-purple-50/50 rounded-full blur-3xl -z-10 pointer-events-none"></div>
+
+      {/* =========================================
+          بديل الجوال: خلفية ملونة متدفقة (Mesh Gradient / Fluid Aurora) 
+          ========================================= */}
+      <div className="md:hidden absolute inset-0 overflow-hidden pointer-events-none z-0" aria-hidden="true">
+        {/* طبقة فلتر زجاجي لدمج الألوان بنعومة تامة */}
+        <div className="absolute inset-0 backdrop-blur-[90px] z-10 bg-white/30"></div>
+        
+        {/* كتل الألوان المضيئة والمتحركة */}
+        <div 
+          className="absolute w-[120%] h-[60%] rounded-[100%] bg-gradient-to-tr from-pink-500 to-orange-400 opacity-60 mix-blend-multiply"
+          style={{ top: '-10%', left: '-20%', animation: 'fluidGradient 12s ease-in-out infinite alternate' }}
+        ></div>
+        
+        <div 
+          className="absolute w-[100%] h-[70%] rounded-[100%] bg-gradient-to-br from-violet-600 to-fuchsia-500 opacity-50 mix-blend-multiply"
+          style={{ top: '20%', right: '-30%', animation: 'fluidGradient 15s ease-in-out infinite alternate-reverse' }}
+        ></div>
+        
+        <div 
+          className="absolute w-[110%] h-[60%] rounded-[100%] bg-gradient-to-bl from-cyan-400 to-blue-600 opacity-50 mix-blend-multiply"
+          style={{ bottom: '-15%', left: '-10%', animation: 'fluidGradient 10s ease-in-out infinite alternate' }}
+        ></div>
+      </div>
 
       <div className="max-w-[85rem] w-full mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 relative z-10">
         
@@ -61,12 +84,12 @@ export default function Hero() {
           </div>
 
           {/* العناوين الضخمة */}
-          <div className="flex flex-col gap-0 select-none">
+          <div className="flex flex-col gap-0 select-none drop-shadow-sm md:drop-shadow-none">
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[0.95] font-bold text-[#1e2022] tracking-tight">
               {t.home.heroTitle1}
             </h1>
             <div className="flex items-center gap-3 my-3 md:my-4 ms-2">
-              <div className="h-[2px] w-8 md:w-10 bg-blue-500"></div>
+              <div className="h-[2px] w-8 md:w-10 bg-blue-600"></div>
               <span className="text-xl md:text-3xl text-blue-600 font-semibold leading-none">»</span>
             </div>
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[0.95] font-bold text-[#1e2022] tracking-tight">
@@ -74,19 +97,18 @@ export default function Hero() {
             </h1>
           </div>
 
-          <p className="mt-6 md:mt-8 text-base sm:text-lg lg:text-xl text-gray-500 max-w-sm font-light leading-relaxed">
-            {t.home.heroAbout}<strong className="font-semibold text-gray-800">{t.home.heroCliq}</strong>{t.home.heroAboutEnd}
+          <p className="mt-6 md:mt-8 text-base sm:text-lg lg:text-xl text-gray-700 md:text-gray-500 max-w-sm font-medium md:font-light leading-relaxed">
+            {t.home.heroAbout}<strong className="font-semibold text-gray-900">{t.home.heroCliq}</strong>{t.home.heroAboutEnd}
           </p>
 
           <div className="mt-8 md:mt-10 flex gap-4">
-            <Link to="/products" className="inline-flex px-8 py-3.5 bg-[#1e2022] text-white rounded-none font-bold uppercase tracking-wider hover:bg-black transition-all hover:-translate-y-1 shadow-[4px_4px_0px_0px_rgba(203,213,225,0.5)]">
+            <Link to="/products" className="inline-flex px-8 py-3.5 bg-[#1e2022] text-white rounded-none font-bold uppercase tracking-wider hover:bg-black transition-all hover:-translate-y-1 shadow-[4px_4px_0px_0px_rgba(203,213,225,0.8)] md:shadow-[4px_4px_0px_0px_rgba(203,213,225,0.5)]">
               {t.home.heroBtn}
             </Link>
           </div>
         </div>
 
-        {/* النصف الأيمن: المجسمات الثلاثية */}
-        {/* التعديل هنا: تقليل الارتفاع قليلاً ليتناسب مع الشاشات */}
+        {/* النصف الأيمن: المجسمات الثلاثية (للكمبيوتر والأيباد فقط) */}
         <div className="hidden md:flex lg:col-span-7 relative h-[380px] lg:h-[500px] w-full items-center justify-center lg:justify-end transform scale-[0.8] lg:scale-100">
           
           <div className="relative w-full max-w-[550px] h-full">
@@ -137,20 +159,6 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* بديل الجوال: غيط متموج (Wavy Field) خفيف بدل المجسمات */}
-        <div className="md:hidden absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
-          <div className="absolute inset-0 animate-[fieldBob_14s_ease-in-out_infinite]">
-            <svg className="absolute left-0 w-[200%] h-40" style={{ top: '16%', color: '#dbeafe', opacity: 0.4, animation: 'waveSlide 18s linear infinite' }} viewBox="0 0 1200 120" preserveAspectRatio="none" fill="none">
-              <path d="M0,60 Q100,-60 200,60 T400,60 T600,60 T800,60 T1000,60 T1200,60 L1200,120 L0,120 Z" fill="currentColor" />
-            </svg>
-            <svg className="absolute left-0 w-[200%] h-44" style={{ top: '40%', color: '#ede9fe', opacity: 0.4, animation: 'waveSlide 12s linear infinite reverse' }} viewBox="0 0 1200 120" preserveAspectRatio="none" fill="none">
-              <path d="M0,60 Q100,-60 200,60 T400,60 T600,60 T800,60 T1000,60 T1200,60 L1200,120 L0,120 Z" fill="currentColor" />
-            </svg>
-            <svg className="absolute left-0 w-[200%] h-40" style={{ top: '62%', color: '#fecdd3', opacity: 0.3, animation: 'waveSlide 9s linear infinite' }} viewBox="0 0 1200 120" preserveAspectRatio="none" fill="none">
-              <path d="M0,60 Q100,-60 200,60 T400,60 T600,60 T800,60 T1000,60 T1200,60 L1200,120 L0,120 Z" fill="currentColor" />
-            </svg>
-          </div>
-        </div>
       </div>
 
       <style>{`
@@ -162,13 +170,12 @@ export default function Hero() {
           0%, 100% { transform: translateY(0) rotateX(15deg) rotateY(-15deg) rotateZ(-12deg); }
           50% { transform: translateY(-15px) rotateX(12deg) rotateY(-18deg) rotateZ(-10deg); }
         }
-        @keyframes waveSlide {
-          from { transform: translateX(0); }
-          to { transform: translateX(-50%); }
-        }
-        @keyframes fieldBob {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-8px); }
+        /* أنيميشن الألوان المتدفقة للجوال */
+        @keyframes fluidGradient {
+          0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+          33% { transform: translate(8%, 12%) scale(1.1) rotate(5deg); }
+          66% { transform: translate(-8%, 5%) scale(0.9) rotate(-5deg); }
+          100% { transform: translate(0, 0) scale(1) rotate(0deg); }
         }
       `}</style>
     </section>
