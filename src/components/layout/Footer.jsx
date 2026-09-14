@@ -79,6 +79,9 @@ export default function Footer() {
 
             <div className="flex flex-col gap-6">
               <h4 className="text-sm font-bold tracking-widest uppercase text-white mb-2">{t.footer.legal}</h4>
+              <Link to="/terms" className="text-gray-400 hover:text-white transition-colors flex items-center gap-1 group font-light">
+                {t.footer.termsOfUse} <ArrowUpRight className="w-3 h-3 opacity-0 -translate-x-2 translate-y-2 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-300" />
+              </Link>
               {t.footer.legalLinks.map((link, idx) => (
                 <a key={idx} href="#" className="text-gray-400 hover:text-white transition-colors flex items-center gap-1 group font-light">
                   {link} <ArrowUpRight className="w-3 h-3 opacity-0 -translate-x-2 translate-y-2 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-300" />
