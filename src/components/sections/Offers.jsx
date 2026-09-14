@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
-import { ArrowUpRight, ArrowRight, ArrowLeft, ShieldCheck, Zap, TrendingUp, Check } from 'lucide-react';
+import { ArrowUpRight, Plus, Sparkles, TrendingUp, Flame } from 'lucide-react';
 
 export default function Offers() {
   const { t } = useLanguage();
@@ -10,172 +10,141 @@ export default function Offers() {
   const offers = [
     {
       id: 1,
-      title: isRTL ? 'باقة وكالات السوشال ميديا' : 'Social Media Agency',
+      tag: isRTL ? 'باقة متكاملة' : 'FULL BUNDLE',
+      title: isRTL ? 'وكالات السوشال ميديا' : 'Social Media Agency',
       desc: isRTL 
-        ? 'مزيج متكامل من 20K متابع انستغرام و 50K مشاهدة ريلز لدعم الثقة.' 
-        : '20K IG Followers + 50K Reels Views to build absolute trust.',
+        ? 'مزيج متكامل من 20K متابع انستغرام و 50K مشاهدة ريلز.' 
+        : '20K IG Followers + 50K Reels Views.',
       price: '65.00',
-      oldPrice: '120.00',
       currency: 'JOD',
-      features: isRTL ? ['حسابات عالية الجودة', 'ضمان 30 يوم', 'تنفيذ فوري'] : ['HQ Accounts', '30-Day Warranty', 'Instant Start'],
-      // نمط جوجل: أزرق (ثقة) وأصفر (تنبيه/طاقة)
-      mainColor: 'bg-blue-600',
-      textColor: 'text-blue-600',
-      badgeText: isRTL ? 'الأكثر مبيعاً' : 'Best Seller',
-      colSpan: 'lg:col-span-8',
-      icon: ShieldCheck,
-      geometricShape: (
+      icon: Flame,
+      // ألوان الفن التجريدي السفلي (مستوحى من الألوان الدافئة والبنفسجية)
+      artBg: 'bg-[#0f0c29]',
+      artGradients: (
         <>
-          <div className="absolute -top-32 -right-32 w-80 h-80 bg-blue-500 rounded-full opacity-10 group-hover:scale-110 transition-transform duration-700 ease-out"></div>
-          <div className={`absolute bottom-0 ${isRTL ? 'left-10' : 'right-10'} w-24 h-12 bg-yellow-400 rounded-t-full opacity-90 transform translate-y-6 group-hover:translate-y-2 transition-transform duration-500`}></div>
+          <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-bl from-orange-400 to-pink-500 rounded-full mix-blend-screen filter blur-[30px] opacity-80 group-hover:scale-110 transition-transform duration-700"></div>
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-violet-600 to-indigo-600 rounded-full mix-blend-screen filter blur-[40px] opacity-80 group-hover:translate-x-4 transition-transform duration-700"></div>
+          {/* محاكاة شكل ثلاثي الأبعاد (Glass/3D Wave) */}
+          <div className="absolute inset-0 bg-[linear-gradient(105deg,transparent_20%,rgba(255,255,255,0.1)_25%,transparent_30%)]"></div>
         </>
       )
     },
     {
       id: 2,
+      tag: isRTL ? 'نمو الجمهور' : 'AUDIENCE GROWTH',
       title: isRTL ? 'الانتشار العربي' : 'Arab Reach',
       desc: isRTL 
-        ? '10,000 متابع فيسبوك عربي حقيقي لتعزيز مصداقية صفحتك.' 
+        ? '10,000 متابع فيسبوك عربي حقيقي لتعزيز ثقة عملائك.' 
         : '10K Real Arab Facebook followers for page credibility.',
       price: '56.00',
-      oldPrice: '80.00',
       currency: 'JOD',
-      features: isRTL ? ['عرب 100%', 'أمان تام للصفحة'] : ['100% Arab', 'Page Safe'],
-      // نمط جوجل: أخضر (نمو، أمان)
-      mainColor: 'bg-green-500',
-      textColor: 'text-green-600',
-      badgeText: isRTL ? 'موثوق' : 'Trusted',
-      colSpan: 'lg:col-span-4',
       icon: TrendingUp,
-      geometricShape: (
-        <div className={`absolute -bottom-16 ${isRTL ? '-right-16' : '-left-16'} w-48 h-48 bg-green-50 rounded-full border-[20px] border-green-500 opacity-20 group-hover:scale-125 transition-transform duration-700 ease-out`}></div>
+      // ألوان الفن التجريدي السفلي (أخضر وأزرق متداخل)
+      artBg: 'bg-[#0f172a]',
+      artGradients: (
+        <>
+          <div className="absolute -bottom-10 right-0 w-64 h-64 bg-gradient-to-tl from-emerald-400 to-teal-500 rounded-full mix-blend-screen filter blur-[40px] opacity-90 group-hover:scale-110 transition-transform duration-700"></div>
+          <div className="absolute top-0 left-0 w-40 h-40 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-full mix-blend-screen filter blur-[30px] opacity-70 group-hover:-translate-y-4 transition-transform duration-700"></div>
+          <div className="absolute inset-0 bg-[linear-gradient(75deg,transparent_40%,rgba(255,255,255,0.05)_50%,transparent_60%)]"></div>
+        </>
       )
     },
     {
       id: 3,
+      tag: isRTL ? 'دعم الخوارزميات' : 'ALGORITHM BOOST',
       title: isRTL ? 'صاروخ الإكسبلور' : 'Explore Rocket',
       desc: isRTL 
-        ? '100,000 مشاهدة تيك توك + لايكات لزيادة فرص الظهور.' 
-        : '100K TikTok Views + Likes to boost explore chances.',
+        ? '100,000 مشاهدة تيك توك لدفع فيديوهاتك للترند السريع.' 
+        : '100K TikTok Views to push your videos to the trends.',
       price: '18.00',
-      oldPrice: '35.00',
       currency: 'JOD',
-      features: isRTL ? ['سرعة فائقة', 'تفاعل حقيقي'] : ['Super Fast', 'Real Interaction'],
-      // نمط جوجل: أحمر (عاجل، ساخن)
-      mainColor: 'bg-red-500',
-      textColor: 'text-red-600',
-      badgeText: isRTL ? 'عرض سريع' : 'Flash Deal',
-      colSpan: 'lg:col-span-12',
-      icon: Zap,
-      geometricShape: (
+      icon: Sparkles,
+      // ألوان الفن التجريدي السفلي (ألوان نيون نابضة)
+      artBg: 'bg-[#1a0b2e]',
+      artGradients: (
         <>
-          <div className={`absolute top-0 ${isRTL ? 'left-0' : 'right-0'} w-32 h-full bg-red-50 opacity-50 transform ${isRTL ? '-skew-x-12 -translate-x-10' : 'skew-x-12 translate-x-10'} group-hover:scale-110 transition-transform duration-700`}></div>
-          <div className={`absolute top-1/2 -translate-y-1/2 ${isRTL ? 'left-20' : 'right-20'} w-16 h-16 bg-red-500 rounded-lg rotate-45 opacity-10 group-hover:rotate-90 transition-transform duration-700`}></div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-r from-fuchsia-600 via-pink-500 to-rose-500 mix-blend-screen filter blur-[50px] opacity-60 group-hover:opacity-80 transition-opacity duration-700"></div>
+          {/* خطوط تمثل تأثير السرعة (Speed Lines/Glass lines) */}
+          <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 10px, rgba(255,255,255,0.2) 10px, rgba(255,255,255,0.2) 11px)' }}></div>
         </>
       )
     }
   ];
 
   return (
-    <section dir={t.dir} className="w-full py-20 md:py-28 px-4 md:px-8 bg-[#fafbfc] border-t border-gray-200 font-sans">
+    <section dir={t.dir} className="w-full py-24 md:py-32 px-6 md:px-12 bg-[#fafbfc] border-t border-gray-100 font-sans">
       <div className="max-w-[85rem] mx-auto">
         
-        {/* الترويسة (Header) - جدية ومباشرة */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-          <div>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-              <span className="text-sm font-bold tracking-widest uppercase text-gray-900">
-                {isRTL ? 'عروض حصرية محدودة' : 'Limited Exclusive Offers'}
+        {/* الترويسة (Header) - بأسلوب Sleek & Minimal */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+          <div className="max-w-2xl">
+            <h2 className="text-4xl md:text-5xl lg:text-[3.5rem] font-medium text-[#1e2022] tracking-tight leading-[1.1] mb-6">
+              {isRTL ? 'أحدث العروض الحصرية' : 'Latest Exclusive Offers'} <br />
+              <span className="text-gray-400 font-light">
+                {isRTL ? 'نمو استثنائي بميزانية ذكية.' : 'Exceptional growth, smart budget.'}
               </span>
-            </div>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-[#202124] tracking-tight leading-none">
-              {isRTL ? 'باقات النمو.' : 'Growth Packages.'} <br />
-              <span className="text-gray-500">{isRTL ? 'أسعار لا تُنافس.' : 'Unbeatable prices.'}</span>
             </h2>
           </div>
           
-          <Link to="/products" className="inline-flex items-center gap-2 font-bold text-blue-600 hover:text-blue-800 transition-colors group">
-            {isRTL ? 'عرض جميع الخدمات' : 'View All Services'}
-            {isRTL ? (
-              <ArrowLeft className="w-5 h-5 transition-transform group-hover:-translate-x-1" />
-            ) : (
-              <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-            )}
+          <Link to="/products" className="inline-flex items-center gap-2 font-medium text-gray-900 hover:text-blue-600 transition-colors group pb-2 border-b border-gray-300 hover:border-blue-600">
+            {isRTL ? 'اكتشف جميع الخدمات' : 'Discover all services'}
+            <ArrowUpRight className={`w-5 h-5 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1 ${isRTL ? '-scale-x-100' : ''}`} />
           </Link>
         </div>
 
-        {/* شبكة العروض (Bento Grid) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* شبكة البطاقات (Cards Grid) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10">
           {offers.map((offer) => {
             const Icon = offer.icon;
             return (
               <div 
                 key={offer.id}
-                className={`${offer.colSpan} group relative bg-white border border-gray-200 rounded-[2rem] overflow-hidden flex flex-col justify-between transition-all duration-300 hover:shadow-[0_20px_40px_rgba(0,0,0,0.06)] hover:border-gray-300`}
+                className="group relative bg-white rounded-[2rem] overflow-hidden flex flex-col h-[500px] border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_50px_rgb(0,0,0,0.1)] transition-all duration-500"
               >
-                {/* الأشكال الهندسية الخلفية (Google Geometry) */}
-                <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-                  {offer.geometricShape}
-                </div>
-
-                <div className="relative z-10 p-8 md:p-10 flex flex-col h-full">
-                  
-                  {/* رأس الكرت (الشارة والأيقونة) */}
-                  <div className="flex justify-between items-start mb-8">
-                    <span className={`inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest text-white ${offer.mainColor}`}>
-                      {offer.badgeText}
+                
+                {/* 1. النصف العلوي: المحتوى النصي (Minimalist Text Area) */}
+                <div className="p-8 flex flex-col flex-1 bg-white relative z-10">
+                  <div className="mb-6">
+                    <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-blue-600 mb-4 block">
+                      {offer.tag}
                     </span>
-                    <div className={`p-3 rounded-2xl bg-gray-50 border border-gray-100 ${offer.textColor}`}>
-                      <Icon className="w-6 h-6" />
-                    </div>
-                  </div>
-
-                  {/* معلومات العرض */}
-                  <div className="mb-8">
-                    <h3 className="text-3xl md:text-4xl font-black text-[#202124] mb-4 tracking-tight leading-tight">
+                    <h3 className="text-2xl lg:text-3xl font-medium text-gray-900 mb-3 tracking-tight leading-snug">
                       {offer.title}
                     </h3>
-                    <p className="text-gray-600 text-lg font-medium leading-relaxed max-w-[90%]">
+                    <p className="text-sm text-gray-500 leading-relaxed font-light">
                       {offer.desc}
                     </p>
                   </div>
-
-                  {/* الميزات (بشكل جدي ونظيف) */}
-                  <div className={`flex flex-wrap gap-4 mb-10 ${offer.id === 3 ? 'lg:w-1/2' : ''}`}>
-                    {offer.features.map((feat, idx) => (
-                      <div key={idx} className="flex items-center gap-2 text-sm font-bold text-gray-700 bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100">
-                        <Check className={`w-4 h-4 ${offer.textColor}`} />
-                        {feat}
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* قسم السعر والشراء (أسفل الكرت) */}
-                  <div className="mt-auto flex flex-col sm:flex-row sm:items-end justify-between gap-6 pt-8 border-t border-gray-100">
-                    <div className="flex flex-col">
-                      <span className="text-gray-400 line-through text-sm font-bold mb-1">{offer.oldPrice} {offer.currency}</span>
-                      <div className="flex items-baseline gap-1">
-                        <span className={`text-5xl font-black tracking-tighter ${offer.textColor}`}>
-                          {offer.price.split('.')[0]}
-                        </span>
-                        <span className="text-2xl font-black text-gray-900">
-                          .{offer.price.split('.')[1]}
-                        </span>
-                        <span className="text-gray-500 font-bold ml-1">{offer.currency}</span>
-                      </div>
+                  
+                  {/* السعر */}
+                  <div className="mt-auto">
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-3xl font-bold text-gray-900 tracking-tighter">
+                        {offer.price}
+                      </span>
+                      <span className="text-sm font-medium text-gray-400 ml-1">{offer.currency}</span>
                     </div>
-                    
-                    <Link 
-                      to="/products"
-                      className={`inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-white font-bold uppercase tracking-wider transition-all duration-300 hover:-translate-y-1 shadow-sm hover:shadow-md ${offer.mainColor}`}
-                    >
-                      {isRTL ? 'شراء العرض' : 'Purchase'}
-                      <ArrowUpRight className={`w-5 h-5 ${isRTL ? '-scale-x-100' : ''}`} />
-                    </Link>
                   </div>
-
                 </div>
+
+                {/* زر عائم يربط بين النصفين (Floating Action Button) */}
+                <div className={`absolute ${isRTL ? 'left-8' : 'right-8'} top-[53%] -translate-y-1/2 z-20`}>
+                  <Link 
+                    to="/products"
+                    className="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center shadow-lg hover:bg-blue-700 hover:scale-110 transition-all duration-300"
+                  >
+                    <Plus className="w-6 h-6" />
+                  </Link>
+                </div>
+
+                {/* 2. النصف السفلي: الفن التجريدي (Vibrant 3D/Fluid Abstract Art) */}
+                <div className={`relative h-[45%] w-full ${offer.artBg} overflow-hidden transform group-hover:scale-[1.02] transition-transform duration-700 ease-out`}>
+                  {offer.artGradients}
+                  
+                  {/* تراكب زجاجي خفيف لجعل الألوان تندمج بأناقة */}
+                  <div className="absolute inset-0 bg-white/5 backdrop-blur-[2px]"></div>
+                </div>
+
               </div>
             );
           })}
