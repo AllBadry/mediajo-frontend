@@ -21,6 +21,8 @@ import Auth from './pages/Auth';
 import ForgotPassword from './pages/ForgotPassword';
 import ContactUs from './pages/ContactUs';
 import TermsOfUse from './pages/TermsOfUse';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import RefundPolicy from './pages/RefundPolicy';
 import CartPage from './pages/CartPage';
 import ProductDetail from './pages/ProductDetail';
 
@@ -100,6 +102,12 @@ function AppRoutes() {
 
       {/* صفحة شروط الاستخدام */}
       <Route path="/terms" element={<TermsOfUse />} />
+
+      {/* صفحة سياسة الخصوصية */}
+      <Route path="/privacy" element={<PrivacyPolicy />} />
+
+      {/* صفحة سياسة الاسترداد */}
+      <Route path="/refunds" element={<RefundPolicy />} />
     </Routes>
   );
 }

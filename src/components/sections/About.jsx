@@ -72,9 +72,10 @@ export default function About() {
               
               <div className="flex items-center gap-4 mt-2">
                 <div className="flex items-center">
-                  <img src="https://i.pravatar.cc/100?img=32" alt="Client" className="w-8 h-8 rounded-full border-2 border-white z-30" />
-                  <img src="https://i.pravatar.cc/100?img=12" alt="Client" className="w-8 h-8 rounded-full border-2 border-white -ml-3 z-20" />
-                  <img src="https://i.pravatar.cc/100?img=47" alt="Client" className="w-8 h-8 rounded-full border-2 border-white -ml-3 z-10" />
+                  {/* تم استبدال الصور هنا لتكون لرجال */}
+                  <img src="https://i.pravatar.cc/100?img=11" alt="Client" className="w-8 h-8 rounded-full border-2 border-white z-30" />
+                  <img src="https://i.pravatar.cc/100?img=33" alt="Client" className="w-8 h-8 rounded-full border-2 border-white -ml-3 z-20" />
+                  <img src="https://i.pravatar.cc/100?img=52" alt="Client" className="w-8 h-8 rounded-full border-2 border-white -ml-3 z-10" />
                 </div>
                 <span className="text-sm text-gray-500 font-medium">
                   {isRTL ? 'شريك نجاح' : 'Success partners'}
@@ -105,8 +106,9 @@ export default function About() {
             
             <div className="absolute -top-6 left-8">
               <div className="p-1 bg-[#15161c] rounded-full">
+                {/* تم استبدال صورة التقييم لتكون لرجل */}
                 <img 
-                  src="https://i.pravatar.cc/150?img=44" 
+                  src="https://i.pravatar.cc/150?img=68" 
                   alt="Reviewer" 
                   className="w-12 h-12 rounded-full object-cover"
                 />
@@ -115,7 +117,7 @@ export default function About() {
 
             <div className="mt-4">
               <h4 className="text-sm font-bold tracking-widest uppercase mb-1 text-gray-100">
-                {isRTL ? 'سارة الخطيب' : 'SARAH AL-KHATEEB'}
+                {isRTL ? 'عمر الخطيب' : 'OMAR AL-KHATEEB'}
               </h4>
               <p className="text-xs text-gray-400 mb-6 font-medium uppercase tracking-wider">
                 {isRTL ? 'مشتري موثق' : 'Verified buyer'}
@@ -123,7 +125,7 @@ export default function About() {
               
               <p className="text-base text-gray-300 font-light leading-relaxed">
                 {isRTL 
-                  ? "أنا سعيدة للغاية بخدمات ميديا جو! لقد كانت رحلة مذهلة في عالم الإبداع والنمو. من الدقائق الأولى، وجدت نفسي في عالم آسر من الدعم السريع والنتائج الحقيقية."
+                  ? "أنا سعيد للغاية بخدمات ميديا جو! لقد كانت رحلة مذهلة في عالم الإبداع والنمو. من الدقائق الأولى، وجدت نفسي في عالم آسر من الدعم السريع والنتائج الحقيقية."
                   : "I am absolutely thrilled with MediaJo services! It was an incredible journey into the world of growth. From the very first minutes, I immersed myself in the captivating results."}
               </p>
             </div>

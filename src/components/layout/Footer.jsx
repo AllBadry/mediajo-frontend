@@ -83,9 +83,9 @@ export default function Footer() {
                 {t.footer.termsOfUse} <ArrowUpRight className="w-3 h-3 opacity-0 -translate-x-2 translate-y-2 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-300" />
               </Link>
               {t.footer.legalLinks.map((link, idx) => (
-                <a key={idx} href="#" className="text-gray-400 hover:text-white transition-colors flex items-center gap-1 group font-light">
+                <Link key={idx} to={idx === 0 ? '/privacy' : '/refunds'} className="text-gray-400 hover:text-white transition-colors flex items-center gap-1 group font-light">
                   {link} <ArrowUpRight className="w-3 h-3 opacity-0 -translate-x-2 translate-y-2 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-300" />
-                </a>
+                </Link>
               ))}
             </div>
           </div>
