@@ -20,6 +20,7 @@ import Coursera from './pages/Coursera';
 import Auth from './pages/Auth';
 import ForgotPassword from './pages/ForgotPassword';
 import ContactUs from './pages/ContactUs';
+import TermsOfUse from './pages/TermsOfUse';
 import CartPage from './pages/CartPage';
 import ProductDetail from './pages/ProductDetail';
 
@@ -96,6 +97,9 @@ function AppRoutes() {
 
       {/* صفحة تواصل معنا */}
       <Route path="/contact" element={<ContactUs />} />
+
+      {/* صفحة شروط الاستخدام */}
+      <Route path="/terms" element={<TermsOfUse />} />
     </Routes>
   );
 }
