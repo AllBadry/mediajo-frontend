@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLanguage } from '../../context/LanguageContext';
-import { PlayCircle, ArrowUpRight } from 'lucide-react';
+import { PlayCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function About() {
@@ -64,10 +64,10 @@ export default function About() {
 
             <div className="flex flex-col">
               <span className="text-xs font-bold tracking-[0.2em] text-gray-400 uppercase mb-4">
-                {isRTL ? 'عملاء اختارونا' : 'CLIENTS CHOSE US'}
+                {isRTL ? 'عميل يثق بنا' : 'CLIENTS TRUST US'}
               </span>
               <div className="text-5xl lg:text-6xl font-medium text-[#111] mb-2 tracking-tighter">
-                +1850
+                +1000
               </div>
               
               <div className="flex items-center gap-4 mt-2">
@@ -115,7 +115,7 @@ export default function About() {
 
             <div className="mt-4">
               <h4 className="text-sm font-bold tracking-widest uppercase mb-1 text-gray-100">
-                {isRTL ? 'صوفيا زينتشنكو' : 'SOFIA ZINCHENKO'}
+                {isRTL ? 'سارة الخطيب' : 'SARAH AL-KHATEEB'}
               </h4>
               <p className="text-xs text-gray-400 mb-6 font-medium uppercase tracking-wider">
                 {isRTL ? 'مشتري موثق' : 'Verified buyer'}
