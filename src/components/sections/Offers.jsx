@@ -1,206 +1,187 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
-import { ArrowUpRight, Sparkles, Zap, Flame, CheckCircle2 } from 'lucide-react';
+import { ArrowUpRight, ArrowRight, ArrowLeft, ShieldCheck, Zap, TrendingUp, Check } from 'lucide-react';
 
 export default function Offers() {
   const { t } = useLanguage();
   const isRTL = t.dir === 'rtl';
 
-  const [currentSlide, setCurrentSlide] = useState(0);
-
-  const offersList = [
+  const offers = [
     {
       id: 1,
-      titleTop: isRTL ? 'وكالات' : 'AGENCY',
-      titleBottom: isRTL ? 'السوشال ميديا' : 'BUNDLE',
+      title: isRTL ? 'باقة وكالات السوشال ميديا' : 'Social Media Agency',
       desc: isRTL 
-        ? 'الكومبو الأقوى لحسابك: 20,000 متابع انستغرام + 50,000 مشاهدة ريلز.'
-        : 'The ultimate combo: 20K IG Followers + 50K Reels Views.',
-      features: isRTL ? ['حسابات بجودة عالية', 'ضمان تعويض 30 يوم'] : ['HQ Accounts', '30-Day Refill'],
+        ? 'مزيج متكامل من 20K متابع انستغرام و 50K مشاهدة ريلز لدعم الثقة.' 
+        : '20K IG Followers + 50K Reels Views to build absolute trust.',
       price: '65.00',
       oldPrice: '120.00',
-      // ألوان المجسمات الهندسية للعرض الأول (حار: برتقالي/وردي)
-      shapeRing: 'border-orange-400',
-      shapePill: 'from-pink-500 to-rose-400',
-      shapeCircle: 'from-orange-400 to-amber-300',
-      textColor: 'text-rose-500',
-      icon: Flame
+      currency: 'JOD',
+      features: isRTL ? ['حسابات عالية الجودة', 'ضمان 30 يوم', 'تنفيذ فوري'] : ['HQ Accounts', '30-Day Warranty', 'Instant Start'],
+      // نمط جوجل: أزرق (ثقة) وأصفر (تنبيه/طاقة)
+      mainColor: 'bg-blue-600',
+      textColor: 'text-blue-600',
+      badgeText: isRTL ? 'الأكثر مبيعاً' : 'Best Seller',
+      colSpan: 'lg:col-span-8',
+      icon: ShieldCheck,
+      geometricShape: (
+        <>
+          <div className="absolute -top-32 -right-32 w-80 h-80 bg-blue-500 rounded-full opacity-10 group-hover:scale-110 transition-transform duration-700 ease-out"></div>
+          <div className={`absolute bottom-0 ${isRTL ? 'left-10' : 'right-10'} w-24 h-12 bg-yellow-400 rounded-t-full opacity-90 transform translate-y-6 group-hover:translate-y-2 transition-transform duration-500`}></div>
+        </>
+      )
     },
     {
       id: 2,
-      titleTop: isRTL ? 'الانتشار' : 'ARAB',
-      titleBottom: isRTL ? 'العربي' : 'REACH',
+      title: isRTL ? 'الانتشار العربي' : 'Arab Reach',
       desc: isRTL 
-        ? 'استهدف الجمهور العربي بقوة مع 10,000 متابع حقيقي لصفحتك.'
-        : 'Target the Arab audience with 10K real page followers.',
-      features: isRTL ? ['عرب 100% حقيقيون', 'أمان تام للصفحة'] : ['100% Real Arab', 'Completely Page Safe'],
+        ? '10,000 متابع فيسبوك عربي حقيقي لتعزيز مصداقية صفحتك.' 
+        : '10K Real Arab Facebook followers for page credibility.',
       price: '56.00',
       oldPrice: '80.00',
-      // ألوان المجسمات الهندسية للعرض الثاني (بارد: أزرق/سماوي)
-      shapeRing: 'border-blue-400',
-      shapePill: 'from-blue-500 to-cyan-400',
-      shapeCircle: 'from-indigo-400 to-purple-400',
-      textColor: 'text-blue-600',
-      icon: Zap
+      currency: 'JOD',
+      features: isRTL ? ['عرب 100%', 'أمان تام للصفحة'] : ['100% Arab', 'Page Safe'],
+      // نمط جوجل: أخضر (نمو، أمان)
+      mainColor: 'bg-green-500',
+      textColor: 'text-green-600',
+      badgeText: isRTL ? 'موثوق' : 'Trusted',
+      colSpan: 'lg:col-span-4',
+      icon: TrendingUp,
+      geometricShape: (
+        <div className={`absolute -bottom-16 ${isRTL ? '-right-16' : '-left-16'} w-48 h-48 bg-green-50 rounded-full border-[20px] border-green-500 opacity-20 group-hover:scale-125 transition-transform duration-700 ease-out`}></div>
+      )
     },
     {
       id: 3,
-      titleTop: isRTL ? 'صاروخ' : 'EXPLORE',
-      titleBottom: isRTL ? 'الإكسبلور' : 'ROCKET',
+      title: isRTL ? 'صاروخ الإكسبلور' : 'Explore Rocket',
       desc: isRTL 
-        ? 'دفعة قوية للفيديو الخاص بك: 100,000 مشاهدة + 5,000 لايك.'
-        : 'Massive push for your video: 100K Views + 5K Likes.',
-      features: isRTL ? ['سرعة تنفيذ فائقة', 'تفاعل حقيقي ونشط'] : ['Super Fast Delivery', 'Real Active Interaction'],
+        ? '100,000 مشاهدة تيك توك + لايكات لزيادة فرص الظهور.' 
+        : '100K TikTok Views + Likes to boost explore chances.',
       price: '18.00',
       oldPrice: '35.00',
-      // ألوان المجسمات الهندسية للعرض الثالث (غامض: بنفسجي/وردي)
-      shapeRing: 'border-purple-400',
-      shapePill: 'from-purple-600 to-violet-500',
-      shapeCircle: 'from-fuchsia-500 to-pink-500',
-      textColor: 'text-purple-600',
-      icon: Sparkles
+      currency: 'JOD',
+      features: isRTL ? ['سرعة فائقة', 'تفاعل حقيقي'] : ['Super Fast', 'Real Interaction'],
+      // نمط جوجل: أحمر (عاجل، ساخن)
+      mainColor: 'bg-red-500',
+      textColor: 'text-red-600',
+      badgeText: isRTL ? 'عرض سريع' : 'Flash Deal',
+      colSpan: 'lg:col-span-12',
+      icon: Zap,
+      geometricShape: (
+        <>
+          <div className={`absolute top-0 ${isRTL ? 'left-0' : 'right-0'} w-32 h-full bg-red-50 opacity-50 transform ${isRTL ? '-skew-x-12 -translate-x-10' : 'skew-x-12 translate-x-10'} group-hover:scale-110 transition-transform duration-700`}></div>
+          <div className={`absolute top-1/2 -translate-y-1/2 ${isRTL ? 'left-20' : 'right-20'} w-16 h-16 bg-red-500 rounded-lg rotate-45 opacity-10 group-hover:rotate-90 transition-transform duration-700`}></div>
+        </>
+      )
     }
   ];
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev === offersList.length - 1 ? 0 : prev + 1));
-    }, 6000); 
-    return () => clearInterval(timer);
-  }, [offersList.length]);
-
-  const activeOffer = offersList[currentSlide];
-  const ActiveIcon = activeOffer.icon;
-
   return (
-    <section dir={t.dir} className="relative w-full py-20 md:py-28 px-4 md:px-8 bg-[#fafbfc] overflow-hidden font-sans border-t border-gray-100">
-      
-      {/* =======================================
-          مجسمات الخلفية الملموسة (Concrete Geometric Background)
-          أشكال هندسية حادة الأطراف وواضحة المعالم تطفو كديكور مسرحي
-          ======================================= */}
-      <div className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-hidden">
+    <section dir={t.dir} className="w-full py-20 md:py-28 px-4 md:px-8 bg-[#fafbfc] border-t border-gray-200 font-sans">
+      <div className="max-w-[85rem] mx-auto">
         
-        {/* 1. حلقة ضخمة مفرغة (Torus Ring) */}
-        <div 
-          className={`absolute w-[400px] h-[400px] md:w-[600px] md:h-[600px] rounded-full border-[30px] md:border-[50px] ${activeOffer.shapeRing} opacity-20 transition-colors duration-1000 animate-[spinSlow_40s_linear_infinite] shadow-xl`}
-          style={{ top: '-10%', right: '-10%' }}
-        ></div>
-
-        {/* 2. كبسولة هندسية مائلة (Elongated Pill) */}
-        <div 
-          className={`absolute w-[120px] md:w-[180px] h-[400px] md:h-[600px] rounded-[100px] bg-gradient-to-t ${activeOffer.shapePill} opacity-30 transition-colors duration-1000 animate-[floatObj_8s_ease-in-out_infinite] shadow-2xl border border-white/50 backdrop-blur-sm`}
-          style={{ bottom: '-15%', left: '15%', transform: 'rotate(-35deg)' }}
-        ></div>
-
-        {/* 3. دائرة صلبة صغيرة (Solid Sphere) */}
-        <div 
-          className={`absolute w-[150px] h-[150px] md:w-[250px] md:h-[250px] rounded-full bg-gradient-to-tr ${activeOffer.shapeCircle} opacity-40 transition-colors duration-1000 animate-[floatObj_10s_ease-in-out_infinite_reverse] shadow-2xl border border-white/50 backdrop-blur-sm`}
-          style={{ top: '25%', left: '45%' }}
-        ></div>
-
-        {/* فلتر تشتت خفيف لدمج المجسمات مع الخلفية بشكل أنيق (بدون تضييع حوافها) */}
-        <div className="absolute inset-0 bg-white/30 backdrop-blur-[2px]"></div>
-      </div>
-
-      <div className="max-w-[85rem] mx-auto relative z-10 flex flex-col md:flex-row items-center gap-12 md:gap-16 lg:gap-24">
-        
-        {/* =======================================
-            الجزء الأيمن (النصوص والطباعة العملاقة)
-            ======================================= */}
-        <div className="w-full md:w-1/2 flex flex-col justify-center">
-          
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-md border border-gray-200 rounded-full mb-8 shadow-sm w-max">
-            <ActiveIcon className={`w-5 h-5 ${activeOffer.textColor}`} />
-            <span className="text-sm font-bold tracking-widest uppercase text-gray-800">
-              {isRTL ? 'عروض حصرية 2026' : 'EXCLUSIVE OFFERS 2026'}
-            </span>
-          </div>
-
-          <div className="relative mb-8">
-            <h2 className="flex flex-col gap-0 select-none">
-              <span className="text-[4rem] sm:text-[5.5rem] lg:text-[7rem] font-black text-[#1e2022] leading-[0.85] tracking-tighter drop-shadow-sm uppercase">
-                {activeOffer.titleTop}
+        {/* الترويسة (Header) - جدية ومباشرة */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+          <div>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+              <span className="text-sm font-bold tracking-widest uppercase text-gray-900">
+                {isRTL ? 'عروض حصرية محدودة' : 'Limited Exclusive Offers'}
               </span>
-              <span className={`text-[3.2rem] sm:text-[4.5rem] lg:text-[5.5rem] font-black ${activeOffer.textColor} leading-[0.9] tracking-tighter uppercase drop-shadow-sm`}>
-                {activeOffer.titleBottom}
-              </span>
+            </div>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-[#202124] tracking-tight leading-none">
+              {isRTL ? 'باقات النمو.' : 'Growth Packages.'} <br />
+              <span className="text-gray-500">{isRTL ? 'أسعار لا تُنافس.' : 'Unbeatable prices.'}</span>
             </h2>
           </div>
-
-          <p className="text-gray-600 text-lg md:text-xl font-medium leading-relaxed max-w-md mb-8">
-            {activeOffer.desc}
-          </p>
-
-          <div className="flex flex-col gap-3 mb-10">
-            {activeOffer.features.map((feat, idx) => (
-              <div key={idx} className="flex items-center gap-3">
-                <CheckCircle2 className={`w-5 h-5 ${activeOffer.textColor}`} />
-                <span className="text-gray-700 font-semibold">{feat}</span>
-              </div>
-            ))}
-          </div>
-
-          <div className="flex items-center gap-4">
-            {offersList.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentSlide(index)}
-                className={`transition-all duration-500 rounded-full h-2 ${currentSlide === index ? `w-16 bg-gradient-to-r ${activeOffer.shapePill} shadow-md` : 'w-4 bg-gray-300 hover:bg-gray-400'}`}
-                aria-label={`Go to offer ${index + 1}`}
-              />
-            ))}
-          </div>
+          
+          <Link to="/products" className="inline-flex items-center gap-2 font-bold text-blue-600 hover:text-blue-800 transition-colors group">
+            {isRTL ? 'عرض جميع الخدمات' : 'View All Services'}
+            {isRTL ? (
+              <ArrowLeft className="w-5 h-5 transition-transform group-hover:-translate-x-1" />
+            ) : (
+              <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+            )}
+          </Link>
         </div>
 
-        {/* =======================================
-            الجزء الأيسر (بطاقة الشراء الزجاجية الأنيقة)
-            ======================================= */}
-        <div className="w-full md:w-1/2 flex justify-center md:justify-end relative">
-          
-          <div className="relative w-full max-w-sm bg-white/60 backdrop-blur-xl border border-white rounded-[3rem] p-10 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] flex flex-col items-center text-center transform transition-transform duration-700 hover:-translate-y-2">
-            
-            <div className="w-20 h-20 rounded-full bg-white shadow-lg flex items-center justify-center mb-8 border border-gray-100">
-              <ActiveIcon className={`w-10 h-10 ${activeOffer.textColor}`} />
-            </div>
+        {/* شبكة العروض (Bento Grid) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {offers.map((offer) => {
+            const Icon = offer.icon;
+            return (
+              <div 
+                key={offer.id}
+                className={`${offer.colSpan} group relative bg-white border border-gray-200 rounded-[2rem] overflow-hidden flex flex-col justify-between transition-all duration-300 hover:shadow-[0_20px_40px_rgba(0,0,0,0.06)] hover:border-gray-300`}
+              >
+                {/* الأشكال الهندسية الخلفية (Google Geometry) */}
+                <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+                  {offer.geometricShape}
+                </div>
 
-            <span className="text-gray-500 font-bold uppercase tracking-widest text-sm mb-2">{isRTL ? 'السعر الشامل' : 'TOTAL PRICE'}</span>
-            
-            <div className="mb-2">
-              <span className="text-gray-400 line-through text-lg font-bold">{activeOffer.oldPrice} JOD</span>
-            </div>
-            
-            <div className="flex items-start justify-center gap-1 mb-10">
-              <span className="text-6xl font-black text-gray-900 tracking-tighter leading-none">{activeOffer.price.split('.')[0]}</span>
-              <div className="flex flex-col items-start justify-start mt-1">
-                <span className="text-2xl font-black text-gray-900 leading-none">.{activeOffer.price.split('.')[1]}</span>
-                <span className={`text-sm font-bold mt-1 ${activeOffer.textColor}`}>JOD</span>
+                <div className="relative z-10 p-8 md:p-10 flex flex-col h-full">
+                  
+                  {/* رأس الكرت (الشارة والأيقونة) */}
+                  <div className="flex justify-between items-start mb-8">
+                    <span className={`inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest text-white ${offer.mainColor}`}>
+                      {offer.badgeText}
+                    </span>
+                    <div className={`p-3 rounded-2xl bg-gray-50 border border-gray-100 ${offer.textColor}`}>
+                      <Icon className="w-6 h-6" />
+                    </div>
+                  </div>
+
+                  {/* معلومات العرض */}
+                  <div className="mb-8">
+                    <h3 className="text-3xl md:text-4xl font-black text-[#202124] mb-4 tracking-tight leading-tight">
+                      {offer.title}
+                    </h3>
+                    <p className="text-gray-600 text-lg font-medium leading-relaxed max-w-[90%]">
+                      {offer.desc}
+                    </p>
+                  </div>
+
+                  {/* الميزات (بشكل جدي ونظيف) */}
+                  <div className={`flex flex-wrap gap-4 mb-10 ${offer.id === 3 ? 'lg:w-1/2' : ''}`}>
+                    {offer.features.map((feat, idx) => (
+                      <div key={idx} className="flex items-center gap-2 text-sm font-bold text-gray-700 bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100">
+                        <Check className={`w-4 h-4 ${offer.textColor}`} />
+                        {feat}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* قسم السعر والشراء (أسفل الكرت) */}
+                  <div className="mt-auto flex flex-col sm:flex-row sm:items-end justify-between gap-6 pt-8 border-t border-gray-100">
+                    <div className="flex flex-col">
+                      <span className="text-gray-400 line-through text-sm font-bold mb-1">{offer.oldPrice} {offer.currency}</span>
+                      <div className="flex items-baseline gap-1">
+                        <span className={`text-5xl font-black tracking-tighter ${offer.textColor}`}>
+                          {offer.price.split('.')[0]}
+                        </span>
+                        <span className="text-2xl font-black text-gray-900">
+                          .{offer.price.split('.')[1]}
+                        </span>
+                        <span className="text-gray-500 font-bold ml-1">{offer.currency}</span>
+                      </div>
+                    </div>
+                    
+                    <Link 
+                      to="/products"
+                      className={`inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-white font-bold uppercase tracking-wider transition-all duration-300 hover:-translate-y-1 shadow-sm hover:shadow-md ${offer.mainColor}`}
+                    >
+                      {isRTL ? 'شراء العرض' : 'Purchase'}
+                      <ArrowUpRight className={`w-5 h-5 ${isRTL ? '-scale-x-100' : ''}`} />
+                    </Link>
+                  </div>
+
+                </div>
               </div>
-            </div>
-
-            <Link 
-              to="/products" 
-              className={`w-full py-5 rounded-2xl flex items-center justify-center gap-3 text-white font-black uppercase tracking-wider transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 bg-gradient-to-r ${activeOffer.shapePill}`}
-            >
-              {isRTL ? 'اطلب العرض' : 'CLAIM OFFER'}
-              <ArrowUpRight className={`w-6 h-6 ${isRTL ? '-scale-x-100' : ''}`} />
-            </Link>
-          </div>
+            );
+          })}
         </div>
 
       </div>
-
-      <style>{`
-        @keyframes floatObj {
-          0%, 100% { transform: translateY(0) rotate(-35deg); }
-          50% { transform: translateY(-30px) rotate(-30deg); }
-        }
-        @keyframes spinSlow {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-      `}</style>
     </section>
   );
 }
