@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { useLanguage } from '../../context/LanguageContext';
+import { useLanguage } from '../context/LanguageContext';
 import { ArrowUpRight, Sparkles, MapPin, Globe, Play, Volume2 } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
