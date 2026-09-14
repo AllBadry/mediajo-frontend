@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLanguage } from '../../context/LanguageContext';
-import { Activity, Zap, ShieldCheck, ArrowUpRight } from 'lucide-react';
+import { PlayCircle, ArrowUpRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function About() {
@@ -11,129 +11,153 @@ export default function About() {
     <section 
       id="about-section" 
       dir={t.dir} 
-      className="relative w-full py-24 md:py-32 px-6 md:px-12 bg-white border-t border-gray-100 font-sans overflow-hidden"
+      // خلفية رمادية فاتحة جداً لإبراز الكرت الأبيض
+      className="relative w-full py-20 md:py-28 px-4 md:px-8 bg-[#eef0f3] font-sans flex justify-center items-center"
     >
       
-      {/* شبكة خلفية خفيفة جداً (Subtle Dot Grid) للمسة تقنية نظيفة */}
-      <div 
-        className="absolute inset-0 z-0 opacity-[0.03]" 
-        style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '32px 32px' }}
-      ></div>
-
-      <div className="max-w-[85rem] mx-auto relative z-10">
+      {/* الكرت المركزي الضخم (The Main Wrapper) */}
+      <div className="w-full max-w-[85rem] bg-[#f9fafb] rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] flex flex-col lg:flex-row">
         
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+        {/* =========================================
+            الجزء الأيمن/الأيسر (النصوص والإحصائيات - 65% من العرض)
+            ========================================= */}
+        <div className="w-full lg:w-[65%] flex flex-col">
           
-          {/* =========================================
-              النصف الأيمن/الأيسر: النصوص والرسالة (The Narrative)
-              ========================================= */}
-          <div className="lg:col-span-5 flex flex-col justify-center">
-            
-            <div className="inline-flex items-center gap-2 mb-6">
-              <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-              <span className="text-sm font-bold tracking-widest uppercase text-gray-500">
-                {t.about.discover || (isRTL ? 'اكتشف ميديا جو' : 'DISCOVER MEDIAJO')}
-              </span>
-            </div>
-            
-            <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-[#1e2022] tracking-tighter leading-[1.1] mb-6">
-              {t.about.title1} <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">
-                {t.about.title2}
-              </span>
+          {/* الجزء العلوي: النصوص الرئيسية */}
+          <div className="p-10 md:p-16 flex-1 flex flex-col justify-center">
+            <h2 className="text-5xl md:text-6xl lg:text-7xl font-medium text-[#111] tracking-tight leading-[1.05] mb-6">
+              {isRTL ? 'فن السيطرة' : 'The Art of the'} <br />
+              {isRTL ? 'على العالم الرقمي' : 'Digital World'}
             </h2>
             
-            <p className="text-lg md:text-xl text-gray-500 font-light leading-relaxed mb-10 max-w-lg">
-              {t.about.para}
+            <p className="text-gray-500 font-medium text-sm md:text-base leading-relaxed max-w-md mb-10">
+              {isRTL 
+                ? 'نقدم لك في ميديا جو رحلة استثنائية في عالم النمو الرقمي، حيث يمكنك إتقان فن السيطرة على السوشال ميديا بأدوات احترافية.'
+                : 'Our digital services offer an exciting journey into the world of social growth, where you can master the art of online presence.'}
             </p>
 
-            <Link 
-              to="/products"
-              className="inline-flex items-center gap-2 text-blue-600 font-bold uppercase tracking-wider hover:text-blue-800 transition-colors group w-max"
-            >
-              {isRTL ? 'ابدأ رحلة النمو' : 'Start Growing Now'}
-              <ArrowUpRight className={`w-5 h-5 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1 ${isRTL ? '-scale-x-100' : ''}`} />
-            </Link>
+            <div className="flex flex-wrap items-center gap-6">
+              <Link to="/products" className="px-8 py-4 bg-[#111] text-white rounded-full font-bold text-sm hover:scale-105 transition-transform">
+                {isRTL ? 'تسوق الآن' : 'SHOP NOW'}
+              </Link>
+              <button className="flex items-center gap-2 text-[#111] font-bold text-sm hover:text-blue-600 transition-colors">
+                <PlayCircle className="w-6 h-6" />
+                {isRTL ? 'شاهد كيف نعمل' : "SEE HOW IT'S WORK"}
+              </button>
+            </div>
           </div>
 
-          {/* =========================================
-              النصف الآخر: شبكة الإحصائيات (Bento Grid Stats)
-              ========================================= */}
-          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {/* الجزء السفلي: الإحصائيات (مفصولة بخطوط) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 border-t border-gray-200">
             
-            {/* البطاقة الأولى (عريضة) - Uptime */}
-            <div className="sm:col-span-2 group bg-[#fafbfc] border border-gray-200 rounded-[2rem] p-8 md:p-10 hover:shadow-[0_20px_40px_rgba(0,0,0,0.04)] transition-all duration-500 overflow-hidden relative">
-              <div className="absolute top-0 right-0 w-40 h-40 bg-green-500/5 rounded-full blur-3xl pointer-events-none group-hover:scale-150 transition-transform duration-700"></div>
-              
-              <div className="flex justify-between items-start mb-12">
-                <div className="p-3 bg-white rounded-xl shadow-sm border border-gray-100 text-green-500">
-                  <Activity className="w-6 h-6" />
+            {/* إحصائية 1 */}
+            <div className={`p-8 md:p-10 ${isRTL ? 'sm:border-l' : 'sm:border-r'} border-b sm:border-b-0 border-gray-200 flex flex-col justify-between`}>
+              <div>
+                <span className="text-xs font-bold tracking-widest text-gray-500 uppercase mb-2 block">
+                  {isRTL ? 'بدءاً من' : 'FROM'}
+                </span>
+                <div className="text-3xl font-medium text-[#111] leading-tight mb-6">
+                  {isRTL ? 'سرعة فائقة' : 'High Speed'}<br/> 0.5s
                 </div>
-                <span className="text-green-600 text-sm font-bold tracking-widest uppercase bg-green-50 px-3 py-1 rounded-full">
-                  Status: Online
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-1 text-sm text-gray-600 font-medium">
+                  <span>{isRTL ? 'نسبة الاستقرار' : 'Uptime Status'} <strong className="text-[#111]">99.9%</strong></span>
+                  <span>{isRTL ? 'ضمان تعويض' : 'Refill Warranty'} <strong className="text-[#111]">30 Days</strong></span>
+                </div>
+                <div className="w-10 h-10 bg-[#111] rounded-full flex items-center justify-center text-white hover:bg-blue-600 cursor-pointer transition-colors">
+                  <ArrowUpRight className={`w-5 h-5 ${isRTL ? '-scale-x-100' : ''}`} />
+                </div>
+              </div>
+            </div>
+
+            {/* إحصائية 2 */}
+            <div className="p-8 md:p-10 flex flex-col justify-between">
+              <div>
+                <span className="text-xs font-bold tracking-widest text-gray-500 uppercase mb-2 block">
+                  {isRTL ? 'العديد من العملاء اختارونا' : 'SO MANY CLIENTS CHOSE US'}
+                </span>
+                <div className="text-4xl md:text-5xl font-medium text-[#111] mt-4 mb-2">
+                  +1850
+                </div>
+                <span className="text-sm text-gray-500 font-medium">
+                  {isRTL ? 'عميل راضٍ' : 'Satisfied clients'}
                 </span>
               </div>
               
-              <div>
-                <div className="flex items-baseline gap-1">
-                  <h3 className="text-6xl md:text-7xl font-black text-[#1e2022] tracking-tighter">99.9</h3>
-                  <span className="text-3xl font-bold text-green-500">%</span>
+              {/* صور العملاء المتداخلة */}
+              <div className="flex items-center mt-6">
+                <img src="https://i.pravatar.cc/100?img=32" alt="Client" className="w-12 h-12 rounded-full border-2 border-[#f9fafb] z-30" />
+                <img src="https://i.pravatar.cc/100?img=12" alt="Client" className="w-12 h-12 rounded-full border-2 border-[#f9fafb] -ml-4 z-20" />
+                <img src="https://i.pravatar.cc/100?img=47" alt="Client" className="w-12 h-12 rounded-full border-2 border-[#f9fafb] -ml-4 z-10" />
+                <div className="w-12 h-12 rounded-full border-2 border-[#f9fafb] bg-gray-200 -ml-4 flex items-center justify-center text-xs font-bold text-gray-600 z-0">
+                  +2k
                 </div>
-                <p className="text-gray-500 font-medium text-lg mt-2 uppercase tracking-widest">
-                  {t.about.uptime || (isRTL ? 'استقرار الخدمة' : 'Service Uptime')}
-                </p>
-              </div>
-            </div>
-
-            {/* البطاقة الثانية (مربعة) - Speed */}
-            <div className="group bg-[#fafbfc] border border-gray-200 rounded-[2rem] p-8 md:p-10 hover:shadow-[0_20px_40px_rgba(0,0,0,0.04)] transition-all duration-500 relative overflow-hidden">
-              <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-blue-500/5 rounded-full blur-2xl pointer-events-none group-hover:scale-150 transition-transform duration-700"></div>
-              
-              <div className="p-3 bg-white rounded-xl shadow-sm border border-gray-100 text-blue-500 w-max mb-10">
-                <Zap className="w-6 h-6" />
-              </div>
-              
-              <div>
-                <div className="flex items-baseline gap-1">
-                  <h3 className="text-5xl md:text-6xl font-black text-[#1e2022] tracking-tighter">0.5</h3>
-                  <span className="text-2xl font-bold text-blue-500">s</span>
-                </div>
-                <p className="text-gray-500 font-medium mt-2 uppercase tracking-widest text-sm">
-                  {t.about.execution || (isRTL ? 'سرعة التنفيذ' : 'Execution Speed')}
-                </p>
-              </div>
-            </div>
-
-            {/* البطاقة الثالثة (مربعة) - Security/Quality */}
-            <div className="group bg-[#202124] rounded-[2rem] p-8 md:p-10 hover:shadow-[0_20px_40px_rgba(0,0,0,0.1)] transition-all duration-500 relative overflow-hidden flex flex-col justify-between">
-              
-              {/* رسمة هندسية بسيطة في الخلفية */}
-              <div className="absolute top-0 right-0 w-full h-full opacity-10 pointer-events-none">
-                <svg viewBox="0 0 100 100" className="w-full h-full absolute -right-12 -top-12 transform group-hover:rotate-12 transition-transform duration-1000">
-                  <circle cx="50" cy="50" r="40" fill="none" stroke="white" strokeWidth="2" strokeDasharray="4 4" />
-                  <circle cx="50" cy="50" r="20" fill="none" stroke="white" strokeWidth="1" />
-                </svg>
-              </div>
-
-              <div className="p-3 bg-white/10 rounded-xl w-max mb-10 text-white relative z-10">
-                <ShieldCheck className="w-6 h-6" />
-              </div>
-              
-              <div className="relative z-10">
-                <h3 className="text-2xl md:text-3xl font-bold text-white mb-2 leading-tight">
-                  {isRTL ? 'أمان وموثوقية' : 'Secure & Reliable'}
-                </h3>
-                <p className="text-gray-400 text-sm font-light leading-relaxed">
-                  {isRTL 
-                    ? 'بنية تحتية متطورة تضمن حماية حساباتك وسرية بياناتك بالكامل.' 
-                    : 'Advanced infrastructure ensuring complete account protection and data privacy.'}
-                </p>
               </div>
             </div>
 
           </div>
         </div>
+
+        {/* =========================================
+            الجزء الآخر (الصورة الفنية + الكرت الداكن - 35% من العرض)
+            ========================================= */}
+        <div className="w-full lg:w-[35%] flex flex-col relative">
+          
+          {/* الصورة التجريدية (3D Art) من الإنترنت مع أنيميشن */}
+          <div className="h-64 lg:h-[60%] w-full bg-gray-100 overflow-hidden relative">
+            <img 
+              src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2000&auto=format&fit=crop" 
+              alt="3D Abstract Art" 
+              className="w-full h-full object-cover transform scale-110 animate-[slowPan_15s_ease-in-out_infinite_alternate]"
+            />
+            {/* فلتر خفيف فوق الصورة لتبدو ناعمة */}
+            <div className="absolute inset-0 bg-white/10 mix-blend-overlay"></div>
+          </div>
+
+          {/* الكرت الداكن (Testimonial Card) */}
+          <div className="bg-[#1a1b26] text-white p-10 flex-1 relative flex flex-col justify-center">
+            
+            {/* الصورة الشخصية العائمة (تتداخل مع حدود الصورة العلوية) */}
+            <div className="absolute -top-8 left-10">
+              <div className="p-1 bg-[#1a1b26] rounded-full">
+                <img 
+                  src="https://i.pravatar.cc/150?img=44" 
+                  alt="Reviewer" 
+                  className="w-14 h-14 rounded-full object-cover"
+                />
+              </div>
+            </div>
+
+            <div className="mt-4">
+              <h4 className="text-sm font-bold tracking-wider uppercase mb-1">
+                {isRTL ? 'صوفيا زينتشنكو' : 'SOFIA ZINCHENKO'}
+              </h4>
+              <p className="text-xs text-gray-400 mb-6 font-medium">
+                {isRTL ? 'مشتري موثق' : 'Verified buyer'}
+              </p>
+              
+              <p className="text-sm text-gray-300 font-light leading-relaxed">
+                {isRTL 
+                  ? "أنا سعيدة للغاية بخدمات ميديا جو! لقد كانت رحلة مذهلة في عالم الإبداع والنمو. من الدقائق الأولى، وجدت نفسي في عالم آسر من الدعم السريع والنتائج الحقيقية."
+                  : "I am absolutely thrilled with MediaJo services! It was an incredible journey into the world of growth. From the very first minutes, I immersed myself in the captivating results."}
+              </p>
+            </div>
+          </div>
+
+        </div>
+
       </div>
+
+      <style>{`
+        /* أنيميشن ناعم جداً لتحريك الصورة 3D ببطء لتعطي إيحاء بأنها حية */
+        @keyframes slowPan {
+          0% { transform: scale(1.1) translate(0, 0); }
+          50% { transform: scale(1.15) translate(-2%, 2%); }
+          100% { transform: scale(1.1) translate(2%, -2%); }
+        }
+      `}</style>
     </section>
   );
 }
