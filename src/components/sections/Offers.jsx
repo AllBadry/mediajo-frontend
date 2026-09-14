@@ -1,159 +1,208 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
-import { Flame, Sparkles, Clock, ArrowRight, Zap } from 'lucide-react';
+import { Flame, Sparkles, Clock, ChevronRight, ChevronLeft, Zap, ShieldCheck } from 'lucide-react';
 
 export default function Offers() {
   const { t } = useLanguage();
   const isRTL = t.dir === 'rtl';
+  
+  // حالة الـ Slider
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  // بيانات العروض (يمكنك جلبها من الـ API لاحقاً)
+  const offersList = [
+    {
+      id: 1,
+      title: isRTL ? 'باقة وكالات السوشال ميديا' : 'Social Media Agency Bundle',
+      desc: isRTL 
+        ? 'الكومبو الأقوى لحسابك: 20,000 متابع انستغرام + 50,000 مشاهدة ريلز مع تفاعل حقيقي.'
+        : 'The ultimate combo: 20K IG Followers + 50K Reels Views with real engagement.',
+      features: isRTL ? ['حسابات عالية الجودة', 'ضمان تعويض 30 يوم', 'تنفيذ فوري'] : ['HQ Accounts', '30-Day Refill', 'Instant Start'],
+      oldPrice: '120.00',
+      newPrice: '65.00',
+      badge: isRTL ? 'الأكثر مبيعاً' : 'Best Seller',
+      colorFrom: 'from-orange-500',
+      colorTo: 'to-pink-600',
+      glowColor: 'bg-orange-500/20',
+      icon: Flame
+    },
+    {
+      id: 2,
+      title: isRTL ? 'باقة الانتشار العربي (فيسبوك)' : 'Arab Reach Bundle (FB)',
+      desc: isRTL 
+        ? 'استهدف الجمهور العربي بقوة مع 10,000 متابع حقيقي لصفحتك لتعزيز ثقة عملائك.'
+        : 'Target the Arab audience with 10K real page followers to build brand trust.',
+      features: isRTL ? ['متابعين عرب 100%', 'ثبات عالي جداً', 'أمان تام للصفحة'] : ['100% Arab Followers', 'High Retention', 'Page Safe'],
+      oldPrice: '80.00',
+      newPrice: '56.00',
+      badge: isRTL ? 'خصم حصري' : 'Exclusive Deal',
+      colorFrom: 'from-blue-500',
+      colorTo: 'to-cyan-400',
+      glowColor: 'bg-blue-500/20',
+      icon: Zap
+    },
+    {
+      id: 3,
+      title: isRTL ? 'صاروخ الإكسبلور (تيك توك)' : 'Explore Rocket (TikTok)',
+      desc: isRTL 
+        ? 'دفعة قوية للفيديو الخاص بك: 100,000 مشاهدة + 5,000 لايك لتصدر الترند.'
+        : 'A massive push for your video: 100K Views + 5K Likes to hit the trends.',
+      features: isRTL ? ['سرعة فائقة', 'تفاعل حقيقي', 'دعم خوارزميات تيك توك'] : ['Super Fast', 'Real Interaction', 'Algorithm Boost'],
+      oldPrice: '35.00',
+      newPrice: '18.00',
+      badge: isRTL ? 'فرصة ذهبية' : 'Golden Chance',
+      colorFrom: 'from-purple-600',
+      colorTo: 'to-fuchsia-500',
+      glowColor: 'bg-purple-500/20',
+      icon: Sparkles
+    }
+  ];
+
+  // دالة التقدم التلقائي للـ Slider
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev === offersList.length - 1 ? 0 : prev + 1));
+    }, 6000); // يقلب كل 6 ثواني
+    return () => clearInterval(timer);
+  }, [offersList.length]);
+
+  const nextSlide = () => setCurrentSlide((prev) => (prev === offersList.length - 1 ? 0 : prev + 1));
+  const prevSlide = () => setCurrentSlide((prev) => (prev === 0 ? offersList.length - 1 : prev - 1));
+
+  const activeOffer = offersList[currentSlide];
+  const Icon = activeOffer.icon;
 
   return (
-    <section dir={t.dir} className="relative w-full py-20 md:py-32 px-6 md:px-12 font-sans bg-[#fafbfc] overflow-hidden border-t border-gray-100">
+    // القسم أصبح داكناً ليفصل بصرياً ويجذب الانتباه بشدة
+    <section dir={t.dir} className="relative w-full py-24 md:py-32 px-4 md:px-12 bg-[#050508] overflow-hidden font-sans">
       
-      {/* 1. تأثيرات الخلفية (Soft Glowing Blobs) */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-bl from-orange-200/40 to-pink-200/40 blur-[100px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/4 z-0"></div>
-      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-tr from-blue-200/40 to-purple-200/40 blur-[120px] rounded-full pointer-events-none translate-y-1/3 -translate-x-1/4 z-0"></div>
+      {/* توهج خلفي ديناميكي يتغير لونه حسب العرض النشط */}
+      <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[120px] pointer-events-none transition-colors duration-1000 ease-in-out ${activeOffer.glowColor} opacity-50`}></div>
 
       <div className="max-w-[85rem] mx-auto relative z-10">
         
-        {/* 2. عنوان القسم */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-16 gap-6">
-          <div className="flex flex-col">
-            <div className="flex items-center gap-3 mb-4">
-              <Flame className="w-6 h-6 text-orange-500 animate-pulse" />
-              <span className="text-sm font-bold tracking-widest uppercase text-orange-500">
-                {isRTL ? 'عروض لفترة محدودة' : 'Limited Time Offers'}
-              </span>
-            </div>
-            <h2 className="text-4xl md:text-6xl font-black text-[#1e2022] tracking-tighter leading-tight">
-              {isRTL ? 'باقات الحرق' : 'Flash Deals'} <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-pink-600">
-                {isRTL ? 'أسعار لا تقبل المنافسة' : 'Unbeatable Prices'}
-              </span>
-            </h2>
+        {/* عنوان القسم */}
+        <div className="text-center mb-12 md:mb-16">
+          <div className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-full mb-6 backdrop-blur-sm">
+            <Flame className="w-5 h-5 text-orange-500 animate-pulse" />
+            <span className="text-sm font-bold tracking-widest uppercase text-gray-300">
+              {isRTL ? 'عروض الحرق' : 'Flash Deals'}
+            </span>
           </div>
-          
-          <Link to="/products" className="inline-flex items-center gap-2 font-bold text-gray-500 hover:text-gray-900 transition-colors group">
-            {isRTL ? 'عرض كل الباقات' : 'View all packages'}
-            <ArrowRight className={`w-5 h-5 transition-transform ${isRTL ? 'rotate-180 group-hover:-translate-x-2' : 'group-hover:translate-x-2'}`} />
-          </Link>
+          <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter leading-tight">
+            {isRTL ? 'أسعار تدمر المنافسة' : 'Prices That Destroy Competition'}
+          </h2>
         </div>
 
-        {/* 3. شبكة العروض (Bento Grid Layout) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
+        {/* حاوية الـ Slider */}
+        <div className="relative w-full max-w-5xl mx-auto">
           
-          {/* =======================================
-              البطاقة الرئيسية (Mega Offer) - داكنة وفخمة
-              ======================================= */}
-          <div className="lg:col-span-7 relative group rounded-[2rem] md:rounded-[2.5rem] bg-[#0a0a0f] overflow-hidden shadow-2xl flex flex-col justify-between p-8 md:p-12">
-            
-            {/* تأثير اللمعان المتحرك (Shimmer Effect) */}
-            <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/5 to-transparent group-hover:animate-[shimmer_2s_infinite] pointer-events-none z-10"></div>
-            
-            {/* أشكال في الخلفية */}
-            <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-gradient-to-br from-orange-500/20 to-purple-600/20 rounded-full blur-3xl pointer-events-none z-0"></div>
+          {/* أزرار التنقل للكمبيوتر */}
+          <button 
+            onClick={isRTL ? nextSlide : prevSlide}
+            className="hidden md:flex absolute top-1/2 -left-16 -translate-y-1/2 w-12 h-12 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full items-center justify-center text-white transition-all hover:scale-110 z-20"
+          >
+            <ChevronLeft className="w-6 h-6" />
+          </button>
+          
+          <button 
+            onClick={isRTL ? prevSlide : nextSlide}
+            className="hidden md:flex absolute top-1/2 -right-16 -translate-y-1/2 w-12 h-12 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full items-center justify-center text-white transition-all hover:scale-110 z-20"
+          >
+            <ChevronRight className="w-6 h-6" />
+          </button>
 
-            <div className="relative z-20">
-              <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
-                <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-orange-500/10 border border-orange-500/20 text-orange-400 rounded-full text-sm font-bold">
-                  <Sparkles className="w-4 h-4" /> {isRTL ? 'الأكثر مبيعاً' : 'Best Seller'}
+          {/* الكرت الفردي (The Single Showpiece Card) */}
+          <div className="relative w-full bg-[#0a0a0f]/80 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] md:rounded-[3rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col lg:flex-row transition-all duration-700 ease-in-out">
+            
+            {/* لمعان يمر على الكرت */}
+            <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/5 to-transparent animate-[shimmer_3s_infinite] pointer-events-none z-10"></div>
+
+            {/* الجزء الأيمن (معلومات العرض) */}
+            <div className="w-full lg:w-3/5 p-8 md:p-12 lg:p-16 flex flex-col justify-center relative z-20">
+              <div className="flex flex-wrap items-center gap-4 mb-6">
+                <span className={`inline-flex items-center gap-2 px-4 py-1.5 bg-gradient-to-r ${activeOffer.colorFrom} ${activeOffer.colorTo} rounded-full text-white text-sm font-bold shadow-lg`}>
+                  <Icon className="w-4 h-4" /> {activeOffer.badge}
                 </span>
                 
-                {/* عداد تنازلي (شكلي) */}
-                <div className="flex items-center gap-2 bg-white/5 backdrop-blur-md border border-white/10 px-4 py-2 rounded-xl text-white font-mono text-sm">
-                  <Clock className="w-4 h-4 text-pink-400" />
-                  <span>12 : 45 : 30</span>
+                {/* مؤقت العرض */}
+                <div className="flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-1.5 rounded-full text-gray-300 font-mono text-sm">
+                  <Clock className="w-4 h-4 text-red-400 animate-pulse" />
+                  <span>12:45:30</span>
                 </div>
               </div>
 
-              <h3 className="text-4xl md:text-5xl font-black text-white mb-4 leading-tight tracking-tight">
-                {isRTL ? 'باقة وكالات السوشال ميديا' : 'Social Media Agency Bundle'}
+              <h3 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-6 leading-tight tracking-tight">
+                {activeOffer.title}
               </h3>
-              <p className="text-gray-400 text-lg max-w-md font-light leading-relaxed mb-8">
-                {isRTL 
-                  ? 'مزيج احترافي يتضمن 20,000 متابع انستغرام، 50,000 مشاهدة، وتفاعل حقيقي لدعم حسابك.' 
-                  : 'A professional mix including 20K IG followers, 50K views, and real engagement.'}
+              
+              <p className="text-gray-400 text-lg md:text-xl font-light leading-relaxed mb-8 max-w-lg">
+                {activeOffer.desc}
               </p>
+
+              <div className="flex flex-wrap gap-4 mb-2">
+                {activeOffer.features.map((feat, idx) => (
+                  <div key={idx} className="flex items-center gap-2 text-sm md:text-base font-medium text-gray-300">
+                    <ShieldCheck className={`w-5 h-5 text-transparent bg-clip-text bg-gradient-to-r ${activeOffer.colorFrom} ${activeOffer.colorTo}`} />
+                    {feat}
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <div className="relative z-20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mt-8 pt-8 border-t border-white/10">
-              <div className="flex flex-col">
-                <span className="text-gray-500 line-through text-lg font-medium mb-1">120.00 JOD</span>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-5xl md:text-6xl font-black text-white">65<span className="text-2xl text-orange-400">.00</span></span>
-                  <span className="text-orange-400 font-bold tracking-widest">JOD</span>
-                </div>
+            {/* الجزء الأيسر (السعر وزر الشراء) */}
+            <div className="w-full lg:w-2/5 p-8 md:p-12 lg:p-16 bg-white/5 border-t lg:border-t-0 lg:border-l border-white/10 flex flex-col items-center justify-center text-center relative z-20">
+              
+              <div className="mb-2">
+                <span className="text-gray-500 line-through text-xl font-medium">{activeOffer.oldPrice} JOD</span>
               </div>
-              <Link to="/products" className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-orange-500 to-pink-600 text-white font-bold rounded-2xl hover:scale-105 transition-transform shadow-[0_10px_30px_rgba(249,115,22,0.3)] text-center">
-                {isRTL ? 'اقتنص العرض' : 'Grab the Deal'}
+              
+              <div className="flex items-baseline gap-2 mb-10">
+                <span className={`text-6xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r ${activeOffer.colorFrom} ${activeOffer.colorTo}`}>
+                  {activeOffer.newPrice.split('.')[0]}
+                </span>
+                <span className={`text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r ${activeOffer.colorFrom} ${activeOffer.colorTo}`}>
+                  .{activeOffer.newPrice.split('.')[1]}
+                </span>
+                <span className="text-gray-400 font-bold tracking-widest ml-1">JOD</span>
+              </div>
+
+              <Link 
+                to="/products" 
+                className={`w-full py-5 bg-gradient-to-r ${activeOffer.colorFrom} ${activeOffer.colorTo} text-white text-lg font-black uppercase tracking-wider rounded-2xl hover:scale-105 transition-transform shadow-[0_15px_40px_rgba(0,0,0,0.4)] relative overflow-hidden group`}
+              >
+                <span className="relative z-10">{isRTL ? 'اقتنص العرض الآن' : 'Grab Deal Now'}</span>
+                <div className="absolute inset-0 w-full h-full bg-white/20 -translate-x-full group-hover:animate-[shimmer_1s_forwards]"></div>
               </Link>
             </div>
-          </div>
-
-          {/* =======================================
-              البطاقات الفرعية (مكدسة عمودياً) - زجاجية
-              ======================================= */}
-          <div className="lg:col-span-5 flex flex-col gap-6 md:gap-8">
             
-            {/* العرض الفرعي 1 */}
-            <Link to="/products" className="group flex-1 relative bg-white rounded-[2rem] p-6 md:p-8 border border-gray-200 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1 overflow-hidden flex flex-col justify-between">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-bl-full pointer-events-none"></div>
-              
-              <div>
-                <div className="flex justify-between items-start mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
-                    <Zap className="w-6 h-6" />
-                  </div>
-                  <span className="bg-red-500 text-white text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider animate-[float_3s_ease-in-out_infinite]">
-                    -30%
-                  </span>
-                </div>
-                <h4 className="text-2xl font-black text-[#1e2022] mb-2">{isRTL ? 'متابعين فيسبوك عرب' : 'Arab FB Followers'}</h4>
-                <p className="text-gray-500 font-medium text-sm">{isRTL ? '10,000 متابع حقيقي مع ضمان 30 يوم.' : '10K Real followers with 30-day refill.'}</p>
-              </div>
-              
-              <div className="mt-6 flex items-end gap-3">
-                <span className="text-3xl font-black text-blue-600">56.00</span>
-                <span className="text-gray-400 font-bold text-sm mb-1">JOD</span>
-                <span className="text-gray-300 line-through text-sm mb-1 ms-2">80.00</span>
-              </div>
-            </Link>
-
-            {/* العرض الفرعي 2 */}
-            <Link to="/products" className="group flex-1 relative bg-white rounded-[2rem] p-6 md:p-8 border border-gray-200 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1 overflow-hidden flex flex-col justify-between">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-bl-full pointer-events-none"></div>
-              
-              <div>
-                <div className="flex justify-between items-start mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
-                    <Sparkles className="w-6 h-6" />
-                  </div>
-                  <span className="bg-purple-600 text-white text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider">
-                    {isRTL ? 'عروض تيك توك' : 'TikTok Deals'}
-                  </span>
-                </div>
-                <h4 className="text-2xl font-black text-[#1e2022] mb-2">{isRTL ? '100,000 مشاهدة' : '100K Views'}</h4>
-                <p className="text-gray-500 font-medium text-sm">{isRTL ? 'سرعة فائقة ودعم لظهور الفيديو في الاكسبلور.' : 'Super fast delivery to boost explore page chances.'}</p>
-              </div>
-              
-              <div className="mt-6 flex items-end gap-3">
-                <span className="text-3xl font-black text-purple-600">12.00</span>
-                <span className="text-gray-400 font-bold text-sm mb-1">JOD</span>
-                <span className="text-gray-300 line-through text-sm mb-1 ms-2">25.00</span>
-              </div>
-            </Link>
-
           </div>
+
+          {/* أزرار التنقل للجوال والمؤشرات (Dots) */}
+          <div className="flex items-center justify-center gap-6 mt-10">
+            <button onClick={isRTL ? nextSlide : prevSlide} className="md:hidden text-white/50 hover:text-white p-2"><ChevronLeft className="w-8 h-8" /></button>
+            
+            <div className="flex gap-3">
+              {offersList.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentSlide(index)}
+                  className={`transition-all duration-500 rounded-full ${currentSlide === index ? 'w-10 h-2.5 bg-white' : 'w-2.5 h-2.5 bg-white/20 hover:bg-white/50'}`}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
+            </div>
+
+            <button onClick={isRTL ? prevSlide : nextSlide} className="md:hidden text-white/50 hover:text-white p-2"><ChevronRight className="w-8 h-8" /></button>
+          </div>
+
         </div>
       </div>
 
       <style>{`
         @keyframes shimmer {
           100% { transform: translateX(100%); }
-        }
-        @keyframes float {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-5px); }
         }
       `}</style>
     </section>
