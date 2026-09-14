@@ -133,6 +133,7 @@ export default function CheckoutModal({ open, onClose }) {
           productId: i.id,
           quantity: parseInt(i.productQty, 10) || 1,
           dynamicInputs: i.dynamicInputs || {},
+          ...(i.offerId ? { offerId: i.offerId } : {}),
         })),
         targetLink,
         customerEmail: user?.email || '',

@@ -61,6 +61,19 @@ export const useCartStore = create(
         get().saveToServer();
       },
 
+      // إضافة عرض كامل (Bundle) للسلة:
+      // - كل بند يمثل باقة حقيقية من الكتالوج بسعره الموزَّع (المجموع = سعر العرض)
+      // - الأسطر التي تحمل نفس الباقة تُستبدل لتجنب تكرار نفس البند بمعزل عن العرض
+      addOfferToCart: (lines) => {
+        if (!Array.isArray(lines) || !lines.length) return;
+        set((state) => {
+          const offerIds = new Set(lines.map((l) => l.id));
+          const rest = state.items.filter((i) => !offerIds.has(i.id));
+          return { items: normalizeItems([...rest, ...lines]) };
+        });
+        get().saveToServer();
+      },
+
       removeItem: (id) => {
         set((state) => ({ items: state.items.filter((i) => i.id !== id) }));
         get().saveToServer();

@@ -1,9 +1,10 @@
 import React, { useRef, useState, useEffect, useMemo } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import api from '../lib/axios'; // 👈 استيراد ملف axios الذي أنشأناه
+import OfferGrid from '../components/offers/OfferGrid';
 import { 
   MonitorPlay, TrendingUp, Zap, 
   ArrowRight, ShieldCheck, CheckCircle2, Star, Lock, Wallet, ChevronRight, Loader2
@@ -85,6 +86,7 @@ const platformUIConfig = {
 export default function Products() {
   const container = useRef();
   const { t } = useLanguage();
+  const location = useLocation();
   
   // 👈 تعريف الحالات لجلب البيانات
   const [products, setProducts] = useState([]);
@@ -105,6 +107,17 @@ export default function Products() {
     };
     fetchProducts();
   }, []);
+
+  // 👈 التمرير لقسم العروض عند الوصول عبر رابط #offers (بعد تحميل القسم إن لزم)
+  useEffect(() => {
+    if (location.hash === '#offers') {
+      const el = document.getElementById('offers');
+      if (el) {
+        const top = el.getBoundingClientRect().top + window.scrollY - 88;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    }
+  }, [location]);
 
   // 👈 تجميع المنتجات حسب المنصة (لكي نأخذ عينة لصفحة الهبوط)
   const groupedPlatforms = useMemo(() => {
@@ -232,7 +245,12 @@ export default function Products() {
       </section>
 
       {/* =========================================
-          2. Social Media Platforms (من الباك إند)
+          2. العروض (من الباك إند)
+          ========================================= */}
+      <OfferGrid />
+
+      {/* =========================================
+          3. Social Media Platforms (من الباك إند)
           ========================================= */}
       <section className="relative w-full py-16 px-6 lg:px-12 min-h-[500px]">
         {isLoading ? (

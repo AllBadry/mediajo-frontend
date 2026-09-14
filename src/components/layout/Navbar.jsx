@@ -14,7 +14,9 @@ import {
   LayoutDashboard,
   ShoppingCart,
   Menu,
-  X
+  X,
+  BadgePercent,
+  ArrowRight
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
@@ -122,7 +124,10 @@ export default function Navbar() {
           
           <div className="absolute top-full left-1/2 -translate-x-1/2 w-full h-4"></div>
           
-          <div className="absolute top-[calc(100%+10px)] left-1/2 -translate-x-1/2 w-[900px] bg-white border border-gray-100 rounded-[2rem] shadow-[0_40px_100px_rgba(0,0,0,0.1)] opacity-0 invisible translate-y-4 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-300 p-8 flex gap-8 cursor-default">
+          <div className="absolute top-[calc(100%+10px)] left-1/2 -translate-x-1/2 w-[900px] bg-white border border-gray-100 rounded-[2rem] shadow-[0_40px_100px_rgba(0,0,0,0.1)] opacity-0 invisible translate-y-4 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-300 p-8 flex flex-col gap-6 cursor-default">
+            
+            {/* الصف الداخلي: الأعمدة الثلاثة */}
+            <div className="flex gap-8">
             
             {/* العمود الأول: Social Media */}
             <div className="flex-1">
@@ -258,6 +263,15 @@ export default function Navbar() {
             </div>
 
           </div>
+
+          {/* شريط العروض الحصرية */}
+          <Link to="/products#offers" className="flex items-center justify-between gap-3 w-full px-5 py-4 bg-gradient-to-r from-orange-500 to-pink-600 rounded-2xl text-white hover:opacity-95 transition-all">
+            <span className="flex items-center gap-2 font-bold text-sm">
+              <BadgePercent className="w-5 h-5" /> {t.nav.offers}
+            </span>
+            <ArrowRight className="w-4 h-4 rtl:rotate-180" />
+          </Link>
+        </div>
         </div>
 
         <Link to="/contact" className={`text-sm font-medium transition-colors ${isActive('/contact') ? 'text-blue-600' : 'text-gray-600 hover:text-black'}`}>
@@ -374,6 +388,9 @@ export default function Navbar() {
               </Link>
               <Link to="/products" onClick={close} className="flex items-center px-4 py-3 rounded-xl text-sm font-bold text-gray-800 hover:bg-gray-50 transition-colors">
                 {t.nav.products}
+              </Link>
+              <Link to="/products#offers" onClick={close} className="flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-bold text-orange-600 bg-orange-50 hover:bg-orange-100 transition-colors">
+                <BadgePercent className="w-4 h-4" /> {t.nav.offers}
               </Link>
 
               <p className="px-4 pt-4 pb-1 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">{t.nav.services}</p>
