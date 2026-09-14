@@ -1,31 +1,46 @@
 import React, { useRef } from 'react';
-import { Zap, ShieldCheck, TrendingUp, ArrowUpRight } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
+import { Sparkles, TrendingUp, Zap, ArrowUpRight, PlayCircle } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
+import { Link } from 'react-router-dom';
 
-// تفعيل إضافة ScrollTrigger
 gsap.registerPlugin(ScrollTrigger);
 
 export default function AboutUs() {
+  const { t } = useLanguage();
+  const isRTL = t.dir === 'rtl';
   const containerRef = useRef(null);
 
-  // استخدام useGSAP (الـ Hook الرسمي للرياكت لضمان الأداء الممتاز)
   useGSAP(() => {
-    // 1. تأثير البارالاكس للترويسة (Hero Parallax)
-    gsap.to('.hero-text', {
-      y: 150,
-      opacity: 0,
-      scrollTrigger: {
-        trigger: '.hero-section',
-        start: 'top top',
-        end: 'bottom top',
-        scrub: true, // يربط الحركة بعجلة الماوس مباشرة
-      }
+    // 1. حركة الأوربات (Gradient Orbs) العائمة
+    gsap.to('.aura-orb-1', {
+      x: '10vw',
+      y: '5vh',
+      scale: 1.1,
+      rotation: 15,
+      duration: 12,
+      repeat: -1,
+      yoyo: true,
+      ease: 'sine.inOut'
     });
 
-    gsap.to('.bg-grid', {
-      y: 200,
+    gsap.to('.aura-orb-2', {
+      x: '-15vw',
+      y: '-10vh',
+      scale: 1.2,
+      rotation: -20,
+      duration: 15,
+      repeat: -1,
+      yoyo: true,
+      ease: 'sine.inOut'
+    });
+
+    // 2. حركة التمرير البارالاكس للترويسة
+    gsap.to('.hero-title', {
+      y: 100,
+      opacity: 0.2,
       scrollTrigger: {
         trigger: '.hero-section',
         start: 'top top',
@@ -34,225 +49,249 @@ export default function AboutUs() {
       }
     });
 
-    // 2. حركة التدرج الفني المستمرة (Fluid Gradient Infinite Animation)
-    gsap.to('.fluid-gradient', {
-      scale: 1.05,
-      rotation: 5,
-      duration: 10,
-      repeat: -1,
-      yoyo: true,
-      ease: 'sine.inOut'
-    });
-
-    // 3. انبثاق العناصر عند السكرول (Scroll Reveal)
-    const revealSections = gsap.utils.toArray('.reveal-section');
-    revealSections.forEach((section) => {
-      const items = section.querySelectorAll('.reveal-item');
-      gsap.from(items, {
-        y: 50,
+    // 3. ظهور العناصر المتتابع (Fade Up)
+    const revealElements = gsap.utils.toArray('.reveal-up');
+    revealElements.forEach((el) => {
+      gsap.from(el, {
+        y: 60,
         opacity: 0,
-        duration: 1.2,
-        stagger: 0.15, // تتابع ظهور العناصر وراء بعضها
+        duration: 1,
         ease: 'power3.out',
         scrollTrigger: {
-          trigger: section,
-          start: 'top 80%', // يبدأ الأنيميشن عندما يصل القسم لـ 80% من الشاشة
+          trigger: el,
+          start: 'top 85%',
         }
       });
     });
 
-    // 4. الدوائر الهندسية تتفاعل مع السكرول (Scrub Rotation)
-    gsap.to('.cta-circle-1', {
-      rotation: 180,
+    // 4. تأثير الشرائح الزجاجية (Crunchy Style Effect)
+    gsap.from('.glass-strip', {
+      y: 100,
+      opacity: 0,
+      duration: 1,
+      stagger: 0.15,
+      ease: 'power4.out',
       scrollTrigger: {
-        trigger: '.cta-section',
-        start: 'top bottom',
-        end: 'bottom top',
-        scrub: 1, // وضعنا 1 لجعل الحركة ناعمة (Smooth Scrubbing)
+        trigger: '.glass-strips-container',
+        start: 'top 75%',
       }
     });
 
-    gsap.to('.cta-circle-2', {
-      rotation: -180,
-      scrollTrigger: {
-        trigger: '.cta-section',
-        start: 'top bottom',
-        end: 'bottom top',
-        scrub: 1,
-      }
-    });
-
-  }, { scope: containerRef }); // ربط الأنيميشن بالحاوية لتجنب تداخل الـ Classes
+  }, { scope: containerRef });
 
   return (
-    <div ref={containerRef} dir="ltr" className="min-h-screen bg-[#fafbfc] font-sans overflow-hidden selection:bg-blue-200">
+    <div ref={containerRef} dir={t.dir} className="relative min-h-screen bg-[#f5f5f7] font-sans overflow-hidden text-[#111]">
       
       {/* =========================================
-          1. Hero Section (Cinematic Parallax)
+          طبقة الحبيبات (Noise / Grain Texture)
+          تغطي الشاشة بالكامل لإعطاء مظهر Ideogram و ls.graphics
           ========================================= */}
-      <section className="hero-section relative w-full pt-32 pb-20 px-6 lg:px-12 flex flex-col justify-center min-h-[85vh] overflow-hidden">
-        
-        {/* شبكة الخلفية */}
-        <div 
-          className="bg-grid absolute inset-0 z-0 opacity-[0.03] pointer-events-none" 
-          style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '32px 32px' }}
-        />
-        
-        {/* التدرجات الفنية الحرة */}
-        <div 
-          className="fluid-gradient absolute top-[-10%] right-[-5%] w-[60vw] h-[60vw] max-w-[800px] max-h-[800px] bg-gradient-to-bl from-pink-400/30 via-purple-400/20 to-blue-400/30 rounded-full blur-[100px] -z-10 mix-blend-multiply"
-        />
+      <div className="fixed inset-0 z-50 pointer-events-none opacity-[0.04] mix-blend-multiply" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")' }}></div>
 
-        <div className="hero-text max-w-[90rem] mx-auto w-full relative z-10">
-          <div className="flex items-center gap-3 mb-8 reveal-item">
-            <span className="px-4 py-1.5 bg-gray-900 text-white font-bold text-xs tracking-widest uppercase rounded-full">
-              Our Story
-            </span>
-            <span className="text-gray-500 font-mono text-sm tracking-widest uppercase">
-              Est. 2026 // Amman, Jordan
-            </span>
-          </div>
+      {/* =========================================
+          1. Hero Section (Samsung Design / ls.graphics Style)
+          ========================================= */}
+      <section className="hero-section relative w-full h-[90vh] flex flex-col justify-center items-center overflow-hidden">
+        
+        {/* التدرجات الفنية الضخمة (Aura / Blobs) */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+          <div className="aura-orb-1 absolute w-[60vw] h-[60vw] min-w-[600px] min-h-[600px] bg-gradient-to-tr from-[#ff3366] via-[#ff9933] to-[#ffcc00] rounded-full blur-[120px] opacity-60 mix-blend-multiply top-[-10%] right-[-10%]"></div>
+          <div className="aura-orb-2 absolute w-[70vw] h-[70vw] min-w-[700px] min-h-[700px] bg-gradient-to-bl from-[#00c6ff] via-[#0072ff] to-[#bd00ff] rounded-full blur-[140px] opacity-40 mix-blend-multiply bottom-[-20%] left-[-20%]"></div>
+        </div>
 
-          <h1 className="text-[14vw] md:text-[11vw] font-medium leading-[0.85] tracking-tighter text-[#1e2022] mb-6">
-            <span className="block reveal-item">We Engineer</span>
-            <span className="block reveal-item text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-600 italic pr-4">
-              Growth.
-            </span>
+        {/* النص المركزي */}
+        <div className="hero-title relative z-10 text-center flex flex-col items-center px-6">
+          <span className="px-5 py-2 bg-white/40 backdrop-blur-md border border-white/50 rounded-full text-xs font-bold uppercase tracking-[0.2em] mb-8 shadow-sm">
+            {isRTL ? 'رؤيتنا الإبداعية' : 'Our Creative Vision'}
+          </span>
+          <h1 className="text-[12vw] md:text-[8vw] lg:text-[7rem] font-medium tracking-tighter leading-[0.9] text-gray-900 drop-shadow-sm">
+            The Dream <br />
+            <span className="font-light italic text-gray-700">Navigator</span>
           </h1>
+          <p className="mt-8 text-lg md:text-xl text-gray-600 font-medium max-w-lg leading-relaxed">
+            {isRTL 
+              ? 'ميديا جو هي بوابتك نحو الإلهام والابتكار في عالم النمو الرقمي.' 
+              : 'MediaJo is your path to inspiration and innovation in digital growth.'}
+          </p>
         </div>
       </section>
 
       {/* =========================================
-          2. The Manifesto (Scroll Reveal)
+          2. Split Layout (Ideogram Style)
           ========================================= */}
-      <section className="reveal-section relative w-full py-32 px-6 lg:px-12 bg-white">
-        <div className="max-w-[85rem] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16">
-          <div className="lg:col-span-5">
-            <h2 className="reveal-item text-4xl md:text-5xl lg:text-6xl font-medium tracking-tighter text-gray-900 mb-8 leading-[1.1]">
-              We don't just deliver. We build fame.
-            </h2>
-            <div className="reveal-item w-20 h-1 bg-blue-600"></div>
-          </div>
-
-          <div className="lg:col-span-7 flex flex-col gap-10 text-xl lg:text-3xl text-gray-500 font-light leading-relaxed">
-            <p className="reveal-item">
-              MediaJo was built on a single promise: to make you impossible to miss. We don't just grow numbers on a screen — we engineer real presence for brands, creators, and rising stars, turning attention into momentum.
-            </p>
-            <p className="reveal-item">
-              By combining smart automation with local payment solutions like <strong className="font-semibold text-gray-900">CliQ</strong>, we've built an ecosystem where speed meets uncompromised quality.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* =========================================
-          3. Core Values (Bento Box)
-          ========================================= */}
-      <section className="reveal-section relative w-full py-32 px-6 lg:px-12 bg-[#fafbfc]">
-        <div className="max-w-[85rem] mx-auto">
-          <div className="mb-20 reveal-item">
-            <h2 className="text-5xl md:text-7xl font-medium tracking-tighter text-[#1e2022]">
-              The Core <span className="text-gray-400 italic">Matrix</span>
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            
-            <div className="reveal-item bg-white p-10 rounded-[2.5rem] border border-gray-100 shadow-sm hover:-translate-y-2 hover:shadow-2xl transition-all duration-500 group">
-              <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-10 group-hover:scale-110 transition-transform duration-500">
-                <Zap className="w-8 h-8" />
-              </div>
-              <h3 className="text-3xl font-medium text-gray-900 mb-4 tracking-tight">Lightning Speed</h3>
-              <p className="text-gray-500 font-light leading-relaxed text-lg">
-                Automated API routing ensures that 99% of our orders start within seconds of payment confirmation.
-              </p>
-            </div>
-
-            <div className="reveal-item bg-white p-10 rounded-[2.5rem] border border-gray-100 shadow-sm hover:-translate-y-2 hover:shadow-2xl transition-all duration-500 group">
-              <div className="w-16 h-16 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center mb-10 group-hover:scale-110 transition-transform duration-500">
-                <ShieldCheck className="w-8 h-8" />
-              </div>
-              <h3 className="text-3xl font-medium text-gray-900 mb-4 tracking-tight">Premium Quality</h3>
-              <p className="text-gray-500 font-light leading-relaxed text-lg">
-                We filter our networks rigorously. Zero drop-offs, real engagement, and guaranteed premium accounts.
-              </p>
-            </div>
-
-            <div className="reveal-item bg-[#111] p-10 rounded-[2.5rem] shadow-xl hover:-translate-y-2 hover:shadow-2xl transition-all duration-500 group md:col-span-2 lg:col-span-1 relative overflow-hidden text-white">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-purple-500/30 to-transparent rounded-full blur-3xl pointer-events-none group-hover:scale-150 transition-transform duration-1000"></div>
-              
-              <div className="w-16 h-16 bg-white/10 text-white rounded-2xl flex items-center justify-center mb-10 group-hover:scale-110 transition-transform duration-500 relative z-10 backdrop-blur-md">
-                <TrendingUp className="w-8 h-8" />
-              </div>
-              <h3 className="text-3xl font-medium mb-4 tracking-tight relative z-10">Growth Engineering</h3>
-              <p className="text-gray-400 font-light leading-relaxed text-lg relative z-10">
-                Every campaign is architected with intention. We turn your goals into a measurable upward curve.
-              </p>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* =========================================
-          4. Giant Stats Section
-          ========================================= */}
-      <section className="reveal-section relative w-full py-32 px-6 lg:px-12 bg-white">
-        <div className="max-w-[85rem] mx-auto grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-8 divide-y md:divide-y-0 md:divide-x divide-gray-100">
+      <section className="relative w-full py-32 px-6 lg:px-12 bg-[#f5f5f7]">
+        <div className="max-w-[85rem] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           
-          <div className="reveal-item flex flex-col items-center justify-center text-center pt-8 md:pt-0">
-            <span className="text-[6rem] md:text-[7rem] lg:text-[8rem] font-medium tracking-tighter text-[#1e2022] leading-none mb-4">
-              1M<span className="text-blue-600">+</span>
-            </span>
-            <span className="text-sm font-bold tracking-[0.2em] uppercase text-gray-400">Orders Processed</span>
+          <div className="reveal-up order-2 lg:order-1 flex flex-col justify-center">
+            <h2 className="text-4xl md:text-6xl font-medium tracking-tighter mb-8 leading-[1.1]">
+              {isRTL ? 'إبداع يتجاوز' : 'Creativity beyond'}<br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+                {isRTL ? 'المألوف.' : 'the ordinary.'}
+              </span>
+            </h2>
+            <p className="text-gray-500 font-light text-xl leading-relaxed mb-10 max-w-md">
+              {isRTL 
+                ? 'نحن لا نقدم مجرد خدمات، بل نصنع واجهات وتجارب رقمية تعيد صياغة مفهوم السيطرة على وسائل التواصل الاجتماعي.' 
+                : 'We don’t just offer services; we craft digital interfaces and experiences that redefine social media dominance.'}
+            </p>
+            
+            <div className="flex gap-4">
+              <Link to="/products" className="px-8 py-4 bg-gray-900 text-white rounded-full font-bold tracking-wide hover:bg-gray-800 transition-colors flex items-center gap-2">
+                {isRTL ? 'ابدأ الآن' : 'Get Started'} <ArrowUpRight className="w-5 h-5" />
+              </Link>
+            </div>
           </div>
 
-          <div className="reveal-item flex flex-col items-center justify-center text-center pt-8 md:pt-0">
-            <span className="text-[6rem] md:text-[7rem] lg:text-[8rem] font-medium tracking-tighter text-[#1e2022] leading-none mb-4">
-              99<span className="text-purple-600">%</span>
-            </span>
-            <span className="text-sm font-bold tracking-[0.2em] uppercase text-gray-400">Uptime SLA</span>
-          </div>
+          {/* لوحة زجاجية فنية فوق التدرجات (Glassmorphism Artwork) */}
+          <div className="reveal-up order-1 lg:order-2 relative h-[500px] w-full rounded-[3rem] overflow-hidden bg-white/20 border border-white/50 backdrop-blur-xl shadow-2xl p-8 flex flex-col justify-between">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-400/30 via-purple-400/20 to-pink-400/30 -z-10"></div>
+            
+            <div className="flex justify-between items-start">
+              <div className="w-12 h-12 bg-white/50 rounded-full flex items-center justify-center backdrop-blur-md">
+                <Sparkles className="w-6 h-6 text-blue-600" />
+              </div>
+              <span className="px-4 py-2 bg-white/40 rounded-full text-xs font-bold uppercase tracking-widest backdrop-blur-md">
+                {isRTL ? 'تحليلات ذكية' : 'Smart Analytics'}
+              </span>
+            </div>
 
-          <div className="reveal-item flex flex-col items-center justify-center text-center pt-8 md:pt-0">
-            <span className="text-[6rem] md:text-[7rem] lg:text-[8rem] font-medium tracking-tighter text-[#1e2022] leading-none mb-4">
-              24<span className="text-green-500">/7</span>
-            </span>
-            <span className="text-sm font-bold tracking-[0.2em] uppercase text-gray-400">Active Support</span>
+            <div>
+              <h3 className="text-4xl font-medium tracking-tight mb-2">MediaJo Engine</h3>
+              <p className="text-gray-700 font-medium">Illuminating your path to digital triumph.</p>
+            </div>
           </div>
 
         </div>
       </section>
 
       {/* =========================================
-          5. Call to Action (Scroll Scub Trigger)
+          3. Vertical Glass Strips (Crunchy Style)
           ========================================= */}
-      <section className="cta-section reveal-section relative w-full py-40 px-6 lg:px-12 bg-[#fafbfc] flex items-center justify-center text-center overflow-hidden">
+      <section className="relative w-full py-32 bg-gray-900 text-white overflow-hidden">
         
-        {/* دوائر فنية تدور مع السكرول بفضل GSAP Scrub */}
-        <div className="cta-circle-1 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] border border-gray-200 rounded-full pointer-events-none origin-center" />
-        <div className="cta-circle-2 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] border border-gray-100 rounded-full pointer-events-none origin-center" />
+        {/* خلفية زرقاء عميقة مشعة (Deep Blue Glow) */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120vw] h-[100vh] bg-gradient-to-b from-[#0011ff] to-[#000000] blur-[100px] opacity-50 pointer-events-none"></div>
 
-        <div className="reveal-item relative z-10 flex flex-col items-center">
-          <h2 className="text-6xl md:text-8xl font-medium tracking-tighter text-[#1e2022] mb-10">
-            Ready to scale?
-          </h2>
-          <button className="group relative flex items-center gap-4 bg-[#111] text-white px-12 py-6 rounded-full font-bold text-lg overflow-hidden shadow-2xl hover:scale-105 transition-transform duration-300">
-            <span className="relative z-10">Create Free Account</span>
-            <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center relative z-10 group-hover:bg-blue-600 transition-colors duration-300">
-              <ArrowUpRight className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />
-            </div>
-            {/* لمعة تتحرك داخل الزر CSS Only */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] pointer-events-none"></div>
-          </button>
+        <div className="max-w-[85rem] mx-auto px-6 lg:px-12 relative z-10">
+          <div className="text-center mb-20 reveal-up">
+            <h2 className="text-5xl md:text-7xl font-medium tracking-tighter uppercase">
+              {isRTL ? 'استوديو النمو' : 'Growth Studio'}
+            </h2>
+          </div>
+
+          {/* شرائح زجاجية عامودية */}
+          <div className="glass-strips-container grid grid-cols-1 md:grid-cols-3 gap-6 h-[400px]">
+            
+            {[
+              { id: '01', title: isRTL ? 'السرعة' : 'Speed', icon: Zap, desc: isRTL ? 'تنفيذ فوري للطلبات' : 'Instant execution' },
+              { id: '02', title: isRTL ? 'الجودة' : 'Quality', icon: Sparkles, desc: isRTL ? 'حسابات حقيقية ونشطة' : 'Real active accounts' },
+              { id: '03', title: isRTL ? 'التحليل' : 'Analytics', icon: TrendingUp, desc: isRTL ? 'تقارير نمو مفصلة' : 'Detailed growth reports' }
+            ].map((item) => (
+              <div key={item.id} className="glass-strip relative group h-full rounded-[2rem] bg-white/5 border border-white/10 backdrop-blur-2xl p-8 flex flex-col justify-between overflow-hidden hover:bg-white/10 transition-colors duration-500 cursor-pointer">
+                <div className="absolute inset-0 bg-gradient-to-b from-blue-500/0 via-blue-500/0 to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                
+                <div className="flex justify-between items-center relative z-10">
+                  <span className="text-xl font-mono text-gray-400">{item.id}</span>
+                  <item.icon className="w-6 h-6 text-blue-400" />
+                </div>
+                
+                <div className="relative z-10">
+                  <h3 className="text-3xl font-medium mb-2">{item.title}</h3>
+                  <p className="text-gray-400 text-sm font-light">{item.desc}</p>
+                </div>
+              </div>
+            ))}
+
+          </div>
         </div>
       </section>
 
-      <style>{`
-        @keyframes shimmer {
-          100% { transform: translateX(100%); }
-        }
-      `}</style>
+      {/* =========================================
+          4. Stats Pill-Shaped Cards (Spark Style)
+          ========================================= */}
+      <section className="relative w-full py-32 px-6 lg:px-12 bg-[#f5f5f7]">
+        <div className="max-w-[85rem] mx-auto">
+          
+          <div className="flex flex-col md:flex-row gap-8">
+            
+            {/* عنوان القسم */}
+            <div className="reveal-up md:w-1/3 flex flex-col justify-center">
+              <h2 className="text-4xl md:text-5xl font-medium tracking-tight mb-4">
+                Fueling growth with data insights.
+              </h2>
+              <Link to="/products" className="text-blue-600 font-bold hover:underline flex items-center gap-1 w-max">
+                Create project <ArrowUpRight className="w-4 h-4" />
+              </Link>
+            </div>
+
+            {/* الإحصائيات (كبسولات بيضاء مسطحة) */}
+            <div className="md:w-2/3 grid grid-cols-2 md:grid-cols-4 gap-4">
+              
+              <div className="reveal-up bg-white rounded-3xl p-6 flex flex-col justify-center border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+                <span className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-2">Impressions</span>
+                <span className="text-3xl font-medium tracking-tighter">2.3M</span>
+              </div>
+              
+              <div className="reveal-up bg-white rounded-3xl p-6 flex flex-col justify-center border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+                <span className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-2">Conversion</span>
+                <span className="text-3xl font-medium tracking-tighter">99%</span>
+              </div>
+
+              <div className="reveal-up bg-white rounded-3xl p-6 flex flex-col justify-center border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+                <span className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-2">Clients</span>
+                <span className="text-3xl font-medium tracking-tighter">+1000</span>
+              </div>
+
+              <div className="reveal-up bg-white rounded-3xl p-6 flex flex-col justify-center border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+                <span className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-2">Uptime</span>
+                <span className="text-3xl font-medium tracking-tighter">24/7</span>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================
+          5. CTA (Audio Player Inspired - Image 662240...)
+          ========================================= */}
+      <section className="relative w-full py-40 px-6 lg:px-12 flex justify-center items-center">
+        
+        {/* خلفية ضبابية خضراء/زرقاء (طبيعة/صوتيات) */}
+        <div className="absolute inset-0 flex items-center justify-center -z-10 overflow-hidden">
+          <div className="w-[80vw] h-[80vw] bg-gradient-to-r from-green-400/40 to-blue-400/40 rounded-full blur-[100px]"></div>
+        </div>
+
+        <div className="reveal-up relative z-10 w-full max-w-4xl bg-white/60 backdrop-blur-2xl border border-white/80 rounded-[3rem] p-10 md:p-16 flex flex-col md:flex-row items-center gap-10 shadow-[0_20px_60px_rgba(0,0,0,0.05)]">
+          
+          <div className="flex-1">
+            <h2 className="text-4xl md:text-5xl font-medium tracking-tight mb-4 leading-tight">
+              {isRTL ? 'ابدأ في بناء وكالتك الرقمية الآن.' : 'Start building your digital agency now.'}
+            </h2>
+            <p className="text-gray-500 mb-8 font-medium">
+              {isRTL ? 'خدمات مؤتمتة، دعم فني متواصل، ونتائج مضمونة.' : 'Automated services, continuous support, and guaranteed results.'}
+            </p>
+            <Link to="/products" className="px-8 py-4 bg-[#111] text-white rounded-full font-bold flex items-center gap-2 w-max hover:bg-blue-600 transition-colors">
+              <PlayCircle className="w-5 h-5" /> {isRTL ? 'اشترك الآن' : 'Join Now'}
+            </Link>
+          </div>
+
+          {/* محاكاة مشغل زجاجي (Glass Player Mockup) */}
+          <div className="w-full md:w-80 h-24 bg-white/40 backdrop-blur-md border border-white rounded-2xl p-4 flex flex-col justify-center shadow-lg relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-blue-400/20 rounded-full blur-xl"></div>
+            <div className="flex justify-between items-center mb-2 text-xs font-bold tracking-widest text-gray-500 uppercase">
+              <span>{isRTL ? 'النمو الرقمي' : 'Digital Growth'}</span>
+              <span>100%</span>
+            </div>
+            <div className="w-full h-2 bg-gray-200/50 rounded-full overflow-hidden">
+              <div className="h-full bg-blue-500 w-[75%] rounded-full"></div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
     </div>
   );
 }
