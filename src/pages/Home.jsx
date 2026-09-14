@@ -10,9 +10,10 @@ export default function Home() {
     <div className="min-h-screen bg-[#030014]">
       <div className="page-enter">
         <Hero />
+        <Offers />
         <About />
         <Categories />
-        <Offers />
+        
 
         <Contact />
       </div>
