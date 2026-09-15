@@ -14,30 +14,40 @@ export default function Categories() {
   const sectionRef = useRef(null);
 
   useGSAP(() => {
-    // ظهور البطاقات بسلاسة من الأسفل (Staggered Reveal)
-    gsap.from('.category-card', {
-      y: 100,
-      opacity: 0,
-      duration: 1.5,
-      stagger: 0.2,
-      ease: 'expo.out',
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: 'top 80%',
+    // استخدمنا fromTo لتجنب مشكلة بقاء العناصر مخفية في React
+    gsap.fromTo('.category-card', 
+      { 
+        y: 100, 
+        opacity: 0 
+      },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 1.5,
+        stagger: 0.2,
+        ease: 'expo.out',
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 90%', // جعلناها 90% ليتم التفعيل بمجرد ظهور جزء بسيط من القسم
+          // markers: true, // يمكنك إزالة التعليق عن هذا السطر لتشاهد خطوط التفعيل وتتأكد أنها تعمل
+        }
       }
-    });
+    );
 
     // حركة خفيفة للعناصر الزجاجية الداخلية (Parallax Effect)
-    gsap.to('.glass-panel', {
-      y: -20,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: 'top bottom',
-        end: 'bottom top',
-        scrub: 1,
+    gsap.fromTo('.glass-panel', 
+      { y: 0 },
+      {
+        y: -20,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 1,
+        }
       }
-    });
+    );
   }, { scope: sectionRef });
 
   return (
