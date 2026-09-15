@@ -1,133 +1,161 @@
-import React from 'react';
-import { Gamepad2, Share2, Sparkles, Hexagon } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import React, { useRef } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
+import { TrendingUp, Key, ArrowUpRight, Zap, Users, Star } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function Categories() {
   const { t } = useLanguage();
   const isRTL = t.dir === 'rtl';
-  const textSide = isRTL ? 'pr-8 md:pr-16 pl-0 text-right' : 'pl-8 md:pl-16 pr-0 text-left';
-  const visualSide = isRTL ? 'left-0 -scale-x-100' : 'right-0';
+  const sectionRef = useRef(null);
+
+  useGSAP(() => {
+    // ظهور البطاقات بسلاسة من الأسفل (Staggered Reveal)
+    gsap.from('.category-card', {
+      y: 100,
+      opacity: 0,
+      duration: 1.5,
+      stagger: 0.2,
+      ease: 'expo.out',
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: 'top 80%',
+      }
+    });
+
+    // حركة خفيفة للعناصر الزجاجية الداخلية (Parallax Effect)
+    gsap.to('.glass-panel', {
+      y: -20,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 1,
+      }
+    });
+  }, { scope: sectionRef });
+
   return (
-    // 1. استخدام نفس لون الخلفية الفاتح الموجود في الهيرو (bg-[#fafbfc])
-    <section dir={t.dir} className="relative w-full pb-16 pt-20 md:pb-24 md:pt-32 px-4 md:px-8 font-sans bg-[#fafbfc] -mt-20 z-20">
+    // نستخدم نفس خلفية الموقع (أو transparent) للحفاظ على اللوحة المتصلة
+    <section ref={sectionRef} dir={t.dir} className="relative w-full py-24 md:py-32 px-6 lg:px-12 font-sans z-20">
       
-      {/* =========================================
-          الجسر البصري الأبيض (The Light Visual Bridge)
-          هذا الديف يطفو فوق نهاية قسم About (فوق صورة المدينة) 
-          ويحولها تدريجياً إلى الأبيض النقي دون حواف قاسية
-          ========================================= */}
-      <div className="absolute top-0 left-0 w-full h-48 bg-gradient-to-b from-transparent to-[#fafbfc] -translate-y-full pointer-events-none"></div>
-
-      {/* لمسة تصميمية: خط رفيع يفصل بين نهاية الصورة وبداية البطاقات بشكل أنيق */}
-      <div className="absolute top-10 left-1/2 -translate-x-1/2 w-px h-16 bg-gradient-to-b from-gray-300 to-transparent"></div>
-
-      <div className="max-w-[85rem] mx-auto flex flex-col gap-6 md:gap-10 relative z-10">
+      <div className="max-w-[85rem] mx-auto">
         
-        {/* =========================================
-            البطاقة الأولى: الحسابات والاشتراكات
-            ========================================= */}
-        <Link to="/products" className="group relative w-full h-[280px] md:h-[400px] bg-[#050510] rounded-[2rem] md:rounded-[2.5rem] overflow-hidden shadow-2xl flex items-center cursor-pointer transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_30px_60px_rgba(234,88,12,0.2)]">
+        {/* الترويسة الأنيقة (Editorial Header) */}
+        <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8 px-2 category-card">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-medium tracking-tighter leading-[1.1] w-full md:w-1/2 text-[#111]">
+            {isRTL ? 'حلول صُممت' : 'Solutions crafted'} <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+              {isRTL ? 'للهيمنة الرقمية.' : 'for digital dominance.'}
+            </span>
+          </h2>
+          <p className="text-gray-500 font-medium text-lg leading-relaxed w-full md:w-1/3">
+            {isRTL 
+              ? 'سواء كنت تبحث عن تضخيم أرقامك على منصات التواصل، أو امتلاك حسابات واشتراكات حصرية، لدينا البنية التحتية لتحقيق ذلك فوراً.' 
+              : 'Whether you seek to amplify your social metrics or acquire exclusive premium accounts, we have the infrastructure to deliver instantly.'}
+          </p>
+        </div>
+
+        {/* شبكة البطاقات (Bento Grid) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
           
-          {/* الأشكال الهندسية */}
-          <div className={`absolute ${visualSide} top-0 w-full md:w-1/2 h-full overflow-hidden pointer-events-none z-0`}>
-            <div className="absolute inset-0 flex items-center justify-end pr-10 md:pr-32 transition-transform duration-700 group-hover:scale-110">
-              {[...Array(8)].map((_, i) => (
-                <div 
-                  key={i} 
-                  className="absolute w-[300px] h-[300px] md:w-[500px] md:h-[500px] rounded-full border border-orange-400/20"
-                  style={{ 
-                    background: 'linear-gradient(135deg, #ea580c, #fdba74)',
-                    right: `${(i * 15) - 100}px`,
-                    zIndex: 10 - i,
-                    boxShadow: '-10px 0 25px rgba(0,0,0,0.6)'
-                  }}
-                ></div>
-              ))}
-              <div className="absolute right-10 bottom-[-50px] w-64 h-64 bg-gradient-to-t from-purple-600 to-blue-500 rounded-t-full transform rotate-45 mix-blend-screen opacity-80"></div>
-            </div>
-          </div>
-
-          {/* خطوط الشبكة والعناصر الطافية */}
-          <div className="absolute inset-0 pointer-events-none z-10 opacity-60">
-            <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-              <line x1={isRTL ? '70%' : '30%'} y1="50%" x2={isRTL ? '15%' : '85%'} y2="50%" stroke="white" strokeWidth="1" strokeDasharray="4 4" className="transition-all duration-700 group-hover:x2-[90%]" />
-            </svg>
-            <div className={`hidden md:block absolute top-1/2 ${isRTL ? 'left-[10%] md:left-[15%]' : 'right-[10%] md:right-[15%]'} -translate-y-1/2 text-yellow-400 drop-shadow-[0_0_15px_rgba(250,204,21,0.8)] transition-all duration-700 group-hover:scale-125 group-hover:rotate-12`}>
-              <Sparkles className="w-8 h-8 fill-yellow-400" />
-            </div>
-          </div>
-
-          {/* المحتوى النصي */}
-          <div className={`relative z-20 ${textSide} w-full md:w-1/2 flex flex-col justify-center`}>
-            <h2 className="text-3xl md:text-[5.5rem] font-black text-white leading-none tracking-tighter mb-4 drop-shadow-lg">
-              {t.home.categoriesAccounts}
-            </h2>
-            <div className={`flex flex-col gap-1 text-gray-400 font-mono text-xs md:text-sm tracking-widest uppercase ${isRTL ? 'border-r-2 border-orange-500 pr-4 mr-1' : 'border-l-2 border-orange-500 pl-4 ml-1'}`}>
-              <p className="text-white font-sans text-base md:text-lg tracking-normal font-bold">{t.home.categoriesAccountsDesc}</p>
-              <p>{t.home.categoriesAccountsText1}</p>
-              <p>{t.home.categoriesAccountsText2}</p>
-              <p>{t.home.categoriesAccountsText3}</p>
-            </div>
+          {/* =========================================
+              البطاقة الأولى: خدمات السوشال ميديا (Social Media)
+              تأخذ 7 أعمدة - مستوحاة من ستايل Canvas & Ideogram
+              ========================================= */}
+          <Link to="/products" className="category-card lg:col-span-7 group relative h-[500px] md:h-[600px] bg-white/40 backdrop-blur-2xl border border-white/60 rounded-[3rem] p-8 md:p-12 overflow-hidden shadow-[0_20px_60px_-15px_rgba(0,0,0,0.03)] hover:shadow-[0_30px_80px_-20px_rgba(37,99,235,0.1)] transition-all duration-500 flex flex-col justify-between block">
             
-            <div className="mt-5 md:mt-8 flex items-center gap-3" dir="ltr">
-              <div className="p-2 bg-white/10 rounded-full backdrop-blur-md border border-white/10">
-                <Gamepad2 className="w-6 h-6 text-white" />
+            {/* الأوربات الفنية المتحركة في الخلفية (Fluid Abstract Gradients) */}
+            <div className="absolute top-[-20%] right-[-10%] w-[80%] h-[80%] bg-gradient-to-bl from-blue-400 via-cyan-300 to-transparent rounded-full mix-blend-multiply blur-[80px] opacity-60 group-hover:scale-110 transition-transform duration-1000 ease-out animate-[pulse_8s_ease-in-out_infinite_alternate]"></div>
+            <div className="absolute bottom-[-20%] left-[-10%] w-[60%] h-[60%] bg-gradient-to-tr from-purple-400 via-indigo-300 to-transparent rounded-full mix-blend-multiply blur-[80px] opacity-50 group-hover:scale-110 transition-transform duration-1000 ease-out"></div>
+
+            {/* الجزء العلوي للبطاقة */}
+            <div className="relative z-10 flex justify-between items-start">
+              <div className="w-14 h-14 bg-white/80 backdrop-blur-md rounded-2xl flex items-center justify-center shadow-sm text-blue-600 border border-white group-hover:rotate-12 transition-transform duration-500">
+                <TrendingUp className="w-7 h-7" />
               </div>
-              <span className="text-white/50 text-xs font-mono">MEDIAJO.ORG/SUBS</span>
+              <span className="px-5 py-2 bg-white/60 backdrop-blur-md rounded-full text-xs font-bold uppercase tracking-widest text-gray-700 border border-white shadow-sm">
+                01
+              </span>
             </div>
-          </div>
-        </Link>
 
-        {/* =========================================
-            البطاقة الثانية: السوشال ميديا
-            ========================================= */}
-        <Link to="/products" className="group relative w-full h-[280px] md:h-[400px] bg-[#050510] rounded-[2rem] md:rounded-[2.5rem] overflow-hidden shadow-2xl flex items-center cursor-pointer transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_30px_60px_rgba(37,99,235,0.2)]">
-          
-          {/* الأشكال الهندسية */}
-          <div className={`absolute ${visualSide} top-0 w-full md:w-1/2 h-full overflow-hidden pointer-events-none z-0`}>
-            <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-110">
-              <div className="absolute bottom-[-20%] left-[-10%] w-[120%] h-[120%] md:w-[400px] md:h-[400px] bg-gradient-to-tr from-blue-800 to-blue-500 rounded-full mix-blend-lighten blur-[2px]"></div>
-              <div 
-                className="absolute top-0 right-10 w-[300px] h-[300px] bg-gradient-to-bl from-green-400 to-emerald-600 mix-blend-screen opacity-90 blur-[1px]"
-                style={{ clipPath: 'polygon(100% 0, 0% 100%, 100% 100%)' }}
-              ></div>
-            </div>
-          </div>
+            {/* اللوحة الزجاجية الداخلية (Glass Panel) - تحتوي على النصوص */}
+            <div className="glass-panel relative z-20 w-full bg-white/70 backdrop-blur-xl border border-white/80 rounded-[2rem] p-8 shadow-xl mt-auto">
+              <div className="flex justify-between items-end gap-4">
+                <div>
+                  <h3 className="text-3xl md:text-4xl font-medium tracking-tight text-[#111] mb-3">
+                    {t.home.categoriesSocial || (isRTL ? 'النمو والتفاعل' : 'Social Growth')}
+                  </h3>
+                  <p className="text-gray-600 font-medium max-w-sm">
+                    {t.home.categoriesSocialDesc || (isRTL ? 'متابعين، لايكات، ومشاهدات بجودة فائقة لتعزيز مصداقيتك الرقمية.' : 'Premium followers, likes, and views to boost your digital credibility.')}
+                  </p>
+                </div>
+                <div className="w-12 h-12 bg-[#111] rounded-full flex items-center justify-center text-white shrink-0 group-hover:bg-blue-600 transition-colors duration-300 shadow-md">
+                  <ArrowUpRight className={`w-5 h-5 ${isRTL ? '-scale-x-100' : ''}`} />
+                </div>
+              </div>
 
-          {/* خطوط الشبكة والعناصر الطافية */}
-          <div className="absolute inset-0 pointer-events-none z-10 opacity-60">
-            <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-              <line x1={isRTL ? '90%' : '10%'} y1="60%" x2={isRTL ? '55%' : '45%'} y2="60%" stroke="white" strokeWidth="1" />
-              <line x1={isRTL ? '55%' : '45%'} y1="60%" x2={isRTL ? '15%' : '85%'} y2="70%" stroke="white" strokeWidth="1" strokeDasharray="4 4" className="transition-all duration-700 group-hover:y2-[65%]" />
-              <circle cx={isRTL ? '55%' : '45%'} cy="60%" r="3" fill="white" />
-            </svg>
-            <div className={`hidden md:block absolute top-[65%] ${isRTL ? 'left-[10%] md:left-[15%]' : 'right-[10%] md:right-[15%]'} text-purple-400 drop-shadow-[0_0_20px_rgba(168,85,247,0.8)] transition-all duration-700 group-hover:scale-125 group-hover:-rotate-12`}>
-              <Hexagon className="w-8 h-8 fill-purple-500 text-purple-200" />
+              {/* شريط الإحصائيات/المميزات الصغير */}
+              <div className="flex flex-wrap gap-4 mt-8 pt-6 border-t border-gray-200/50">
+                <span className="flex items-center gap-1.5 text-sm font-bold text-gray-700">
+                  <Zap className="w-4 h-4 text-yellow-500" /> {isRTL ? 'تنفيذ فوري' : 'Instant Start'}
+                </span>
+                <span className="flex items-center gap-1.5 text-sm font-bold text-gray-700">
+                  <Users className="w-4 h-4 text-blue-500" /> {isRTL ? 'حسابات حقيقية' : 'Real Accounts'}
+                </span>
+                <span className="flex items-center gap-1.5 text-sm font-bold text-gray-700">
+                  <Star className="w-4 h-4 text-purple-500" /> {isRTL ? 'ضمان تعويض' : 'Refill Guarantee'}
+                </span>
+              </div>
             </div>
-          </div>
+          </Link>
 
-          {/* المحتوى النصي */}
-          <div className={`relative z-20 ${textSide} w-full md:w-1/2 flex flex-col justify-center`}>
-            <h2 className="text-3xl md:text-[5.5rem] font-black text-white leading-none tracking-tighter mb-4 drop-shadow-lg">
-              {t.home.categoriesSocial}
-            </h2>
-            <div className={`flex flex-col gap-1 text-gray-400 font-mono text-xs md:text-sm tracking-widest uppercase ${isRTL ? 'border-r-2 border-green-500 pr-4 mr-1' : 'border-l-2 border-green-500 pl-4 ml-1'}`}>
-              <p className="text-white font-sans text-base md:text-lg tracking-normal font-bold">{t.home.categoriesSocialDesc}</p>
-              <p>{t.home.categoriesSocialText1}</p>
-              <p>{t.home.categoriesSocialText2}</p>
-              <p>{t.home.categoriesSocialText3}</p>
-            </div>
+          {/* =========================================
+              البطاقة الثانية: الحسابات والاشتراكات (Accounts & Subs)
+              تأخذ 5 أعمدة - مستوحاة من ألوان Samsung و Spark المشرقة
+              ========================================= */}
+          <Link to="/products" className="category-card lg:col-span-5 group relative h-[500px] md:h-[600px] bg-white/40 backdrop-blur-2xl border border-white/60 rounded-[3rem] p-8 md:p-12 overflow-hidden shadow-[0_20px_60px_-15px_rgba(0,0,0,0.03)] hover:shadow-[0_30px_80px_-20px_rgba(236,72,153,0.1)] transition-all duration-500 flex flex-col justify-between block">
             
-            <div className="mt-5 md:mt-8 flex items-center gap-3" dir="ltr">
-              <div className="p-2 bg-white/10 rounded-full backdrop-blur-md border border-white/10">
-                <Share2 className="w-6 h-6 text-white" />
-              </div>
-              <span className="text-white/50 text-xs font-mono">MEDIAJO.ORG/SOCIAL</span>
-            </div>
-          </div>
-        </Link>
+            {/* الأوربات الفنية المتحركة (ألوان دافئة: وردي، برتقالي) */}
+            <div className="absolute top-[10%] left-[-20%] w-[120%] h-[80%] bg-gradient-to-tr from-pink-400 via-rose-300 to-orange-300 rounded-full mix-blend-multiply blur-[80px] opacity-50 group-hover:scale-105 group-hover:rotate-12 transition-all duration-1000 ease-out"></div>
+            
+            {/* تأثير الخطوط الشبكية الدقيقة (Wireframe Touch) */}
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.03] mix-blend-overlay"></div>
 
+            {/* الجزء العلوي للبطاقة */}
+            <div className="relative z-10 flex justify-between items-start">
+              <div className="w-14 h-14 bg-white/80 backdrop-blur-md rounded-2xl flex items-center justify-center shadow-sm text-pink-600 border border-white group-hover:-rotate-12 transition-transform duration-500">
+                <Key className="w-7 h-7" />
+              </div>
+              <span className="px-5 py-2 bg-white/60 backdrop-blur-md rounded-full text-xs font-bold uppercase tracking-widest text-gray-700 border border-white shadow-sm">
+                02
+              </span>
+            </div>
+
+            {/* المحتوى النصي الأنيق (بدون كرت زجاجي، نصوص مباشرة على الخلفية المضيئة) */}
+            <div className="relative z-20 mt-auto">
+              <h3 className="text-3xl md:text-4xl font-medium tracking-tight text-[#111] mb-4">
+                {t.home.categoriesAccounts || (isRTL ? 'حسابات واشتراكات' : 'Premium Subscriptions')}
+              </h3>
+              <p className="text-gray-700 font-medium mb-8 leading-relaxed">
+                {t.home.categoriesAccountsDesc || (isRTL ? 'وصول غير محدود. اشتراكات نتفلكس، يوتيوب بريميوم، وحسابات موثقة وجاهزة بأسعار تنافسية.' : 'Unlimited access. Netflix, YouTube Premium, and verified ready-to-use accounts at competitive rates.')}
+              </p>
+              
+              {/* زر الشراء الدائري */}
+              <div className="inline-flex items-center gap-3 px-6 py-3 bg-white/80 backdrop-blur-md border border-white rounded-full text-sm font-bold uppercase tracking-widest text-gray-900 shadow-sm group-hover:bg-[#111] group-hover:text-white transition-colors duration-300">
+                {isRTL ? 'تصفح الباقات' : 'View Packages'} 
+                <ArrowUpRight className={`w-4 h-4 ${isRTL ? '-scale-x-100' : ''}`} />
+              </div>
+            </div>
+
+          </Link>
+
+        </div>
       </div>
     </section>
   );
