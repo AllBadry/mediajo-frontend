@@ -54,6 +54,16 @@
 
   </head>
   <body>
+    <script>
+      // استعادة المسار العميق بعد إعادة توجيه 404.html (دعم الروابط المباشرة مع GH Pages)
+      (function () {
+        var r = sessionStorage.getItem('redirect');
+        if (r) {
+          sessionStorage.removeItem('redirect');
+          history.replaceState(null, '', r);
+        }
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

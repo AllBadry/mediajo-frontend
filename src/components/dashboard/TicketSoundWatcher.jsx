@@ -1,5 +1,5 @@
 import { useEffect, useRef, useCallback } from 'react';
-import api from '../../api/client';
+import api from '../../lib/axios';
 import { playSound } from '../../utils/sound';
 import { useTicketStore, computeUnseen } from '../../store/ticketStore';
 
