@@ -1,12 +1,65 @@
 import React, { useState } from 'react';
-import { MapPin, Phone, Mail, MessageSquare, Send, Clock, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { MapPin, Phone, Mail, MessageSquare, Send, Clock, ShieldCheck, CheckCircle2, Loader2 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
 const inputClass = "w-full py-3.5 px-4 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-medium text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 focus:bg-white transition-all";
 
 export default function ContactUs() {
   const { t } = useLanguage();
-  const [sent, setSent] = useState(false);
+  const isRTL = t.dir === 'rtl';
+
+  // 1. إدارة حالة البيانات المدخلة
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    subject: '',
+    message: ''
+  });
+
+  // 2. إدارة حالة الإرسال (idle | loading | success | error)
+  const [status, setStatus] = useState('idle');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  // معالج تغيير المدخلات
+  const handleChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
+  };
+
+  // معالج إرسال النموذج للباك إند
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus('loading');
+    setErrorMessage('');
+
+    try {
+      // قم بتغيير الرابط إذا كنت تستخدم بيئة التطوير (localhost:3005)
+      const response = await fetch('https://api.mediajo.org/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setStatus('success');
+        // تفريغ الحقول بعد النجاح
+        setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+      } else {
+        setStatus('error');
+        setErrorMessage(data.message || (isRTL ? 'حدث خطأ أثناء الإرسال، يرجى المحاولة لاحقاً.' : 'An error occurred, please try again later.'));
+      }
+    } catch (error) {
+      setStatus('error');
+      setErrorMessage(isRTL ? 'تعذر الاتصال بالخادم، تحقق من اتصالك بالإنترنت.' : 'Network error, please check your connection.');
+    }
+  };
 
   return (
     <section dir={t.dir} className="page-enter relative w-full min-h-screen bg-[#fafbfc] font-sans overflow-hidden pt-24 pb-20 px-6 lg:px-12">
@@ -127,7 +180,7 @@ export default function ContactUs() {
           <div className="lg:col-span-7">
             <div className="bg-white/80 backdrop-blur-xl border border-gray-200 rounded-[2.5rem] p-8 md:p-10 shadow-[0_40px_80px_rgba(0,0,0,0.06)]">
               
-              {sent ? (
+              {status === 'success' ? (
                 /* رسالة النجاح بعد الإرسال */
                 <div className="flex flex-col items-center justify-center py-16 text-center">
                   <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-6">
@@ -138,7 +191,7 @@ export default function ContactUs() {
                     {t.contactPage.successBody}
                   </p>
                   <button
-                    onClick={() => setSent(false)}
+                    onClick={() => setStatus('idle')}
                     className="mt-8 px-6 py-3 bg-[#1e2022] text-white rounded-full font-bold text-sm hover:bg-black transition-colors"
                   >
                     {t.contactPage.sendAnother}
@@ -149,49 +202,96 @@ export default function ContactUs() {
                   <h2 className="text-2xl font-black tracking-tight text-gray-900 mb-1">{t.contactPage.sendTitle}</h2>
                   <p className="text-sm text-gray-500 font-medium mb-7">{t.contactPage.sendSub}</p>
 
-                  <form
-                    onSubmit={(e) => { e.preventDefault(); setSent(true); }}
-                    className="flex flex-col gap-4"
-                  >
+                  <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <label className="text-sm font-bold text-gray-700 mb-2 block">{t.contactPage.name}</label>
-                        <input required type="text" placeholder={t.contactPage.namePlaceholder} className={inputClass} />
+                        <input 
+                          required 
+                          type="text" 
+                          name="name"
+                          value={formData.name}
+                          onChange={handleChange}
+                          placeholder={t.contactPage.namePlaceholder} 
+                          className={inputClass} 
+                        />
                       </div>
                       <div>
                         <label className="text-sm font-bold text-gray-700 mb-2 block">{t.contactPage.email}</label>
-                        <input required type="email" placeholder={t.contactPage.emailPlaceholder} className={inputClass} />
+                        <input 
+                          required 
+                          type="email" 
+                          name="email"
+                          value={formData.email}
+                          onChange={handleChange}
+                          placeholder={t.contactPage.emailPlaceholder} 
+                          className={inputClass} 
+                        />
                       </div>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <label className="text-sm font-bold text-gray-700 mb-2 block">{t.contactPage.phoneOptional}</label>
-                        <input type="tel" placeholder="+962..." className={inputClass} />
+                        <input 
+                          type="tel" 
+                          name="phone"
+                          value={formData.phone}
+                          onChange={handleChange}
+                          placeholder="+962..." 
+                          className={inputClass} 
+                        />
                       </div>
                       <div>
                         <label className="text-sm font-bold text-gray-700 mb-2 block">{t.contactPage.subject}</label>
-                        <input type="text" placeholder={t.contactPage.subjectPlaceholder} className={inputClass} />
+                        <input 
+                          type="text" 
+                          name="subject"
+                          value={formData.subject}
+                          onChange={handleChange}
+                          placeholder={t.contactPage.subjectPlaceholder} 
+                          className={inputClass} 
+                        />
                       </div>
                     </div>
 
                     <div>
-                      <label className="text-sm font-bold text-gray-700 mb-2 block flex items-center gap-2">
+                      <label className="text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
                         <MessageSquare className="w-4 h-4 text-gray-400" /> {t.contactPage.message}
                       </label>
                       <textarea
                         required
+                        name="message"
+                        value={formData.message}
+                        onChange={handleChange}
                         rows="5"
                         placeholder={t.contactPage.messagePlaceholder}
                         className={`${inputClass} resize-none`}
                       ></textarea>
                     </div>
 
+                    {/* رسالة الخطأ إن وجدت */}
+                    {status === 'error' && (
+                      <div className="p-4 bg-red-50 text-red-600 text-sm font-bold rounded-xl border border-red-100">
+                        {errorMessage}
+                      </div>
+                    )}
+
                     <button
                       type="submit"
-                      className="mt-2 w-full sm:w-auto inline-flex items-center justify-center gap-2 py-4 px-8 bg-[#1e2022] text-white rounded-2xl font-bold text-sm hover:bg-black hover:-translate-y-0.5 transition-all duration-300 shadow-[0_10px_25px_rgba(0,0,0,0.15)]"
+                      disabled={status === 'loading'}
+                      className="mt-2 w-full sm:w-auto inline-flex items-center justify-center gap-2 py-4 px-8 bg-[#1e2022] text-white rounded-2xl font-bold text-sm hover:bg-black hover:-translate-y-0.5 disabled:opacity-70 disabled:hover:translate-y-0 transition-all duration-300 shadow-[0_10px_25px_rgba(0,0,0,0.15)]"
                     >
-                      {t.contactPage.send} <Send className="w-4 h-4" />
+                      {status === 'loading' ? (
+                        <>
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                          {isRTL ? 'جاري الإرسال...' : 'Sending...'}
+                        </>
+                      ) : (
+                        <>
+                          {t.contactPage.send} <Send className="w-4 h-4" />
+                        </>
+                      )}
                     </button>
                   </form>
                 </>
