@@ -394,6 +394,8 @@ export const translations = {
       updatePassword: 'Update Password',
       passwordChanged: 'Password changed successfully',
       passwordChangeFailed: 'Wrong current password',
+      googleAccountTitle: 'Google Account',
+      googleAccountNote: 'Your account was created via Google sign-in, so the password cannot be changed here. Please always sign in with Google.',
 
       fastAssistance: 'Get fast assistance from our 24/7 technical team.',
       openNewTicket: 'Open New Ticket',
@@ -934,6 +936,8 @@ export const translations = {
       updatePassword: 'تحديث كلمة المرور',
       passwordChanged: 'تم تغيير كلمة المرور بنجاح',
       passwordChangeFailed: 'كلمة المرور الحالية غير صحيحة',
+      googleAccountTitle: 'حساب عبر Google',
+      googleAccountNote: 'أُنشئ حسابك عبر تسجيل الدخول بـ Google، لذلك لا يمكنك تغيير كلمة المرور هنا. يكفي تسجيل الدخول دائمًا عبر Google.',
 
       fastAssistance: 'احصل على مساعدة سريعة من فريقنا الفني على مدار الساعة.',
       openNewTicket: 'فتح تذكرة جديدة',

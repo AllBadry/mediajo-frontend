@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { User, Mail, Phone, Lock, ShieldCheck, Save, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
+import { User, Mail, Phone, Lock, ShieldCheck, Save, Loader2, CheckCircle2, AlertCircle, X } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { useAuth } from '../../context/AuthContext';
@@ -33,6 +33,7 @@ export default function ProfileSettings() {
   const [loadingPass, setLoadingPass] = useState(false);
   const [profileMsg, setProfileMsg] = useState({ type: '', text: '' });
   const [passMsg, setPassMsg] = useState({ type: '', text: '' });
+  const [showGooglePassModal, setShowGooglePassModal] = useState(false);
 
   useGSAP(() => {
     gsap.fromTo(".profile-card", 
@@ -78,6 +79,13 @@ export default function ProfileSettings() {
   // إرسال تغيير كلمة المرور
   const updatePassword = async (e) => {
     e.preventDefault();
+
+    // حساب Google: لا يملك كلمة مرور أصلية، لذلك لا يمكن تغييرها
+    if (user?.googleId) {
+      setShowGooglePassModal(true);
+      return;
+    }
+
     setLoadingPass(true);
     setPassMsg({ type: '', text: '' });
 
@@ -238,6 +246,30 @@ export default function ProfileSettings() {
           </div>
         </form>
       </div>
+
+      {/* Modal: حساب عبر Google - لا يمكن تغيير كلمة المرور */}
+      {showGooglePassModal && (
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg max-w-md w-full p-8 shadow-2xl relative animate-in fade-in zoom-in duration-200">
+            <button onClick={() => setShowGooglePassModal(false)} className="absolute top-6 right-6 text-gray-400 hover:text-gray-900">
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mb-4">
+              <Lock className="w-6 h-6" />
+            </div>
+            <h3 className="text-2xl font-black text-gray-900 mb-2">{t.dashboard.googleAccountTitle}</h3>
+            <p className="text-sm text-gray-500 font-medium mb-6">{t.dashboard.googleAccountNote}</p>
+
+            <button
+              onClick={() => setShowGooglePassModal(false)}
+              className="w-full bg-gray-900 hover:bg-black text-white px-6 py-3 rounded-lg font-bold text-sm transition-all"
+            >
+              {t.dashboard.saveChanges}
+            </button>
+          </div>
+        </div>
+      )}
 
     </div>
   );
